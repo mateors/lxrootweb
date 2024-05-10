@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+  <body>
+    <div class="main min-h-[calc(100vh-312px)]">
+      <div class="header-wrapper sticky top-0 z-50">
+        <header id="main-header"
+          class="hidden lg:block relative border-b border-b-[#808afd] transition"
+        >
+          <div class="container mx-auto">
+            <div class="navbar">
+              <div class="flex-1">
+                <a href="/" class="logo-item">
+                  <!-- <img src="./assets/image/logo.png" alt="logo img" /> -->
+                  <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.11206 59V42.2H13.1921V55.4H20.6801V59H9.11206Z" fill="#fff"/>
+                    <path d="M31.1771 59L28.4651 54.896L27.2171 53.144L22.1771 46.256H26.7851L29.4011 50.168L30.7691 52.04L35.7371 59H31.1771ZM22.0571 59L27.1931 51.848L29.2571 54.32L26.5931 59H22.0571ZM30.4811 53.456L28.4411 51.008L30.9611 46.256H35.4971L30.4811 53.456Z" fill="#fff"/>
+                    <path d="M38.2917 59V42.2H45.8517C46.9237 42.2 47.8917 42.432 48.7557 42.896C49.6357 43.36 50.3237 44 50.8197 44.816C51.3157 45.616 51.5637 46.528 51.5637 47.552C51.5637 48.608 51.3157 49.56 50.8197 50.408C50.3237 51.24 49.6437 51.896 48.7797 52.376C47.9157 52.856 46.9397 53.096 45.8517 53.096H42.1797V59H38.2917ZM47.6037 59L43.3317 51.416L47.5077 50.816L52.2597 59H47.6037ZM42.1797 49.976H45.4917C45.9077 49.976 46.2677 49.888 46.5717 49.712C46.8917 49.52 47.1317 49.256 47.2917 48.92C47.4677 48.584 47.5557 48.2 47.5557 47.768C47.5557 47.336 47.4598 46.96 47.2677 46.64C47.0757 46.304 46.7957 46.048 46.4277 45.872C46.0757 45.696 45.6437 45.608 45.1317 45.608H42.1797V49.976Z" fill="#fff"/>
+                    <path d="M60.2666 59.24C58.9386 59.24 57.7546 58.952 56.7146 58.376C55.6906 57.8 54.8746 57.016 54.2666 56.024C53.6746 55.032 53.3786 53.896 53.3786 52.616C53.3786 51.336 53.6746 50.2 54.2666 49.208C54.8746 48.216 55.6906 47.432 56.7146 46.856C57.7546 46.28 58.9386 45.992 60.2666 45.992C61.5946 45.992 62.7706 46.28 63.7946 46.856C64.8346 47.432 65.6506 48.216 66.2426 49.208C66.8346 50.2 67.1306 51.336 67.1306 52.616C67.1306 53.896 66.8346 55.032 66.2426 56.024C65.6506 57.016 64.8346 57.8 63.7946 58.376C62.7706 58.952 61.5946 59.24 60.2666 59.24ZM60.2666 55.928C60.8426 55.928 61.3546 55.784 61.8026 55.496C62.2506 55.208 62.6026 54.816 62.8586 54.32C63.1146 53.824 63.2346 53.256 63.2186 52.616C63.2346 51.976 63.1146 51.408 62.8586 50.912C62.6026 50.4 62.2506 50 61.8026 49.712C61.3546 49.424 60.8426 49.28 60.2666 49.28C59.6906 49.28 59.1706 49.424 58.7066 49.712C58.2586 50 57.9066 50.4 57.6506 50.912C57.3946 51.408 57.2746 51.976 57.2906 52.616C57.2746 53.256 57.3946 53.824 57.6506 54.32C57.9066 54.816 58.2586 55.208 58.7066 55.496C59.1706 55.784 59.6906 55.928 60.2666 55.928Z" fill="#fff"/>
+                    <path d="M75.6416 59.24C74.3136 59.24 73.1296 58.952 72.0896 58.376C71.0656 57.8 70.2496 57.016 69.6416 56.024C69.0496 55.032 68.7536 53.896 68.7536 52.616C68.7536 51.336 69.0496 50.2 69.6416 49.208C70.2496 48.216 71.0656 47.432 72.0896 46.856C73.1296 46.28 74.3136 45.992 75.6416 45.992C76.9696 45.992 78.1456 46.28 79.1696 46.856C80.2096 47.432 81.0256 48.216 81.6176 49.208C82.2096 50.2 82.5056 51.336 82.5056 52.616C82.5056 53.896 82.2096 55.032 81.6176 56.024C81.0256 57.016 80.2096 57.8 79.1696 58.376C78.1456 58.952 76.9696 59.24 75.6416 59.24ZM75.6416 55.928C76.2176 55.928 76.7296 55.784 77.1776 55.496C77.6256 55.208 77.9776 54.816 78.2336 54.32C78.4896 53.824 78.6096 53.256 78.5936 52.616C78.6096 51.976 78.4896 51.408 78.2336 50.912C77.9776 50.4 77.6256 50 77.1776 49.712C76.7296 49.424 76.2176 49.28 75.6416 49.28C75.0656 49.28 74.5456 49.424 74.0816 49.712C73.6336 50 73.2816 50.4 73.0256 50.912C72.7696 51.408 72.6496 51.976 72.6656 52.616C72.6496 53.256 72.7696 53.824 73.0256 54.32C73.2816 54.816 73.6336 55.208 74.0816 55.496C74.5456 55.784 75.0656 55.928 75.6416 55.928Z" fill="#fff"/>
+                    <path d="M86.0726 59V43.04H89.9126V59H86.0726ZM83.8166 49.616V46.256H92.3846V49.616H83.8166Z" fill="#fff"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M76.5399 64C71.5099 73.5156 61.5123 80 50.0001 80C38.4879 80 28.4902 73.5156 23.4603 64H12.5185C18.1935 79.1867 32.834 90 50.0001 90C67.1662 90 81.8067 79.1867 87.4817 64H76.5399ZM22.4964 38C27.1257 27.4046 37.6982 20 50.0001 20C62.302 20 72.8745 27.4046 77.5038 38H88.1689C83.0718 21.7716 67.9107 10 50.0001 10C32.0895 10 16.9284 21.7716 11.8313 38H22.4964Z" fill="#fff"/>
+                  </svg>
+
+
+                </a>
+                
+              </div>
+              <div class="flex-none text-primary">
+                <ul class="menu menu-horizontal px-1 items-center text-primaryDeep ">
+                  <div class="dropdown hover-dropdown h-full flex items-center">
+                    <li>
+                      <button
+                        class="nav-item body-text1 text-white !font-medium menu-btn h-full flex gap-[2px] items-center group/btn text-sm transition"
+                      
+                      >
+                        Product
+                        <svg
+                          width="22"
+                          height="22"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M18 9L12 15L6 9"
+                            stroke="#edededd1"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </li>
+
+                    <div
+                      class="dropdown-content overlap-content py-1 w-screen absolute top-20 left-0 right-0 bg-white z-50"
+                    >
+                      <div
+                        class="container mx-auto px-2 py-10 grid md:grid-cols-3 gap-x-5"
+                      >
+                        <a
+                          href="./pages/features.html"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Features</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+                        <a
+                          href="./pages/technology.html"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid md:grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Technology Stack</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a
+                          href="./pages/wp-toolkit.html"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Wordpress Toolkit</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a
+                          href="./pages/web-hosts.html"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Enhance Performance</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+                        <div></div>
+                        <div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <li><a href="./pages/roadmap.html" class="nav-item body-text1 text-white !font-medium">Roadmap</a></li>
+                  <li><a href="./pages/pricing.html" class="nav-item body-text1 text-white !font-medium">Pricing</a></li>
+                  <!-- <li><a href="#" class="nav-item body-text1 text-white !font-medium">Resourses</a></li> -->
+                  <div class="dropdown hover-dropdown h-full flex items-center">
+                    <li>
+                      <button
+                        class="nav-item body-text1 text-white !font-medium  menu-btn h-full flex gap-[2px] items-center group/btn text-sm  transition"
+                      
+                      >
+                        Resources
+                        <svg
+                          width="22"
+                          height="22"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M18 9L12 15L6 9"
+                            stroke="#edededd1"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    </li>
+
+                    <div
+                      class="dropdown-content overlap-content py-1 w-screen absolute top-20 left-0 right-0 bg-white text-primary z-50"
+                    >
+                      <div
+                        class="container mx-auto px-2 py-10 grid md:grid-cols-3 gap-x-5"
+                      >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Documentation</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid md:grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Community</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="grow-0">
+                              <p class="head-5 mb-1 text-primary">Integration</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="">
+                              <p class="head-5 mb-1 text-primary">API Documentation</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-skin-base hover:bg-skin-fill-hover transition"
+                          role="menuitem"
+                        >
+                          <div
+                            class="grid grid-cols-[auto,1fr] gap-2 items-start"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20 20C20 20.5304 19.7893 21.0391 19.4142 21.4142C19.0391 21.7893 18.5304 22 18 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V6C2 5.46957 2.21071 4.96086 2.58579 4.58579C2.96086 4.21071 3.46957 4 4 4H9.5C9.2 4.8 9 5.6 9 6.5C9 10.1 11.9 13 15.5 13C16.3 13 17 12.9 17.6 12.6L20 15V20ZM19.3 8.9C19.7 8.2 20 7.4 20 6.5C20 4 18 2 15.5 2C13 2 11 4 11 6.5C11 9 13 11 15.5 11C16.4 11 17.2 10.7 17.9 10.3L21 13.4L22.4 12L19.3 8.9ZM15.5 9C14.1 9 13 7.9 13 6.5C13 5.1 14.1 4 15.5 4C16.9 4 18 5.1 18 6.5C18 7.9 16.9 9 15.5 9Z"
+                                fill="#40C0E7"
+                              />
+                            </svg>
+                            <div class="">
+                              <p class="head-5 mb-1 text-primary">Release Note</p>
+                              <p class="body-text2 text-raisinBlack">
+                                Explore the platform, website and admin tools on
+                                the Enhance hosting control panel.
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+
+                        <div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <li><a href="./pages/support.html" class="nav-item body-text1 text-white !font-medium">Support</a></li>
+                  <a
+                    href="./pages/signup.html"
+                    class="nav-button filled-button text-raisinBlack !bg-white border !border-primaryMiddle !h-12 !text-[15px] !pt-0 hover:text-primaryMiddle md:ml-8"
+                  >
+                    Get Started
+                  </a>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <div id="" class="header-wrapper sticky top-0 z-50">
+        <header 
+          class="responsive-header bg-white block lg:hidden bg-base-100 border-slate-200 border-b relative px-5"
+        >
+          <div class="container mx-auto">
+            <div class="navbar">
+              <div class="flex-1">
+                <a href="/" class="">
+                  <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.11206 59V42.2H13.1921V55.4H20.6801V59H9.11206Z" fill="#5865F2"/>
+                    <path d="M31.1771 59L28.4651 54.896L27.2171 53.144L22.1771 46.256H26.7851L29.4011 50.168L30.7691 52.04L35.7371 59H31.1771ZM22.0571 59L27.1931 51.848L29.2571 54.32L26.5931 59H22.0571ZM30.4811 53.456L28.4411 51.008L30.9611 46.256H35.4971L30.4811 53.456Z" fill="#5865F2"/>
+                    <path d="M38.2917 59V42.2H45.8517C46.9237 42.2 47.8917 42.432 48.7557 42.896C49.6357 43.36 50.3237 44 50.8197 44.816C51.3157 45.616 51.5637 46.528 51.5637 47.552C51.5637 48.608 51.3157 49.56 50.8197 50.408C50.3237 51.24 49.6437 51.896 48.7797 52.376C47.9157 52.856 46.9397 53.096 45.8517 53.096H42.1797V59H38.2917ZM47.6037 59L43.3317 51.416L47.5077 50.816L52.2597 59H47.6037ZM42.1797 49.976H45.4917C45.9077 49.976 46.2677 49.888 46.5717 49.712C46.8917 49.52 47.1317 49.256 47.2917 48.92C47.4677 48.584 47.5557 48.2 47.5557 47.768C47.5557 47.336 47.4598 46.96 47.2677 46.64C47.0757 46.304 46.7957 46.048 46.4277 45.872C46.0757 45.696 45.6437 45.608 45.1317 45.608H42.1797V49.976Z" fill="#5865F2"/>
+                    <path d="M60.2666 59.24C58.9386 59.24 57.7546 58.952 56.7146 58.376C55.6906 57.8 54.8746 57.016 54.2666 56.024C53.6746 55.032 53.3786 53.896 53.3786 52.616C53.3786 51.336 53.6746 50.2 54.2666 49.208C54.8746 48.216 55.6906 47.432 56.7146 46.856C57.7546 46.28 58.9386 45.992 60.2666 45.992C61.5946 45.992 62.7706 46.28 63.7946 46.856C64.8346 47.432 65.6506 48.216 66.2426 49.208C66.8346 50.2 67.1306 51.336 67.1306 52.616C67.1306 53.896 66.8346 55.032 66.2426 56.024C65.6506 57.016 64.8346 57.8 63.7946 58.376C62.7706 58.952 61.5946 59.24 60.2666 59.24ZM60.2666 55.928C60.8426 55.928 61.3546 55.784 61.8026 55.496C62.2506 55.208 62.6026 54.816 62.8586 54.32C63.1146 53.824 63.2346 53.256 63.2186 52.616C63.2346 51.976 63.1146 51.408 62.8586 50.912C62.6026 50.4 62.2506 50 61.8026 49.712C61.3546 49.424 60.8426 49.28 60.2666 49.28C59.6906 49.28 59.1706 49.424 58.7066 49.712C58.2586 50 57.9066 50.4 57.6506 50.912C57.3946 51.408 57.2746 51.976 57.2906 52.616C57.2746 53.256 57.3946 53.824 57.6506 54.32C57.9066 54.816 58.2586 55.208 58.7066 55.496C59.1706 55.784 59.6906 55.928 60.2666 55.928Z" fill="#5865F2"/>
+                    <path d="M75.6416 59.24C74.3136 59.24 73.1296 58.952 72.0896 58.376C71.0656 57.8 70.2496 57.016 69.6416 56.024C69.0496 55.032 68.7536 53.896 68.7536 52.616C68.7536 51.336 69.0496 50.2 69.6416 49.208C70.2496 48.216 71.0656 47.432 72.0896 46.856C73.1296 46.28 74.3136 45.992 75.6416 45.992C76.9696 45.992 78.1456 46.28 79.1696 46.856C80.2096 47.432 81.0256 48.216 81.6176 49.208C82.2096 50.2 82.5056 51.336 82.5056 52.616C82.5056 53.896 82.2096 55.032 81.6176 56.024C81.0256 57.016 80.2096 57.8 79.1696 58.376C78.1456 58.952 76.9696 59.24 75.6416 59.24ZM75.6416 55.928C76.2176 55.928 76.7296 55.784 77.1776 55.496C77.6256 55.208 77.9776 54.816 78.2336 54.32C78.4896 53.824 78.6096 53.256 78.5936 52.616C78.6096 51.976 78.4896 51.408 78.2336 50.912C77.9776 50.4 77.6256 50 77.1776 49.712C76.7296 49.424 76.2176 49.28 75.6416 49.28C75.0656 49.28 74.5456 49.424 74.0816 49.712C73.6336 50 73.2816 50.4 73.0256 50.912C72.7696 51.408 72.6496 51.976 72.6656 52.616C72.6496 53.256 72.7696 53.824 73.0256 54.32C73.2816 54.816 73.6336 55.208 74.0816 55.496C74.5456 55.784 75.0656 55.928 75.6416 55.928Z" fill="#5865F2"/>
+                    <path d="M86.0726 59V43.04H89.9126V59H86.0726ZM83.8166 49.616V46.256H92.3846V49.616H83.8166Z" fill="#5865F2"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M76.5399 64C71.5099 73.5156 61.5123 80 50.0001 80C38.4879 80 28.4902 73.5156 23.4603 64H12.5185C18.1935 79.1867 32.834 90 50.0001 90C67.1662 90 81.8067 79.1867 87.4817 64H76.5399ZM22.4964 38C27.1257 27.4046 37.6982 20 50.0001 20C62.302 20 72.8745 27.4046 77.5038 38H88.1689C83.0718 21.7716 67.9107 10 50.0001 10C32.0895 10 16.9284 21.7716 11.8313 38H22.4964Z" fill="#5865F2"/>
+                  </svg>
+                </a>
+              </div>
+              <div class="dropdown h-full flex items-center" data-dropdown>
+                <button
+                  class="body-text1 !font-medium menu-btn h-full flex gap-[2px] items-center group/btn text-sm hover:text-secondary hover:bg-ghostWhite transition"
+                  data-dropdown-btn
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-7 w-7"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h8m-8 6h16"
+                    ></path>
+                  </svg>
+                </button>
+
+                <div
+                  class="dropdown-content overflow-auto overlap-content py-1 w-screen h-[calc(100vh-90px)] absolute top-24 left-0 right-0 bg-white text-primary z-50 !scale-100"
+                >
+                  <div
+                    class="container mx-auto px-2 py-5 grid lg:grid-cols-3 gap-3"
+                  >
+                    <div class="collapsible-wrap !px-0 !py-0 !border-transparent ">
+                      <div class="collapsible menu-btn flex justify-between gap-4 bg-slate-100 border border-slate-200 px-3 py-2">
+                          
+                        <span class="body-text1 !font-semibold ">Products</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18 9L12 15L6 9" stroke="#edededd1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgba(81, 92, 121, 0.82);"></path>
+                        </svg>
+                      </div>
+                      <div class="collapsible-content text-gray-700">
+                        <a href="./pages/features.html" class="mt-2 flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          Features
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="./pages/technology.html" class=" flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          Technology Stack
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="./pages/web-hosts.html" class=" flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          Enhance for webhost
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="./pages/wp-toolkit.html" class=" flex w-full justify-between gap-4  p-2 px-4 font-medium text-secondary">
+                          WOrdpress Toolkit
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+
+                      </div>
+                    </div>
+                    <a href="./pages/roadmap.html" class="flex justify-between gap-4 bg-slate-100 border border-slate-200 px-3 py-2">
+                      <span class="body-text1 !font-semibold text-secondary">Roadmap</span>
+                    </a>
+                    <a href="./pages/pricing.html" class="flex justify-between gap-4 bg-slate-100 border border-slate-200 px-3 py-2">
+                      <span class="body-text1 !font-semibold text-secondary">Pricing</span>
+                    </a>
+
+                    <div class="collapsible-wrap !px-0 !py-0 !border-transparent ">
+                      <div class="collapsible menu-btn flex justify-between gap-4 bg-slate-100 border border-slate-200 px-3 py-2">
+                          
+                        <span class="body-text1 !font-semibold ">Resources</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M18 9L12 15L6 9" stroke="#edededd1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke: rgba(81, 92, 121, 0.82);"></path>
+                        </svg>
+                      </div>
+                      <div class="collapsible-content text-gray-700">
+                        <a href="" class="mt-2 flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          Documentation
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="" class=" flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          Community
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="" class=" flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          Integration
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="" class=" flex w-full justify-between gap-4 border-b border-b-slate-300 p-2 px-4 font-medium text-secondary">
+                          API Documentation
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+                        <a href="#" class=" flex w-full justify-between gap-4  p-2 px-4 font-medium text-secondary">
+                          Release Notes
+                          <svg width="18" height="18" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path class="fill-primary" fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#504949"></path>
+                          </svg>
+                        </a>
+
+                      </div>
+                    </div>
+
+                    <a href="./pages/support.html" class="flex justify-between gap-4 bg-slate-100 border border-slate-200 px-3 py-2">
+                      <span class="body-text1 !font-semibold text-secondary">Support</span>
+                    </a>
+
+                    <a href="./pages/signup.html" class="mt-3 !w-full filled-button !justify-between gap-2 !bg-primaryMiddle text-white">
+                      Get Started
+                      <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <div class="content h-auto bg-white text-slate-700">
+        <section class=" relative bg-gradient-to-br from-primary via-primaryMiddle to-primaryDeep -mt-[100px] pt-[100px]">
+          <div
+              class="bg-[url('../image/pattern/banner__bg.svg')] bg-cover bg-top bg-no-repeat w-full opacity-100 absolute inset-0 z-10"
+          ></div>
+          <div
+            class="container mx-auto px-5 py-16 md:py-24 z-20 flex flex-col items-center text-center gap-3"
+          >
+            <p class="caption-text capitalize !font-medium text-ghostWhite">LEGAL</p>
+            <h1 class="head-1 !font-bold text-white">Terms & Conditions</h1>
+            <p class="body-text1 text-ghostWhite mt-8 py-2 px-3 border border-ghostWhite">
+              Last updated <span class="font-semibold">30/03/2022</span>
+            </p>
+          </div>
+        </section>
+
+        <section class="">
+            <div class="container mx-auto px-5 py-16 md:py-24 z-20 flex flex-col items-center">
+                <p class="body-text2 mb-8 text-center">This page explains our Terms and Conditions. When you use Enhance you are agreeing to these terms.</p>
+
+                <p class="body-text1 !font-semibold text-primary">Agreed Terms</p>
+            </div>
+        </section>
+
+        <section class="bg-slate-100">
+            <div class="container mx-auto px-5 py-16 md:py-24 z-20 ">
+                <div class="max-w-[1280px] mx-auto flex flex-col items-center">
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                            <span class="head-5 !font-semibold">1. About us</span>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </mask>
+                                <g mask="url(#mask0_169_47)">
+                                <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                </g>
+                            </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                            <p class="mt-4 mx-3 md:mt-4 md:mx-8">1.1. <strong> Company details.</strong> <em>LxRoot Hosting Automation Services Ltd</em> (<strong><em>“we” </em></strong>and <strong><em>“us”</em></strong>) is a company registered in England and our registered office is at ''. We operate the website <a href="https://lxroot.com/"><em>https://lxRoot.com</em></a> (<strong><em>“Website”</em></strong>)<br></p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">1.2. <strong>Contacting us.</strong> To contact us, email <a class="inline">support@lxroot.com</a>.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                            <span class="head-5 !font-semibold">2. Our contract with you</span>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </mask>
+                                <g mask="url(#mask0_169_47)">
+                                <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                </g>
+                            </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                            <p class="mt-4 mx-3 md:mt-4 md:mx-8 pb-4">2.1. <strong>Our contract.</strong> These terms and conditions apply to the order by the customer (<strong><em>“you”</em></strong>) and the grant by us of a limited, revocable, non-exclusive licence to install and use the Enhance Software on servers owned or controlled by you in accordance with the terms of this contract (<strong><em>“Licence Agreement”</em></strong>). They apply to the exclusion of any other terms that you seek to impose or incorporate, or which are implied by law, trade custom, practice or course of dealing.<br><br>2.2. <strong>Entire agreement.</strong> The Licence Agreement is the entire agreement between you and us in relation to its subject matter. You acknowledge that you have not relied on any statement, promise or representation or assurance or warranty that is not set out in the Licence Agreement.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                            <span class="head-5 !font-semibold">3. Acceptance and delivery</span>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </mask>
+                                <g mask="url(#mask0_169_47)">
+                                <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                </g>
+                            </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                            <p class="mt-4 mx-3 md:mt-4 md:mx-8">3.1. <strong> Accepting these terms.</strong> Please review the terms of this Licence Agreement before indicating your acceptance by ticking the appropriate box. <strong><em>Your attention is particularly drawn to the provisions of clause 10 (Limitation of liability).</em></strong><br></p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8">3.2. <strong>Activating your Enhance Account.</strong>The Enhance Software will be delivered by way of an installation script published on the Website. Please follow the onscreen prompts to install the Enhance Software. To obtain a Licence Key you must create an Enhance Account via the Enhance Website and pay any required Fees.</p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8">3.3. <strong>Updates.</strong>The Enhance Software may be updated from time to time by means of API call, automated update or manual action. Any updates to the Enhance Software downloaded by you or by the Enhance Software itself are subject to the terms of this Licence Agreement.</p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">3.4. <strong>60-Day Free Trial.</strong>At our sole discretion, we may waive the Fees for a period of up to 60 days (“Free Trial”). This does affect any of the terms of this Licence Agreement which will remain in force. We may revoke or refuse to grant a Free Trial at any time at our sole discretion. <br></p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                            <span class="head-5 !font-semibold">4. Fees</span>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </mask>
+                                <g mask="url(#mask0_169_47)">
+                                <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                </g>
+                            </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                            <p class="mt-4 mx-3 md:mt-4 md:mx-8">4.1. Subject to clause 3.4, you must pay our Fees without any deduction or set-off whatsoever in full by the due date stated on the invoice.</p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8">4.2. Our Fees are exclusive of VAT. You shall:</p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) pay us, at the same time as you pay the Fees, any additional amount required for VAT chargeable in the UK; and</p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8">(b) indemnify us against any liability (including any interest, penalties or costs incurred) in respect of any VAT or equivalent sales tax relating to sums payable under this Licence Agreement.</p>
+                            <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">4.3. We reserve the right to increase the rates on which we base our Fees from time to time, providing 30 days notice by email.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                            <span class="head-5 !font-semibold">5. How to pay</span>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </mask>
+                                <g mask="url(#mask0_169_47)">
+                                <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                </g>
+                            </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">5.1. Subject to clause 3.4, we will take your first payment monthly in advance after the end of any Free Trial.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">5.2. You can pay for licensing the Enhance Software using a debit card, credit card, PayPal or any other payment method listed on the Website.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">5.3. We will send you an electronic invoice based on your Commencement Date.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">5.4. If you fail to make a payment under the Licence Agreement by the due date:</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) you will have to pay interest on the overdue sum from the due date until payment of the overdue sum, whether before or after judgement. Interest under this clause 5.4 will accrue each day at 4% a year above the Bank of England's base rate from time to time, but at 4% a year for any period when that base rate is below 0%; and</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">(b) we reserve the right to limit functionality of the Enhance Software.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">6. Your obligations</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">6.1. It is your responsibility to ensure that: </p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) the functions of the Enhance Software meet your requirements;</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(b) you take adequate steps to validate your backups;</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(c) you obtain and maintain all necessary licences, permissions and consents which may be required before the date on which the Licence Agreement commences; and</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">(d) you comply with all applicable laws including technology control or export laws and regulations.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">7. Intellectual property rights</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">7.1. You acknowledge: </p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) all intellectual property rights in or arising out of or in connection the Enhance Software anywhere in the world belong to us, that rights in the Enhance Software are licensed (not sold) to you, and that you have no rights in, or to, the Enhance Software other than the right to use it in accordance with the terms of this Licence Agreement;</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(b) you have no right to have access to the Enhance Software in source code form; and</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(c) you may not translate, reverse-engineer, decompile, disassemble, modify, or create derivative works based on the Enhance Software (or any part thereof).</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">7.2. You shall notify us immediately if you become aware of any unauthorised use of the whole or any part of the Enhance Software by any person.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">8. Sub-licensing</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">8.1. Subject to fulfilling the requirements outlined at clause 8.2 and otherwise remaining compliant with the terms of this Licence Agreement, you are permitted to allow your Customers to install and use the Enhance Software on systems owned and controlled by you.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">8.2. You acknowledge, in relation to your Customer’s installation and/or use under clause 8.1:</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) you remain liable to us:</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(i) you are responsible for all support and technical assistance required by the Customer.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(ii) for any breaches of this Licence Agreement howsoever occurring;</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">(b) for payment of Fees. </p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">9. Data Processing</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">9.1. The Enhance Software will collect usage data and additional data specific to your installation (<strong>“Collected Data”</strong>) and will send this to servers controlled by us from time to time.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">9.2. Collected Data shall be used to calculate the Fees and to prevent circumvention of the licensing system</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">9.3. No data which can uniquely identify your Customers will be transmitted.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">10. Limitation of liability: YOUR ATTENTION IS PARTICULARLY DRAWN TO THIS CLAUSE</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">10.1. We do not warrant the suitability of the Enhance Software for any particular purpose.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">10.2. While we will use best endeavours to resolve any technical issues or Vulnerabilities as and when they are discovered, you acknowledge:</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) Enhance Software may experience bugs due to its complexity and frequent updating; and</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(b) An Enhance Cluster should not be relied upon as the sole means to back up a website and other data hosted within it and, consequently, you need to take steps to validate your backups</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">10.3. You agree to hold us blameless and indemnify us against losses, whether direct or consequential that you, your Customers or any third party may suffer as a result of this Licence Agreement due to:</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8" dir="ltr">(a) any failure, bug, inadequacy or Vulnerability in the Enhance Software;<br><br>(b) loss of data or costs arising from loss of data;<br><br>(c) termination or suspension of this Licence Agreement; and<br><br>(d) losses or claims arising through use of the Enhance Software by your Customers or any other party to whom you grant access to an Enhance Cluster.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">10.4. We shall will not be liable to you, whether in contract, tort (including negligence), for breach of statutory duty, or otherwise, arising under or in connection with the Licence Agreement for:</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8" dir="ltr">(a) loss of profits;<br><br>(b) loss of sales or business;<br><br>(c) loss of agreements or contracts;<br><br>(d) loss of anticipated savings;<br><br>(e) loss of use or corruption of software, data or information;<br><br>(f) loss of or damage to goodwill; and<br><br>(g) any indirect or consequential loss.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4" dir="ltr"><br>10.5. Our total liability to you arising under or in connection with the Licence Agreement, whether in contract, tort (including negligence), breach of statutory duty, or otherwise, will be limited to three times the average invoice amount for the preceding three months.<br><br>10.6. This Licence Agreement sets out the full extent of our obligations and liabilities in respect of the supply of the Enhance Software. Except as expressly stated in this Licence Agreement, there are no conditions, warranties, representations or other terms, express or implied, that are binding on us. Any condition, warranty, representation or other term concerning the supply of the Enhance Software which might otherwise be implied into, or incorporated in, this Licence Agreement whether by statute, common law or otherwise, is excluded to the fullest extent permitted by law.<br><br>10.7. This clause 10 will survive termination of the Licence Agreement.<br></p>
+                          
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">11. Termination</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8 pb-4">11.1. Without affecting any other right or remedy available to it, either party may terminate the Licence Agreement with immediate effect.</p>
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">12. General</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">12.1. Assignment and transfer.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(a) We may assign or transfer our rights and obligations under the Licence Agreement to another entity by posting on the Webpage if this happens.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">(b) You may only assign or transfer your rights or your obligations under the Licence Agreement to another person if we agree.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8" dir="ltr">12.2 <strong>Variation.</strong> These terms of the Licence Agreement may be updated by us from time to time. Updated terms will be published on the Website. Continued use of the Enhance Software constitutes acceptance of these terms.<br><br>12.3. <strong>Waiver.</strong> If we do not insist that you perform any of your obligations under the Licence Agreement, or if we do not enforce our rights against you, or if we delay in doing so, that will not mean that we have waived our rights against you or that you do not have to comply with those obligations. Unless expressly permitted within the terms of this Licence Agreement, if we waive any rights, we will only do so in writing, and that will not mean that we will automatically waive any right related to any later default by you.<br><br>12.4. <strong>Severance.</strong> Each paragraph of this Licence Agreement operates separately. If any court or relevant authority decides that any of them is unlawful or unenforceable, the remaining paragraphs will remain in full force and effect.<br><br>12.5. <strong>Third party rights.</strong> The Licence Agreement is between you and us. No other person has any rights to enforce any of its terms.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4" dir="ltr">12.6. <strong>Governing law and jurisdiction.</strong> The Licence Agreement is governed by English law and we each irrevocably agree to submit all disputes arising out of or in connection with the Licence Agreement to the exclusive jurisdiction of the English courts.<br></p>
+                          
+                        </div>
+                    </div>
+
+                    <div class="collapsible-wrap w-full mb-5 !px-5 !border-transparent bg-white">
+                        <div class="collapsible menu-btn flex justify-between gap-4 md:p-5">
+                            
+                          <span class="head-5 !font-semibold">13. Definitions</span>
+                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                            <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </mask>
+                            <g mask="url(#mask0_169_47)">
+                            <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                            </g>
+                          </svg>
+
+                        </div>
+                        <div class="collapsible-content  text-gray-700">
+                          <p class="mt-4 mx-3 md:mt-4 md:mx-8">13.1. <strong><em>“Commencement Date”</em></strong> means the date on which you accept the terms of this Licence Agreement.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8">13.2. <strong><em>“Enhance Account”</em></strong> means an entry within our client billing and management platform.<br><br>13.3. <strong><em>“Enhance Cluster” </em></strong>means a deployment of the Enhance Software by you to a server or a group of servers<br><br>13.4. <strong><em>“Enhance Software”</em></strong> means the micro-service-based software provided via the <a href="http://enhance.com/"><em>enhance.com</em></a> website, consisting of <em>“orchd”</em>, <em>“controld”</em> and subordinate applications.</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8" dir="ltr">(a) your usage over the previous month and<br><br>(b) calculated using rates and applicable currency published on the Website,</p>
+                          <p class="mt-4 mx-3 md:mt-8 md:mx-8 pb-4">13.6. <strong><em>“Licence Key”</em></strong> means the text key required to use the Enhance Software.<br><br>13.7. <strong><em>“VAT”</em></strong> means value added tax.<br><br>13.8. <strong><em>“Vulnerability”</em></strong> means an error, flaw, or mistake in the Enhance Software that permits or causes an unintended behaviour to occur, or a weakness in the Enhance Software that could be exploited or triggered by a threat source and that could result in a failure of confidentiality, integrity, or availability.<br><br>13.9. <strong><em>“your Customers” </em></strong>means any organisations or persons who may use the Enhance Software running on systems controlled by you.<br><br></p>
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative bg-white z-10">
+            <div class="container mx-auto px-5 py-16 md:py-24">
+                <div class="max-w-[960px] mx-auto bg-secondary p-5 py-10 md:p-20 flex justify-center rounded-md">
+                    <div class="text-part text-slate-700">
+                        <h2 class="head-2 !font-bold text-white mb-5">
+                        Have a question?
+                        </h2>
+                        <p class="head-4 text-ghostWhite text-center">
+                        Please send any queries to <br> support@lxroot.com
+                        </p>
+
+                        <div class="flex gap-5 items-center justify-center content-center mt-8">
+                            <a href="" class="filled-button gap-3 text-white !bg-primary ">Get Started
+                                <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
+                                </svg>
+                            </a>
+                            <!-- <a href="" class="text-button gap-4 mt-2 text-white">
+                                Learn More
+                                <div class="icon w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                                    <svg width="16" height="16" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
+                                    </svg>
+                                </div>
+                            
+                            </a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="bg-secondary text-ghostWhite">
+      <div class="footer px-4 py-16 container mx-auto">
+        <aside>
+          <a href="/" class="">
+            <!-- <img src="./assets/image/logo.png" alt="logo img" /> -->
+            <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.11206 59V42.2H13.1921V55.4H20.6801V59H9.11206Z" fill="#fff"/>
+                    <path d="M31.1771 59L28.4651 54.896L27.2171 53.144L22.1771 46.256H26.7851L29.4011 50.168L30.7691 52.04L35.7371 59H31.1771ZM22.0571 59L27.1931 51.848L29.2571 54.32L26.5931 59H22.0571ZM30.4811 53.456L28.4411 51.008L30.9611 46.256H35.4971L30.4811 53.456Z" fill="#fff"/>
+                    <path d="M38.2917 59V42.2H45.8517C46.9237 42.2 47.8917 42.432 48.7557 42.896C49.6357 43.36 50.3237 44 50.8197 44.816C51.3157 45.616 51.5637 46.528 51.5637 47.552C51.5637 48.608 51.3157 49.56 50.8197 50.408C50.3237 51.24 49.6437 51.896 48.7797 52.376C47.9157 52.856 46.9397 53.096 45.8517 53.096H42.1797V59H38.2917ZM47.6037 59L43.3317 51.416L47.5077 50.816L52.2597 59H47.6037ZM42.1797 49.976H45.4917C45.9077 49.976 46.2677 49.888 46.5717 49.712C46.8917 49.52 47.1317 49.256 47.2917 48.92C47.4677 48.584 47.5557 48.2 47.5557 47.768C47.5557 47.336 47.4598 46.96 47.2677 46.64C47.0757 46.304 46.7957 46.048 46.4277 45.872C46.0757 45.696 45.6437 45.608 45.1317 45.608H42.1797V49.976Z" fill="#fff"/>
+                    <path d="M60.2666 59.24C58.9386 59.24 57.7546 58.952 56.7146 58.376C55.6906 57.8 54.8746 57.016 54.2666 56.024C53.6746 55.032 53.3786 53.896 53.3786 52.616C53.3786 51.336 53.6746 50.2 54.2666 49.208C54.8746 48.216 55.6906 47.432 56.7146 46.856C57.7546 46.28 58.9386 45.992 60.2666 45.992C61.5946 45.992 62.7706 46.28 63.7946 46.856C64.8346 47.432 65.6506 48.216 66.2426 49.208C66.8346 50.2 67.1306 51.336 67.1306 52.616C67.1306 53.896 66.8346 55.032 66.2426 56.024C65.6506 57.016 64.8346 57.8 63.7946 58.376C62.7706 58.952 61.5946 59.24 60.2666 59.24ZM60.2666 55.928C60.8426 55.928 61.3546 55.784 61.8026 55.496C62.2506 55.208 62.6026 54.816 62.8586 54.32C63.1146 53.824 63.2346 53.256 63.2186 52.616C63.2346 51.976 63.1146 51.408 62.8586 50.912C62.6026 50.4 62.2506 50 61.8026 49.712C61.3546 49.424 60.8426 49.28 60.2666 49.28C59.6906 49.28 59.1706 49.424 58.7066 49.712C58.2586 50 57.9066 50.4 57.6506 50.912C57.3946 51.408 57.2746 51.976 57.2906 52.616C57.2746 53.256 57.3946 53.824 57.6506 54.32C57.9066 54.816 58.2586 55.208 58.7066 55.496C59.1706 55.784 59.6906 55.928 60.2666 55.928Z" fill="#fff"/>
+                    <path d="M75.6416 59.24C74.3136 59.24 73.1296 58.952 72.0896 58.376C71.0656 57.8 70.2496 57.016 69.6416 56.024C69.0496 55.032 68.7536 53.896 68.7536 52.616C68.7536 51.336 69.0496 50.2 69.6416 49.208C70.2496 48.216 71.0656 47.432 72.0896 46.856C73.1296 46.28 74.3136 45.992 75.6416 45.992C76.9696 45.992 78.1456 46.28 79.1696 46.856C80.2096 47.432 81.0256 48.216 81.6176 49.208C82.2096 50.2 82.5056 51.336 82.5056 52.616C82.5056 53.896 82.2096 55.032 81.6176 56.024C81.0256 57.016 80.2096 57.8 79.1696 58.376C78.1456 58.952 76.9696 59.24 75.6416 59.24ZM75.6416 55.928C76.2176 55.928 76.7296 55.784 77.1776 55.496C77.6256 55.208 77.9776 54.816 78.2336 54.32C78.4896 53.824 78.6096 53.256 78.5936 52.616C78.6096 51.976 78.4896 51.408 78.2336 50.912C77.9776 50.4 77.6256 50 77.1776 49.712C76.7296 49.424 76.2176 49.28 75.6416 49.28C75.0656 49.28 74.5456 49.424 74.0816 49.712C73.6336 50 73.2816 50.4 73.0256 50.912C72.7696 51.408 72.6496 51.976 72.6656 52.616C72.6496 53.256 72.7696 53.824 73.0256 54.32C73.2816 54.816 73.6336 55.208 74.0816 55.496C74.5456 55.784 75.0656 55.928 75.6416 55.928Z" fill="#fff"/>
+                    <path d="M86.0726 59V43.04H89.9126V59H86.0726ZM83.8166 49.616V46.256H92.3846V49.616H83.8166Z" fill="#fff"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M76.5399 64C71.5099 73.5156 61.5123 80 50.0001 80C38.4879 80 28.4902 73.5156 23.4603 64H12.5185C18.1935 79.1867 32.834 90 50.0001 90C67.1662 90 81.8067 79.1867 87.4817 64H76.5399ZM22.4964 38C27.1257 27.4046 37.6982 20 50.0001 20C62.302 20 72.8745 27.4046 77.5038 38H88.1689C83.0718 21.7716 67.9107 10 50.0001 10C32.0895 10 16.9284 21.7716 11.8313 38H22.4964Z" fill="#00d2fb"/>
+                  </svg>
+          </a>
+          <p>LXROOT LLC.<br />Providing reliable tech since 2022</p>
+        </aside>
+        <nav>
+          <!-- <h6 class="footer-title">Services</h6> -->
+          <a class="!font-medium body-text1 link link-hover">Home</a>
+          <a class="!font-medium body-text1 link link-hover">Features</a>
+          <a class="!font-medium body-text1 link link-hover"
+            >Technology Stack</a
+          >
+          <a class="!font-medium body-text1 link link-hover">Pricing</a>
+        </nav>
+        <nav>
+          <!-- <h6 class="footer-title">Support Docs</h6> -->
+          <a class="!font-medium body-text1 link link-hover">About</a>
+          <a class="!font-medium body-text1 link link-hover">FAQ's</a>
+          <a class="!font-medium body-text1 link link-hover">Support Docs</a>
+          <a class="!font-medium body-text1 link link-hover">Open a Ticket</a>
+        </nav>
+        <nav class="w-full flex md:justify-end">
+          <a
+            href=""
+            class="w-full md:ml-10 filled-button !justify-between gap-2 !bg-primaryMiddle text-white"
+          >
+            Get Started
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 26 26"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z"
+                fill="#fff"
+              />
+            </svg>
+          </a>
+        </nav>
+      </div>
+
+      <div class="bg-secondaryDeep text-neutral-content">
+        <div class="footer items-center p-4 container mx-auto text-ghostWhite">
+          <aside class="items-center grid-flow-col">
+            <p>Copyright © 2024 - All right reserved</p>
+          </aside>
+          <nav
+            class="grid-flow-col gap-6 md:place-self-center md:justify-self-end"
+          >
+            <a href="">Terms & Conditions</a>
+            <a href="">Privacy Policy</a>
+            <!-- <a></a> -->
+          </nav>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script src="../assets/js/main.js"></script>
+</html>
