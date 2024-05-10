@@ -31,7 +31,7 @@ func main() {
 	r.Handle("/resources/*", http.StripPrefix("/resources/", http.FileServer(http.Dir(assetPath))))
 	//fmt.Println("Allahuakbar", utility.WPORT)
 
-	//r.HandleFunc("/", home)
+	r.HandleFunc("/", home)
 	//r.HandleFunc("/webhook", webhookHandler)
 
 	addr := fmt.Sprintf(":%s", utility.WPORT)
