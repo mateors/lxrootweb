@@ -21,7 +21,7 @@ func GetBaseURL(r *http.Request) string {
 	return baseurl
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
+func homePage(w http.ResponseWriter, r *http.Request) {
 
 	tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 		"templates/base.gohtml",
