@@ -39,6 +39,8 @@ html,
 :host {
   line-height: 1.5;
   /* 1 */
+  text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   /* 2 */
   -moz-tab-size: 4;
@@ -4146,6 +4148,7 @@ select[type=number],
 textarea[type=number],
 input[type=number] {
   -moz-appearance: textfield;
+  -webkit-appearance: textfield;
 }
 
 select[type=checkbox],

@@ -23,7 +23,12 @@ func GetBaseURL(r *http.Request) string {
 
 func home(w http.ResponseWriter, r *http.Request) {
 
-	tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles("templates/base.gohtml")
+	tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		"templates/base.gohtml",
+		"templates/header.gohtml",
+		"templates/footer.gohtml",
+		"wpages/home.gohtml", //
+	)
 	if err != nil {
 		log.Println(err)
 		return
