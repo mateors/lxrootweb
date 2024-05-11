@@ -32,6 +32,7 @@ func main() {
 	//fmt.Println("Allahuakbar", utility.WPORT)
 
 	r.HandleFunc("/", homePage)
+	r.HandleFunc("/features", homePage)
 	//r.HandleFunc("/webhook", webhookHandler)
 
 	addr := fmt.Sprintf(":%s", utility.WPORT)
