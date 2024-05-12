@@ -1,97 +1,95 @@
 {{define "content"}}
 
-    <div class="content h-auto ">
+    <div class="content h-auto">
 
-        <section class="hero bg-gradient-to-br from-primary via-primaryMiddle to-primaryDeep relative -mt-[100px] z-10">
+        <section class="hero bg-gradient-to-br from-primary via-primaryMiddle to-primaryDeep relative -mt-[100px]">
 
-            <!--<div class="bg-[url('../image/pattern/image_16_png.png')] w-screen md:w-full repe opacity-[0.03] md:opacity-10 absolute right-0 top-0 bottom-0 -z-10"></div>-->
-            <div class="bg-[url('../image/pattern/banner__bg1.svg')] bg-cover bg-top bg-no-repeat w-full opacity-100 absolute inset-0 z-10"></div>
+            <div class="bg-[url('../image/pattern/banner__bg1.svg')] bg-cover bg-top bg-no-repeat w-full opacity-100 absolute inset-0"></div>
 
-            <div class="container mx-auto px-5 !pt-[160px] py-16 md:py-24 bg-opacity-10 z-20 flex flex-col items-center justify-center">
+            <div class="container mx-auto px-5 !pt-[160px] py-16 md:py-28 bg-opacity-10 z-20 flex flex-col items-center justify-center">
+
+               
                 <h1 class="head-1 !font-bold text-center text-white mb-6">Features</h1>
-                <p class="text-body1 text-white mb-10">Designed for the modern host, Enhance has all the tools and features you need to build and scale a cluster to meet your needs.</p>
+                <p class="body-text1 text-white mb-10">Designed for the modern host, LxRoot has all the tools and features you need to build and scale a cluster to meet your needs.</p>
 
                 <a href="" class="filled-button !justify-between gap-2 text-white">
-                    Get Started
+                    Explore
                     <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
                     </svg>
                 </a>
+              
             </div>
         </section>
 
         <section class="relative z-10">
             <div class="container mx-auto px-5 pb-16 md:pb-24 pt-16">
                 <div class="grid md:grid-cols-[1fr,2fr] gap-5">
-                    <div class="links-content text-slate-700 p-5 md:p-10 sticky top-20 max-h-[75vh] overflow-y-scroll hidden md:block">
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                    <div id="flinks" class="links-content text-slate-700 p-5s md:p-10s sticky top-20s max-h-[75vh]s overflow-y-scrolls hiddens md:block">
+
+                        <a href="/features" data-id="serverManagement" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-t border-b border-slate-200 py-4 hover:underline">
                         Server Management
-                        
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        <a href="/features" data-id="security" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
                         Security
-                        
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        <a href="#" data-id="webserver" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
                         Web Server
-                        
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Backup
-                        
+                        <a href="#" data-id="backups" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Backups
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        <a href="#" data-id="databases" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
                         Databases
-                        
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        <a href="#" data-id="dns" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
                         DNS
-                        
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="runtime" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Runtime
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="application" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Application
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="websiteManagement" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Website Management
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="email" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Email
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="clientManagement" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Client Management
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="userInterface" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        User interface
                         </a>
 
-                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        
+                        <a href="#" data-id="integrations" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Integrations
+                        </a>
+
+                        <a href="#" data-id="resellers" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Resellers
                         </a>
                     </div>
-                    <div class="md:pl-10">.
-                        <div class="flex gap-4 mb-6 items-center">
+
+                    <!-----FEATURE DETAILS---->
+                    <div class="md:pl-10">
+
+                        <!------------group-1 TITLE-------->
+                        <div class="flex gap-4 mb-6 items-center" id="serverManagement">
                             <svg width="25" height="25" focusable="false" aria-hidden="true" data-prefix="_65f318d0e6089"  viewBox="0 0 28 31" xmlns="http://www.w3.org/2000/svg">
                                 <g transform="translate(1.389 .632)" fill="none" fill-rule="evenodd">
                                     <path d="M2 0h22a2 2 0 012 2v7.69H0V2a2 2 0 012-2z" stroke="#211551"></path>
@@ -101,14 +99,17 @@
                                     <circle fill="#00B1DE" fill-rule="nonzero" cx="6.659" cy="24.43" r="1.704"></circle>
                                 </g>
                             </svg>
-                            <h2 class="head-4 !font-bold text-primary"> Server management </h2>
+                            <span class="material-icons">laptop</span>
+                            <h2 class="head-4 !font-bold text-primary">Server management</h2>
                         </div>
+
+                        <!---group-1 LIST--->
                         <div class="grid md:grid-cols-3 gap-5">
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
+                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl">
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
                                     Clustering support
                                 </h3>
-                                <p class="body-text2">
+                                <p class="body-text2 text-slate-700">
                                     Deploy 1 - 10,000 servers to your cluster and manage them all from a single UI.
                                 </p>
                             </div>
@@ -117,7 +118,7 @@
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
                                     Disaster recovery
                                 </h3>
-                                <p class="body-text2">
+                                <p class="body-text2 text-slate-700">
                                     Restore sites to another server within your cluster from the last available backup.
                                 </p>
                             </div>
@@ -126,7 +127,7 @@
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
                                     Simple server deployment
                                 </h3>
-                                <p class="body-text2">
+                                <p class="body-text2 text-slate-700">
                                     Provision new servers to your cluster with a single command.
                                 </p>
                             </div>
@@ -135,7 +136,7 @@
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
                                     Zero config scaling
                                 </h3>
-                                <p class="body-text2">
+                                <p class="body-text2 text-slate-700">
                                     Each server automatically inherits your global settings - make changes per-server where needed.
                                 </p>
                             </div>
@@ -144,7 +145,7 @@
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
                                     WordPress toolkit
                                 </h3>
-                                <p class="body-text2">
+                                <p class="body-text2 text-slate-700">
                                     Install themes and plugins, configure settings, update and
                                     manage.
                                 </p>
@@ -152,11 +153,9 @@
                             
                         </div>
 
-                        <div class="flex gap-4 mb-6 items-center mt-16">
+                        <!---group-2 TITLE--->
+                        <div class="flex gap-4 mb-6 items-center mt-16" id="security">
                             <svg focusable="false" aria-hidden="true" data-prefix="_65f318d0e6c77" width="20px" height="26px" viewBox="0 0 20 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
-                                <title>security (1)</title>
-                                <desc>Created with Sketch.</desc>
                                 <g id="_65f318d0e6c77Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                     <g id="_65f318d0e6c77security-(1)" fill-rule="nonzero">
                                         <path d="M19.7454979,5.26428662 L10.0923877,0.0572910581 C9.94918002,-0.0200808607 9.77754533,-0.0189950083 9.63541039,0.0600058281 L0.249406653,5.26700139 C0.0954717598,5.35251776 0,5.51594904 0,5.6937687 L0,12.4954406 C0.0056317803,18.0865811 3.27795431,23.1448053 8.33849579,25.3847907 L9.6413103,25.9595149 C9.76306369,26.013268 9.90171232,26.0135395 10.0237339,25.9600579 L11.4917468,25.318278 C16.6461509,23.1268876 19.9994636,18.0197968 20,12.3605148 L20,5.6937687 C20,5.51404866 19.9021145,5.34871707 19.7454979,5.26428662 L19.7454979,5.26428662 Z M19.0388458,12.3605148 C19.037773,17.6296794 15.9148263,22.384117 11.1154914,24.4232069 L11.1122732,24.4248357 L9.833863,24.9835426 L8.72306473,24.4929774 C4.01249715,22.4080073 0.96624963,17.6999929 0.960886046,12.4954406 L0.960886046,5.98180947 L9.86953081,1.03923593 L19.0388458,5.98533877 L19.0388458,12.3605148 Z" id="_65f318d0e6c77Shape" fill="#211451"></path>
@@ -164,9 +163,12 @@
                                     </g>
                                 </g>
                             </svg>
-                            <h2 class="head-4 !font-bold text-primary"> Security </h2>
+                            <h2 class="head-4 !font-bold text-primary">Security</h2>
                         </div>
+
+                        <!---group-2 LIST--->
                         <div class="grid md:grid-cols-3 gap-5">
+
                             <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
                                     Role containerisation
@@ -213,11 +215,46 @@
                             </div>
                             
                         </div>
+
                     </div>
+
                 </div>
             </div>
         </section>
 
     </div>
+
+{{end}}
+
+{{block "scriptsrc" .}}
+    <script src="resources/js/nlib.js"></script>
+    <script src="resources/js/main.js"></script>
+{{end}}
+
+{{define "script"}}
+
+    <script>
+
+        //let stop=$('#security').top();
+        //console.log(stop);
+
+        $('#flinks').find('a').on('click',(e)=>{
+        
+            e.preventDefault();
+
+            let fid=$(e.target).datas().id;
+            let topv=$(`#${fid}`).rect().top-97-20;
+            console.log(topv);
+
+
+            //alert(`${scrollDiv}, ${stop}`);
+            window.scrollTo({top:topv, behavior: 'smooth'}); //604 + 334
+
+        });
+
+        //document.getElementById("security").scrollIntoView();
+
+
+    </script>
 
 {{end}}

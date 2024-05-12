@@ -405,3 +405,73 @@ func product(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+func checkout(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/checkout.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+		}{
+			Title:        "Checkout | LxRoot",
+			Base:         base,
+			BodyClass:    "bg-white text-slate-700",
+			MainDivClass: "main min-h-[calc(100vh-52px)]",
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}
+
+func signup(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/signup.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+		}{
+			Title:        "Authenticate | LxRoot",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-52px)]",
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}

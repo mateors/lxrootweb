@@ -40,8 +40,10 @@ func main() {
 	r.HandleFunc("/pricing", pricing)
 	r.HandleFunc("/terms", terms)
 	r.HandleFunc("/privacy", privacy)
-	r.HandleFunc("/shop", shop)
-	r.HandleFunc("/product", product)
+	r.HandleFunc("/shop", shop)         //store page
+	r.HandleFunc("/product", product)   //product_details
+	r.HandleFunc("/checkout", checkout) //checkout + signup
+	r.HandleFunc("/signup", signup)     //signup + checkout
 
 	//r.HandleFunc("/webhook", webhookHandler)
 
