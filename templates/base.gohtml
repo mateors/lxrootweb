@@ -15,9 +15,9 @@
     {{end}}
   </head>
 
-  <body>
+  <body class="{{.BodyClass}}">
 
-    <div class="main min-h-[calc(100vh-312px)]">
+    <div class="{{.MainDivClass}}">
 
       <!---HEADER--->
       {{block "header" .}}
