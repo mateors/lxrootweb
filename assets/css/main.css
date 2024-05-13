@@ -5354,6 +5354,10 @@ body.modal-open {
     grid-template-columns: 1fr 2fr;
   }
 
+  .md\:grid-cols-\[0\.5fr\2c 2\.5fr\] {
+    grid-template-columns: 0.5fr 2.5fr;
+  }
+
   .md\:grid-cols-\[1fr\2c 4fr\] {
     grid-template-columns: 1fr 4fr;
   }

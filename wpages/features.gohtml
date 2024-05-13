@@ -24,197 +24,46 @@
 
         <section class="relative z-10">
             <div class="container mx-auto px-5 pb-16 md:pb-24 pt-16">
-                <div class="grid md:grid-cols-[1fr,2fr] gap-5">
+                <div class="grid md:grid-cols-[0.5fr,2.5fr] gap-5">
 
                     <div id="flinks" class="links-content text-slate-700 p-5s md:p-10s sticky top-20s max-h-[75vh]s overflow-y-scrolls hiddens md:block">
 
-                        <a href="/features" data-id="serverManagement" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-t border-b border-slate-200 py-4 hover:underline">
-                        Server Management
-                        </a>
+                       {{range $row := .Flinks}} 
+                            {{$slug := index $row "slug"}}
+                            <a href="/features/{{$slug}}" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-t border-b border-slate-200 py-4 hover:underline">
+                                {{index $row "name"}}
+                            </a>
+                        {{end}}
 
-                        <a href="/features" data-id="security" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Security
-                        </a>
-
-                        <a href="#" data-id="webserver" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Web Server
-                        </a>
-
-                        <a href="#" data-id="backups" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Backups
-                        </a>
-
-                        <a href="#" data-id="databases" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Databases
-                        </a>
-
-                        <a href="#" data-id="dns" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        DNS
-                        </a>
-
-                        <a href="#" data-id="runtime" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Runtime
-                        </a>
-
-                        <a href="#" data-id="application" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Application
-                        </a>
-
-                        <a href="#" data-id="websiteManagement" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Website Management
-                        </a>
-
-                        <a href="#" data-id="email" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Email
-                        </a>
-
-                        <a href="#" data-id="clientManagement" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Client Management
-                        </a>
-
-                        <a href="#" data-id="userInterface" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        User interface
-                        </a>
-
-                        <a href="#" data-id="integrations" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Integrations
-                        </a>
-
-                        <a href="#" data-id="resellers" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
-                        Resellers
-                        </a>
                     </div>
 
                     <!-----FEATURE DETAILS---->
                     <div class="md:pl-10">
 
+
                         <!------------group-1 TITLE-------->
                         <div class="flex gap-4 mb-6 items-center" id="serverManagement">
-                            <svg width="25" height="25" focusable="false" aria-hidden="true" data-prefix="_65f318d0e6089"  viewBox="0 0 28 31" xmlns="http://www.w3.org/2000/svg">
-                                <g transform="translate(1.389 .632)" fill="none" fill-rule="evenodd">
-                                    <path d="M2 0h22a2 2 0 012 2v7.69H0V2a2 2 0 012-2z" stroke="#211551"></path>
-                                    <path stroke="#211551" d="M.002 9.67h25.995v9.69H.002zM0 19.585h26v7.69a2 2 0 01-2 2H2a2 2 0 01-2-2v-7.69z"></path>
-                                    <circle fill="#00B1DE" fill-rule="nonzero" cx="6.659" cy="5.114" r="1.704"></circle>
-                                    <circle fill="#00B1DE" fill-rule="nonzero" cx="6.659" cy="14.328" r="1.704"></circle>
-                                    <circle fill="#00B1DE" fill-rule="nonzero" cx="6.659" cy="24.43" r="1.704"></circle>
-                                </g>
-                            </svg>
-                            <span class="material-icons">laptop</span>
-                            <h2 class="head-4 !font-bold text-primary">Server management</h2>
+                            <span class="material-icons text-primary">{{.FeatureIcon}}</span>
+                            <h2 class="head-4 !font-bold text-primary">{{.FeatureName}}</h2>
                         </div>
 
                         <!---group-1 LIST--->
                         <div class="grid md:grid-cols-3 gap-5">
+
+                            {{range $row := .FeatureRows}}
                             <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl">
                                 <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Clustering support
+                                    {{index $row "title"}}
                                 </h3>
                                 <p class="body-text2 text-slate-700">
-                                    Deploy 1 - 10,000 servers to your cluster and manage them all from a single UI.
+                                     {{index $row "desc"}}
                                 </p>
                             </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Disaster recovery
-                                </h3>
-                                <p class="body-text2 text-slate-700">
-                                    Restore sites to another server within your cluster from the last available backup.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Simple server deployment
-                                </h3>
-                                <p class="body-text2 text-slate-700">
-                                    Provision new servers to your cluster with a single command.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Zero config scaling
-                                </h3>
-                                <p class="body-text2 text-slate-700">
-                                    Each server automatically inherits your global settings - make changes per-server where needed.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    WordPress toolkit
-                                </h3>
-                                <p class="body-text2 text-slate-700">
-                                    Install themes and plugins, configure settings, update and
-                                    manage.
-                                </p>
-                            </div>
+                            {{end}}
                             
                         </div>
 
-                        <!---group-2 TITLE--->
-                        <div class="flex gap-4 mb-6 items-center mt-16" id="security">
-                            <svg focusable="false" aria-hidden="true" data-prefix="_65f318d0e6c77" width="20px" height="26px" viewBox="0 0 20 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <g id="_65f318d0e6c77Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <g id="_65f318d0e6c77security-(1)" fill-rule="nonzero">
-                                        <path d="M19.7454979,5.26428662 L10.0923877,0.0572910581 C9.94918002,-0.0200808607 9.77754533,-0.0189950083 9.63541039,0.0600058281 L0.249406653,5.26700139 C0.0954717598,5.35251776 0,5.51594904 0,5.6937687 L0,12.4954406 C0.0056317803,18.0865811 3.27795431,23.1448053 8.33849579,25.3847907 L9.6413103,25.9595149 C9.76306369,26.013268 9.90171232,26.0135395 10.0237339,25.9600579 L11.4917468,25.318278 C16.6461509,23.1268876 19.9994636,18.0197968 20,12.3605148 L20,5.6937687 C20,5.51404866 19.9021145,5.34871707 19.7454979,5.26428662 L19.7454979,5.26428662 Z M19.0388458,12.3605148 C19.037773,17.6296794 15.9148263,22.384117 11.1154914,24.4232069 L11.1122732,24.4248357 L9.833863,24.9835426 L8.72306473,24.4929774 C4.01249715,22.4080073 0.96624963,17.6999929 0.960886046,12.4954406 L0.960886046,5.98180947 L9.86953081,1.03923593 L19.0388458,5.98533877 L19.0388458,12.3605148 Z" id="_65f318d0e6c77Shape" fill="#211451"></path>
-                                        <path d="M6.80921335,12.0852526 C6.64432215,11.8753052 6.35428804,11.8504907 6.16118843,12.0297685 C5.96808882,12.2087675 5.94526557,12.5243856 6.11015677,12.7340542 L8.53762169,15.8247142 C8.69969203,16.031037 8.98357151,16.0591973 9.17692761,15.8880051 L14.8304128,10.8871862 C15.027359,10.7132059 15.0571062,10.3984243 14.8968309,10.1842946 C14.7368121,9.9704438 14.4472909,9.93782251 14.2503446,10.1120816 L8.94510549,14.8045315 L6.80921335,12.0852526 Z" id="_65f318d0e6c77Path" fill="#00B5E2"></path>
-                                    </g>
-                                </g>
-                            </svg>
-                            <h2 class="head-4 !font-bold text-primary">Security</h2>
-                        </div>
-
-                        <!---group-2 LIST--->
-                        <div class="grid md:grid-cols-3 gap-5">
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Role containerisation
-                                </h3>
-                                <p class="body-text2">
-                                    Every role is containerised, including all components of the email system. Containers have no access to website files, even if the application role is installed on the same server.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Website containerisation
-                                </h3>
-                                <p class="body-text2">
-                                    Each stand alone website is containerised to protect other sites in your cluster from any vulnerabilities and cross contamination.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    Brute force protection
-                                </h3>
-                                <p class="body-text2">
-                                    Configure rate limits and block/allow lists for email addresses and IPs to help protect your cluster.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    ModSecurity (OWASP)
-                                </h3>
-                                <p class="body-text2">
-                                    Enable or disable ModSecurity for each server, customise default OWASP settings, add custom rules using an update the running OWASP version.
-                                </p>
-                            </div>
-
-                            <div class="relative flex flex-col p-6 border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-xl ">
-                                <h3 class="head-5 !font-semibold mb-4 text-secondary">
-                                    SSL / TLS
-                                </h3>
-                                <p class="body-text2">
-                                    All websites and services on Enhance fully support SSL/TLS.
-                                </p>
-                            </div>
-                            
-                        </div>
+                        <!----->
 
                     </div>
 
@@ -234,26 +83,9 @@
 {{define "script"}}
 
     <script>
-
-        //let stop=$('#security').top();
-        //console.log(stop);
-
-        $('#flinks').find('a').on('click',(e)=>{
         
-            e.preventDefault();
-
-            let fid=$(e.target).datas().id;
-            let topv=$(`#${fid}`).rect().top-97-20;
-            console.log(topv);
-
-
-            //alert(`${scrollDiv}, ${stop}`);
-            window.scrollTo({top:topv, behavior: 'smooth'}); //604 + 334
-
-        });
-
-        //document.getElementById("security").scrollIntoView();
-
+        $(`#serverManagement`).rect().top-97-20;
+        window.scrollTo({top:topv, behavior: 'smooth'});
 
     </script>
 

@@ -33,7 +33,7 @@ func main() {
 
 	r.HandleFunc("/", homePage)
 	r.HandleFunc("/support", support)
-	r.HandleFunc("/features", features)
+	r.HandleFunc("/features/{slug}", features)
 	r.HandleFunc("/technology", technology)
 	r.HandleFunc("/apphosting", apphosting)
 	r.HandleFunc("/roadmap", roadmap)
