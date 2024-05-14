@@ -184,6 +184,7 @@ func features(w http.ResponseWriter, r *http.Request) {
 			{"feature_id": 8, "title": "Cloner", "desc": "Make a carbon copy of one of your existing application."},
 			{"feature_id": 8, "title": "Build", "desc": "Install, build, run, execute and set linux environment variables."},
 			{"feature_id": 8, "title": "WordPress", "desc": "Install wordpress with just a single click wordpress installer."},
+			{"feature_id": 8, "title": "Ticket", "desc": "Built-in customer support ticketing system ensures seamless customer support."},
 
 			{"feature_id": 9, "title": "File manager", "desc": "Our inline file manager is fully-featured and the interface easily compatible with tablets, phones, as well as desktops and laptops. Drag and drop files, easily perform mass operations and so on."},
 			{"feature_id": 9, "title": "Clone a website", "desc": "Clone an existing site or add a site with an application pre-installed. Cloning automatically duplicates the database and updates website configuration files and paths."},
