@@ -1,0 +1,135 @@
+{{define "content"}}
+
+    <div class="content h-auto bg-white text-slate-700">
+
+        <section class=" relative bg-gradient-to-br from-primary via-primaryMiddle to-primaryDeep -mt-[100px] pt-[100px]">
+          <div class="bg-[url('../image/pattern/banner__bg.svg')] bg-cover bg-top bg-no-repeat w-full opacity-100 absolute inset-0"></div>
+          <div class="container mx-auto px-5 py-16 md:py-24 z-20 flex flex-col items-center text-center gap-3">
+            <p class="caption-text capitalize !font-medium text-ghostWhite">RESOURCES</p>
+            <h1 class="head-1 !font-bold text-white z-10">FAQs</h1>
+            <p class="body-text1 text-ghostWhite mt-8 py-2 px-3 border border-ghostWhite">Find answers to commonly asked questions about LxRoot</p>
+          </div>
+        </section>
+
+        <!----faqs--->
+        <section class="bg-white">
+
+            <div class="container mx-auto px-5 py-12 md:py-24 z-20 ">
+
+                <div class="grid md:grid-cols-[0.5fr,2.5fr] gap-5">
+
+                    <div class="links-content text-slate-700 p-5s md:p-8s sticky top-20s max-h-[75vh]s hidden md:block">
+
+                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        General
+                        </a>
+
+                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Pricing
+                        </a>
+
+                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Technical
+                        </a>
+
+                        <a href="#" type="submit" class="w-full text-body1 !font-semibold flex gap-3 justify-between border-b border-slate-200 py-4 hover:underline">
+                        Support
+                        </a>
+                    </div>
+
+                    <div class="max-w-[1280px] mx-auto flex flex-col gap-4">
+
+                        <div id="general" class="group">
+                            <h3 class="head-4 !font-semibold mb-6">General</h3>
+                            <!----1---->
+                            <div class="collapsible-wrap w-full mb-5 px-4 border">
+
+                                <div class="collapsible menu-btn flex justify-between md:p-4">
+                                    
+                                    <span class="body-text2 !font-semibold text-slate-700">What is LxRoot?</span>
+
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                        <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                        <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </mask>
+                                        <g mask="url(#mask0_169_47)">
+                                        <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                        </g>
+                                    </svg>
+
+                                </div>
+
+                                <div class="collapsible-content text-gray-700">
+                                    <p class="mt-4 mx-3 md:mt-4 md:mx-8 mb-4">LxRoot is a multi-server application hosting platform designed for developers, web hosting companies and web agencies.</p>
+                                </div>
+                            </div>
+
+                            <!----2---->
+                            <div class="collapsible-wrap w-full mb-5 px-4 border">
+
+                                <div class="collapsible menu-btn flex justify-between md:p-4">
+                                    
+                                    <span class="body-text2 !font-semibold text-slate-700">Is the LxRoot platform in Beta?</span>
+
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                        <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                        <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </mask>
+                                        <g mask="url(#mask0_169_47)">
+                                        <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                        </g>
+                                    </svg>
+
+                                </div>
+
+                                <div class="collapsible-content text-gray-700">
+                                    <p class="mt-4 mx-3 md:mt-4 md:mx-8 mb-4">No, the LxRoot platform is production ready. New features are released with a BETA tag which is removed only once the feature has been in production use for two months without any bug reports. </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="pricing" class="group">
+                            <h3 class="head-4 !font-semibold mb-6">Pricing</h3>
+
+                            <div class="collapsible-wrap w-full mb-5 px-4 border">
+
+                                <div class="collapsible menu-btn flex justify-between md:p-4">
+                                    
+                                    <span class="body-text2 !font-semibold text-slate-700">How much does LxRoot cost?</span>
+
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <mask id="mask0_169_47" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+                                        <path d="M12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22Z" fill="white" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+                                        <path d="M16.5 10.5L12 15L7.5 10.5" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </mask>
+                                        <g mask="url(#mask0_169_47)">
+                                        <path d="M0 0H24V24H0V0Z" fill="#5865F2"/>
+                                        </g>
+                                    </svg>
+
+                                </div>
+
+                                <div class="collapsible-content text-gray-700">
+                                    <p class="mt-4 mx-3 md:mt-4 md:mx-8 mb-4">You will be charged monthly based on the number of websites you host on LxRoot. Pricing starts from 15 cents per application/websites and the cost per application decreases as your platform scales. You can view our Pricing here.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+        <!---have questions?--->
+
+    </div>
+
+{{end}}

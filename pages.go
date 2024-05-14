@@ -624,3 +624,38 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+func faqs(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header.gohtml",
+			"templates/footer.gohtml",
+			"wpages/faqs.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+		}{
+			Title:        "FAQs | LxRoot",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-312px)]",
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}

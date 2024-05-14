@@ -44,6 +44,7 @@ func main() {
 	r.HandleFunc("/product", product)   //product_details
 	r.HandleFunc("/checkout", checkout) //checkout + signup
 	r.HandleFunc("/signup", signup)     //signup + checkout
+	r.HandleFunc("/faqs", faqs)
 
 	//r.HandleFunc("/webhook", webhookHandler)
 
