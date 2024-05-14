@@ -3,17 +3,20 @@
     <div class="content h-auto ">
 
         <section class="banner bg-gradient-to-br from-primary via-primaryMiddle to-primaryDeep text-white -mt-[100px] pt-[100px]">
+
             <div class="bg-cover bg-top bg-no-repeat w-full opacity-100 absolute inset-0 md:left-1/4 rotate-180 z-10"></div>
-            <div class="container mx-auto h-[75vh] grid md:grid-cols-2 items-center gap-4 content-start md:content-center py-28 px-5 md:py-16">
+
+            <div class="container mx-auto h-[75vh] grid md:grid-cols-2 items-center gap-4 content-start md:content-center py-28 px-5 md:py-16 flex justify-between">
                 <div class="">
                     <p class="caption-text capitalize !font-medium text-ghostWhite">PRODUCT</p>
                     <h1 class="head-1 !font-bold my-4">Technology stack</h1>
-                    <p class="body-text1 !font-light max-w-[720px]">The Enhance technology stack is secure and flexible allowing you to configure a high performance multi-server platform to scale and grow your business.</p>
+                    <p class="body-text1 !font-light max-w-[720px]">The LxRoot technology stack is secure and flexible allowing you to configure a high performance multi-server platform to scale and grow your business.</p>
                 </div>
                 <div class="img-part hidden md:block">
-                    <img src="resources/image/technology.png" alt="">
+                    <img class="" style="float:right;" src="resources/image/technology.png" alt="lxroot-techstack">
                 </div>
             </div>
+
             <div class="scroll-indicator border-t-[0.5px] border-[#808afd] py-3 px-5">
                 <div class="container mx-auto flex gap-3">
                     <svg focusable="false" aria-hidden="true" data-prefix="_6620cf2165fa9" width="26" height="26" viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg">
@@ -27,96 +30,309 @@
             </div>
         </section>
 
-        <section class="bg-slate-100">
-            <div class="container mx-auto py-16 px-5 md:py-28">
+        <section class="bg-slate-50">
+            <div class="container mx-auto py-16 px-5 md:py-28 bg-white">
+
                 <h1 class="head-1 !font-bold mb-4 text-primary">Web servers</h1>
-                <p class="body-text1 !font-light max-w-[1120px] mb-10">Select your preferred web server. Run any combination of web server types and switch between kinds without any configuration changes to optimise the overall performance of your hosting cluster.</p>
+                <p class="body-text1 !font-light text-slate-700 mb-10">Select your preferred web server. Run any combination of web server types and switch between kinds without any configuration changes to optimise the overall performance of your hosting cluster.</p>
             
                 <div class="grid md:grid-cols-4 gap-4">
-                    <div class="relative flex flex-col py-8 px-6 bg-white border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-lg ">
-                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/litespeed_logo.svg" alt="">
-                        
-                        <h3 class="head-4 !font-semibold mb-4 text-secondary">
-                            LiteSpeed
-                        </h3>
-                        <p class="body-text1">
-                            A lightweight drop in replacement for Apache, the LiteSpeed server provides enhanced performance with advanced full page caching and WordPress integration.
+
+                    <div class="bg-white relative flex flex-col py-8 px-6 bg-white border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-lg ">
+                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/nginx_logo.svg" alt="nginx">
+                        <h3 class="head-4 !font-semibold mb-4 text-secondary">NGINX</h3>
+                        <p class="body-text2 text-slate-600">
+                            An open-source web server, providing high performance with low resource usage and configuration. Configure cache exclusions, utilise FastCGI, purge cache, set rewrites on a per domain basis.
                         </p>
                     </div>
 
                     <div class="relative flex flex-col py-8 px-6 bg-white border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-lg ">
-                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/apache_logo.svg" alt="">
-                        
-                        <h3 class="head-4 !font-semibold mb-4 text-secondary">
-                            Apache
-                        </h3>
-                        <p class="body-text1">
+                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/nginx_logo.svg" alt="nginx-unit">
+                        <h3 class="head-4 !font-semibold mb-4 text-secondary">NGINX Unit</h3>
+                        <p class="body-text2 text-slate-600">
+                            NGINX Unit is a lightweight and versatile application runtime that provides the essential components for your web application as a single open-source server: running application code (including WebAssembly), serving static assets, handling TLS and request routing.
+                        </p>
+                    </div>
+
+                    <div class="relative flex flex-col py-8 px-6 bg-white border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-lg ">
+                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/apache_logo.svg" alt="apache">
+                        <h3 class="head-4 !font-semibold mb-4 text-secondary">Apache</h3>
+                        <p class="body-text2 text-slate-600">
                             Developed by the Apache software foundation, the Apache HTTP server is the most popular open-source web server for maximum compatibility.
                         </p>
                     </div>
 
                     <div class="relative flex flex-col py-8 px-6 bg-white border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-lg ">
-                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/open_litespeed_logo.svg" alt="">
-                        
-                        <h3 class="head-4 !font-semibold mb-4 text-secondary">
-                            OpenLiteSpeed
-                        </h3>
-                        <p class="body-text1">
+                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/open_litespeed_logo.svg" alt="OpenLiteSpeed">
+                        <h3 class="head-4 !font-semibold mb-4 text-secondary">OpenLiteSpeed</h3>
+                        <p class="body-text2 text-slate-600">
                             An open source version of LiteSpeed without commercial support. OpenLiteSpeed has limited .htaccess support.
                         </p>
                     </div>
-
-                    <div class="relative flex flex-col py-8 px-6 bg-white border border-slate-300 transition-all hover:shadow-custom hover:border-transparent rounded-lg ">
-                        <img class="w-11 h-11 object-contain mb-10" src="resources/icon/nginx_logo.svg" alt="">
-                        <h3 class="head-4 !font-semibold mb-4 text-secondary">
-                            Nginx
-                        </h3>
-                        <p class="body-text1">
-                            An open-source web server, providing high performance with low resource usage and configuration. Configure cache exclusions, utilise FastCGI, purge cache, set rewrites on a per domain basis.
-                        </p>
-                    </div>
+                    
                 </div>
             </div>
-            
         </section>
 
-        <section class="bg-slate-50 ">
-            <div class="container mx-auto py-16">
-                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28">
-                    <img src="resources/image/data-storage-personal-data-protection-icon-server-room-database-data-center_39422-626.png" alt="">
-                    <div class="text-part">
-                        <h2 class="head-2 !font-semibold mb-4 text-primary">
-                            PHP
-                        </h2>
+        <!--<section class="mx-auto bg-slate-50">
+            <div class="container mx-auto py-16 md:py-28 px-5 bg-white border">
 
-                        <p class="body-text1 max-w-[620px]">
-                            Out-of-the-box support for popular <a class="underline inline-flex" href="">php modules</a> and <a href="" class="underline inline-flex">php</a> <span class="!font-bold">versions 5.6 - 8.2.</span>
-                            <br><br>
-                            The appropriate PHP SAPI is selected for your chosen web server. Enhance will provision PHP-FPM for Apache and Nginx and LSPHP for LiteSpeed and OpenLiteSpeed. When changing web server type, the PHP SAPI is automatically reconfigured for any existing websites.
+                <h2 class="head-2 !font-bold mb-2 text-primary px-4">Supported Language</h2>
+                <p class="body-text1 text-slate-700s max-w-[1120px] px-4 mb-0">The following programming laguanges are supported by LxRoot</p>
+
+                <div class="flex flex-wrap w-full py-16 px-4 md:py-16 borders bg-white gap-4">
+
+            
+                    <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/go.svg" />
+                        </div>
+                    </div>
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4  bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/rust.svg" />
+                        </div>
+                    </div>
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/nodejs.svg" />
+                        </div>
+                    </div>
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/php4.svg" />
+                        </div>
+                    </div>
+
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/python2.svg" />
+                        </div>
+                    </div>
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/java.svg" />
+                        </div>
+                    </div>
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/ruby.svg" />
+                        </div>
+                    </div>
+
+                    <div class="border flex w-24 aspect-square items-center justify-center bg-primary p-4 bg-primary">
+                        <div class="relative">
+                            <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/html5.svg" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>-->
+
+        <!---programming language---->
+        <section class="bg-slate-50">
+            <div class="container mx-auto py-16">
+                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28 border bg-white">
+
+                    <div class="relative">
+                        <h1 class="head-1 !font-bold mb-2 text-primary px-4">Supported Programming Language</h1>
+                        <p class="body-text1 text-slate-700s max-w-[1120px] px-4 mb-0">Officially supported programming language by LxRoot</p>
+                    </div>
+
+                    <div class="flex flex-wrap w-full py-16 px-4 md:py-16 borders bg-white gap-4">
+
+                
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/go.svg" />
+                            </div>
+                        </div>
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/rust.svg" />
+                            </div>
+                        </div>
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/nodejs.svg" />
+                            </div>
+                        </div>
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/php4.svg" />
+                            </div>
+                        </div>
+
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/python2.svg" />
+                            </div>
+                        </div>
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/java.svg" />
+                            </div>
+                        </div>
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/ruby.svg" />
+                            </div>
+                        </div>
+
+                        <div class="border flex w-24 aspect-square items-center justify-center p-4 bg-primaryDeep">
+                            <div class="relative">
+                                <img alt="golang" loading="lazy" decoding="async" data-nimg="fill" src="resources/image/runtime/html5.svg" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!---databases--->
+        <section class="bg-slate-50">
+            <div class="container mx-auto py-16">
+                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28 border bg-white">
+
+
+                    <div class="flex flex-wrap w-full py-16 px-4 md:py-16 borders bg-white gap-4 bg-primary">
+                        <div class="border rounded-full flex w-48 h-48 items-center justify-center p-3 bg-transparent">
+                            <div class="relative">
+                                <img alt="mysql" loading="lazy" src="resources/image/maria-mysql.png" />
+                            </div>
+                        </div>
+
+                        <div class="border rounded-full flex w-48 h-48 items-center justify-center p-3 bg-transparent">
+                            <div class="relative">
+                                <img alt="postgres" loading="lazy" src="resources/image/postgresql.png" />
+                            </div>
+                        </div>
+
+                        <div class="border rounded-full flex w-48 h-48 items-center justify-center p-3 bg-transparent">
+                            <div class="relative">
+                                <img alt="couchbase" loading="lazy" src="resources/image/couchbase.png" />
+                            </div>
+                        </div>                        
+                    </div>
+
+                    <div class="relative">
+                        <h1 class="head-1 !font-bold mb-2 text-primary px-4 mb-6">Databases</h1>
+
+                        <div class="flex flex-col">
+                            <div class="mb-6">
+                                <h2 class="head-4 !font-bold mb-2 text-primaryDeep px-4">MySQL</h2>
+                                <p class="body-text1 text-slate-700 max-w-[1120px] px-4 mb-0">MariaDB (10.x LTS) with the ability to run a combination of each within a cluster.</p>
+                            </div>
+                            <div class="mb-6">
+                                <h2 class="head-4 !font-bold mb-2 text-primaryDeep px-4">PosgresSQL</h2>
+                                <p class="body-text1 text-slate-700 max-w-[1120px] px-4 mb-0"> PostgreSQL (16.x) with the ability to run a combination of each within a cluster.</p>
+                            </div>
+                            <div class="">
+                                <h2 class="head-4 !font-bold mb-2 text-primaryDeep px-4">Couchbase</h2>
+                                <p class="body-text1 text-slate-700 max-w-[1120px] px-4 mb-0">Couchbase Server Community Edition (7.6.x) with the ability to run a combination of each within a cluster.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!---DNS---->
+        <section class="bg-slate-50">
+            <div class="container mx-auto py-16">
+                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28 border bg-white">
+
+                    <div class="relative">
+                        <h1 class="head-1 !font-bold mb-2 text-primary px-4">DNS</h1>
+                        <p class="body-text1 text-slate-700 max-w-[1120px] px-4 mb-6">The DNS service provides DNS <strong>(PowerDNS)</strong> for all the domains on your LxRoot cluster.</p>
+
+                        <p class="body-text1 text-slate-700 px-4">It is possible to run an LxRoot cluster without installing the DNS service. You can choose to use LxRoot's automatic <strong>CloudFlare</strong> synchronisation or an entirely separate DNS provider.</p>
+                    </div>
+
+                    <div class="flex flex-wrap w-full py-16 px-4 md:py-16 borders bg-white gap-4">
+
+                
+                        <div class="border rounded flex w-48 h-48 items-center justify-center p-4 bg-white">
+                            <div class="relative">
+                                <img alt="powerdns" loading="lazy" src="resources/image/powerdns.png" />
+                            </div>
+                        </div>
+
+                        <div class="border rounded flex w-48 h-48 items-center justify-center p-4 bg-white">
+                            <div class="relative">
+                                <img alt="cloudflare" loading="lazy" src="resources/image/cloudflare.png" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!----email and backup---->
+        <section class="bg-slate-50 py-16">
+            <div class="container mx-auto border">
+
+                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28 bg-white">
+
+                    <div class="relative">
+                        <img src="resources/image/email.png" alt="email">
+                        <img class="absolute right-0 bottom-0" src="resources/image/rspamd.png">
+                    </div>
+
+                    <div class="text-part">
+
+                        <h2 class="head-2 !font-semibold mb-4 text-primary mb-8">EMAIL</h2>
+
+                        <p class="text-slate-700 max-w-[620px]">The Email role provides the following services: <br><br></p>
+                        <p class="text-slate-700 max-w-[620px] mb-1"><span class="material-icon">check</span> POP/IMAP (maddy)</p>
+                        <p class="text-slate-700 max-w-[620px] mb-1"><span class="material-icon">check</span> MTA and SMTP (maddy)</p>
+                        <p class="text-slate-700 max-w-[620px] mb-1"><span class="material-icon">check</span> Spam filtering (rspamd)</p>
+
+                        <p class="text-slate-700 mt-8 pr-5">
+                            You can have an unlimited number of email servers in a single LxRoot cluster including dedicated email servers. If you do not provide email hosting, there is no requirement to install the email service.
                         </p>
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28">
+                <div class="grid md:grid-cols-2 gap-10 items-center py-16 px-5 md:py-28 bg-white">
                     
                     <div class="text-part">
-                        <h2 class="head-2 !font-semibold mb-4 text-primary">
-                            Backups
-                        </h2>
-
-                        <p class="body-text1 max-w-[620px]">
-                            The Enhance backup role creates incremental, de-duplicated "time machine" <a href="" class="underline inline-flex">backups</a> using the btrfs file system. These snapshots are fast to create and restore as well as being very disk space efficient.
+                        <h2 class="head-2 !font-semibold mb-4 text-primary">Backups</h2>
+                        <p class="body-text1 max-w-[620px] text-slate-700">
+                            LxRoot Backup service creates incremental, de-duplicated "time machine" <a href="" class="underline inline-flex">backups</a> using the btrfs file system. These snapshots are fast to create and restore as well as being very disk space efficient.
                             <br><br>
-                            In addition to the built-in Enhance backups you can configure third party <span class="!font-bold">S3 compatible backups</span>  from providers like Backblaze, AWS and R2 to capture website backups. You can even run Enhance's built-in backups system and <span class="!font-bold">S3 backups</span> side by side.
+                            In addition to the built-in LxRoot backups you can configure third party <span class="!font-bold">S3 compatible backups</span> from providers like Backblaze, AWS and R2 to capture website backups. You can even run LxRoot's built-in backups system and <span class="!font-bold">S3 backups</span> side by side.
                         </p>
                     </div>
 
                     <div class="flex justify-center">
-                        <img src="resources/image/image_7_(2).png" alt="">
+                        <img src="resources/image/lxroot-backup.png" alt="backup">
                     </div>
                 </div>
             </div>
-            
         </section>
 
         <section class="system-requirement bg-slate-50">
@@ -124,8 +340,8 @@
                 <h2 class="head-2 !font-semibold mb-4 text-primary text-center">
                     System requirements
                 </h2>
-                <p class="body-text1 mx-auto text-center">
-                    Minimum system requirements for installing the Enhance control panel
+                <p class="body-text1 mx-auto text-center text-slate-700 mt-0">
+                    Minimum system requirements for installing the LxRoot control panel
                 </p>
                 <div class="grid lg:grid-cols-2 gap-10 gap-y-14 mt-20 max-w-[760px] mx-auto">
                     <div class="relative flex flex-col items-center p-5 border border-secondary rounded-lg">
@@ -164,23 +380,23 @@
                 <div class="grid md:grid-cols-[1fr,1.5fr] gap-10">
                 <div class="text-part text-slate-700">
                     <h2 class="head-2 !font-bold text-primary mb-5">Get started now</h2>
-                    <p class="body-text1">Install Enhance on your favourite cloud provider or on your own servers. </p>
+                    <p class="body-text1">Install LxRoot on your favourite cloud provider or on your own servers. </p>
 
-                    <a href="#" class="w-fit filled-button !rounded-full text-white gap-3 mt-10">Website Tools
+                    <a href="#" class="w-fit filled-button !rounded-full text-white gap-3 mt-10">Get Started
                         <svg width="18" height="18" viewBox="0 0 26 26" fill="none"  xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
                         </svg>
                     </a>
                     
-                    <a href="" class="text-button gap-4 mt-2 text-primaryMiddle">Learn More
-                    <div class="icon w-6 h-6 rounded-full bg-primaryMiddle flex items-center justify-center">
+                    <a href="" class="text-button gap-4 mt-2 text-slate-700">Interactive Demo
+                    <div class="icon w-6 h-6 rounded-full !bg-secondaryDeep flex items-center justify-center">
                         <svg width="16" height="16" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" >
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
                         </svg>
                     </div>
                     </a>
                 </div>
-                <div class="image-part flex justify-center"><img class="hidden md:block h-[420px]" src="resources/image/Mobile_UX-amico.png" alt="" /></div>
+                <div class="image-part flex justify-center"><img class="hidden md:block h-[420px]" src="resources/image/get_start.svg" alt="" /></div>
                 </div>
             </div>
         </section>
