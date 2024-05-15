@@ -3868,7 +3868,7 @@ p {
 
 .body-text1 {
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300;
   font-size: 18px;
   letter-spacing: 0.5px;
   line-height: 1.6;
@@ -5652,4 +5652,7 @@ body.modal-open {
 }
 .order-8{
   order:8;
+}
+.fs-48{
+  font-size: 3rem !important;
 }
