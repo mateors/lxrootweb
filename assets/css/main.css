@@ -792,7 +792,21 @@ html {
   -webkit-font-feature-settings: "liga";
   -webkit-font-smoothing: antialiased;
 }
-
+.material-iconp {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
 .container {
   width: 100%;
 }
@@ -2291,6 +2305,9 @@ html {
 
 .mb-10 {
   margin-bottom: 2.5rem;
+}
+.mb-12 {
+  margin-bottom: 3rem;
 }
 
 .mb-2 {
@@ -5306,7 +5323,9 @@ body.modal-open {
   .md\:ml-8 {
     margin-left: 2rem;
   }
-
+  .md\:mt-16 {
+    margin-top: 4rem;
+  }
   .md\:mt-20 {
     margin-top: 5rem;
   }
@@ -5434,6 +5453,12 @@ body.modal-open {
     justify-content: flex-end;
   }
 
+  .md\:gap-8 {
+    gap: 2rem;
+  }
+  .md\:gap-10 {
+    gap: 2.5rem;
+  }
   .md\:gap-12 {
     gap: 3rem;
   }
