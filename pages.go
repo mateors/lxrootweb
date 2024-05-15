@@ -694,3 +694,38 @@ func about(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+func contact(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header.gohtml",
+			"templates/footer.gohtml",
+			"wpages/contact.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+		}{
+			Title:        "Contact | LxRoot",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-312px)]",
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+}

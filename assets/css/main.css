@@ -5553,6 +5553,9 @@ body.modal-open {
     padding-right: 6rem;
   }
 
+  .md\:pt-8 {
+    padding-top: 2rem;
+  }
   .md\:pt-24 {
     padding-top: 6rem;
   }
@@ -5653,31 +5656,15 @@ body.modal-open {
 .order-0{
   order: 0;
 }
-
 .order-1{
   order: 1;
 }
-.order-2{
-  order:2;
-}
-.order-3{
-  order:3;
-}
-.order-4{
-  order:4;
-}
-.order-5{
-  order:5;
-}
-.order-6{
-  order:6;
-}
-.order-7{
-  order:7;
-}
-.order-8{
-  order:8;
-}
 .fs-48{
   font-size: 3rem !important;
+}
+.fs-80{
+  font-size: 80px;
+}
+.pt-8 {
+  padding-top: 2rem;
 }
