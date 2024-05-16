@@ -30,6 +30,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header.gohtml",
+			"templates/section_getstarted.gohtml",
 			"templates/footer.gohtml",
 			"wpages/home.gohtml", //
 		)
@@ -282,6 +283,7 @@ func technology(w http.ResponseWriter, r *http.Request) {
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header.gohtml",
+			"templates/section_getstarted.gohtml",
 			"templates/footer.gohtml",
 			"wpages/technology.gohtml", //
 		)
@@ -317,6 +319,7 @@ func apphosting(w http.ResponseWriter, r *http.Request) {
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header.gohtml",
+			"templates/section_getstarted.gohtml",
 			"templates/footer.gohtml",
 			"wpages/apphosting.gohtml", //
 		)
