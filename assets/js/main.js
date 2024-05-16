@@ -12,7 +12,6 @@ navItems.forEach(navItem => {
 })
 
 /* changing sidebar active according to page */
-
 var navigations = document.querySelectorAll("aside nav > a.nav-item");
 
 navigations.forEach(navigation => {
@@ -29,25 +28,25 @@ navigations.forEach(navigation => {
 });
 
 /* change tab active according to page */
-
 var tabButtons = document.querySelectorAll(".tab-bar a.tab-button");
         
-        tabButtons.forEach(tabButton => {
-            // var currentPageLocation = location.href;
-            var locationUrlSplit = location.pathname.split("/");
-            var subPage = locationUrlSplit[2];
-            // console.log(subPage)
-            var tabUrlSplit = tabButton.pathname.split("/");
-            var tabUrl = tabUrlSplit[2];
-            console.log(tabUrl)
+tabButtons.forEach(tabButton => {
+    // var currentPageLocation = location.href;
+    var locationUrlSplit = location.pathname.split("/");
+    var subPage = locationUrlSplit[2];
+    // console.log(subPage)
+    var tabUrlSplit = tabButton.pathname.split("/");
+    var tabUrl = tabUrlSplit[2];
+    console.log(tabUrl)
 
-            if(tabUrl === subPage){
-                tabButton.classList.add("active-tab")
-            }
-        });
+    if(tabUrl === subPage){
+        tabButton.classList.add("active-tab")
+    }
+});
+
 /* dropdown functionality */
-
 document.addEventListener("click", e => {
+
     const isDropdownBtn = e.target.matches("[data-dropdown-btn]");
     if(!isDropdownBtn && e.target.closest("[data-dropdown]") != null){
         return;
@@ -72,12 +71,9 @@ document.addEventListener("click", e => {
         dropdown.classList.remove("menu-open");
         
     })
-
-    
-})
+});
 
 /* tabs functionality */
-
 var tabs = document.querySelector(".tab-bar");
 var tabButton = document.querySelectorAll(".tab-bar > .tab-button");
 var contents = document.querySelectorAll(".tab-content-wrap > .tab-content");
@@ -200,7 +196,6 @@ modalButtons.forEach(modalButton => {
 })
 
 /* collapsible */
-
 var coll = document.getElementsByClassName("collapsible");
 var i;
 
@@ -220,9 +215,7 @@ for (i = 0; i < coll.length; i++) {
 };
 
 /* message */
-
 var message = document.querySelector("[data-message]");
-
 
 if(message) {
     var clsMessage = message.querySelector("[data-close-message]");
@@ -261,7 +254,6 @@ function formSubmit(){
 
 
 /* copy clipboard */
-
 document.addEventListener("click", e => {
     var isCopyBtn = e.target.matches("[data-copy-button]");
     if(!isCopyBtn && e.target.closest("[data-copy-clipboard]") != null){
@@ -313,8 +305,6 @@ function handleInputChange(e) {
     const min = target.min
     const max = target.max
     const val = target.value
-
-    
     target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
 }
 
@@ -324,7 +314,6 @@ rangeInputs.forEach(input => {
 
 
 /* password toggle */
-
 document.addEventListener("click", e => {
     let togglePassIcon = e.target.matches("[data-toggle-passicon]");
     if( !togglePassIcon && e.target.closest("[data-toggle]") != null){
@@ -393,8 +382,6 @@ window.addEventListener('scroll', function() {
     }
 });
 
-
-
 // Select the message container
 const messageContainer = document.querySelector('[data-message-container]');
 
@@ -451,4 +438,4 @@ toastButtons.forEach(button => {
         console.log(message);
         showToastMessage(message);
     });
-})
+});
