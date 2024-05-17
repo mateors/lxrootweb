@@ -27,14 +27,14 @@
                                 <h3 class="head-5 text-center text-secondary !font-semibold mb-4 mt-10">
                                     1 - 5k applications
                                 </h3>
-                                <h4 class="head-2 text-center text-primary !font-bold my-5">$0.15</h4>
+                                <h4 class="head-2 text-center text-primary !font-bold my-5">$0.20</h4>
                                 <p class="body-text2 text-slate-700 text-center">
                                     per application per month*
                                 </p>
                             </div>
 
                             <div class="grow-0 bg-secondary text-ghostWhite p-2 border border-secondary !border-t-transparent rounded-b-lg">
-                                <p class="caption-text text-center">*Minimum billing threshold of $15</p>
+                                <p class="caption-text text-center">*Minimum billing threshold of $20</p>
                             </div>
                         </div>
 
@@ -46,14 +46,14 @@
                                 <h3 class="head-5 text-center text-secondary !font-semibold mb-4 mt-10">
                                     5,001 - 25k applications
                                 </h3>
-                                <h4 class="head-2 text-center text-primary !font-bold my-5">$0.10</h4>
+                                <h4 class="head-2 text-center text-primary !font-bold my-5">$0.15</h4>
                                 <p class="body-text2 text-slate-700 text-center">
                                     per aplication per month
                                 </p>
                             </div>
 
                             <div class="grow-0 bg-secondary text-ghostWhite p-2 border border-secondary !border-t-transparent rounded-b-lg">
-                                <p class="caption-text text-center invisible">*Minimum billing threshold of $15</p>
+                                <p class="caption-text text-center invisible">*Minimum billing threshold of $20</p>
                             </div>
                         </div>
 
@@ -65,14 +65,14 @@
                                 <h3 class="head-5 text-center text-secondary !font-semibold mb-4 mt-10">
                                     25k - 100k applications
                                 </h3>
-                                <h4 class="head-2 text-center text-primary !font-bold my-5">$0.075</h4>
+                                <h4 class="head-2 text-center text-primary !font-bold my-5">$0.10</h4>
                                 <p class="body-text2 text-slate-700 text-center">
                                     per application per month
                                 </p>
                             </div>
 
                             <div class="grow-0 bg-secondary text-ghostWhite p-2 border border-secondary !border-t-transparent rounded-b-lg">
-                                <p class="caption-text text-center invisible">*Minimum billing threshold of $15</p>
+                                <p class="caption-text text-center invisible">*Minimum billing threshold of $20</p>
                             </div>
                         </div>
 
@@ -311,9 +311,9 @@
         let calculateAppPrice = (numApps) => {
 
             const costPerAppRanges = [
-                { min: 1, max: 5000, cost: 0.15 },
-                { min: 5001, max: 25000, cost: 0.10 },
-                { min: 25001, max: 100000, cost: 0.075 }
+                { min: 1, max: 5000, cost: 0.20 },
+                { min: 5001, max: 25000, cost: 0.15 },
+                { min: 25001, max: 100000, cost: 0.10 }
             ];
 
             let totalCost = 0;
@@ -327,7 +327,7 @@
             }
 
             // Ensure minimum billing threshold
-            totalCost = Math.max(totalCost, 15);
+            totalCost = Math.max(totalCost, 20);
             return totalCost.toFixed(2);
         }
 
