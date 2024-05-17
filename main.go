@@ -17,7 +17,6 @@ func init() {
 
 	//hmacTest()
 	workingDirectory, _ = os.Getwd()
-	//fmt.Println("Bismillah...")
 }
 
 func main() {
