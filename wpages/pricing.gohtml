@@ -108,7 +108,7 @@
                             <p class="body-text2 text-secondary">per <br /> month</p>
                         </div>
                         <div class="contact-details opacity-0 invisible transition-all w-full" id="contact-details">
-                            <p class="body-text2 bg-white p-3 text-center"><a href="./support.html" class="inline transition-all hover:underline font-bold">Contact us</a> to discuss our enterprise options</p>
+                            <p class="body-text2 bg-white p-3 text-center"><a href="/contact" class="inline transition-all hover:underline font-bold">Contact us</a> to discuss our enterprise options</p>
                         </div>
                     </div>
                 </div>
@@ -215,7 +215,6 @@
         /* collapsible */
         var coll = document.getElementsByClassName("collapsible");
         var i;
-
         for (i = 0; i < coll.length; i++) {
             
             coll[i].addEventListener("click", function() {
@@ -312,6 +311,7 @@
             $('#irange').val(`${number}`);
         }
 
+        calc(100);
         $('#irange').on('input',(e)=>{
 
             let min=e.target.min;
