@@ -162,24 +162,21 @@
                 <div class="max-w-[760px] mx-auto">
                     <div class="collapsible-wrap w-fit !px-0 !border-transparent !border-b-slate-300">
                         <div class="collapsible menu-btn flex justify-between gap-4">
-                            
                             <span class="body-text1 !font-semibold">Am I charged for Addon, Alias and Sub domains?</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="stroke-primary" d="M18 9L12 15L6 9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path class="stroke-primary" d="M18 9L12 15L6 9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </div>
                         <div class="collapsible-content  text-gray-700">
                             <p class="body-text2 mt-6">No, there's no charge for Addon, Alias and Sub domains. You are only billed for hosted applications (defined below).</p>
-
                         </div>
                     </div>
 
                     <div class="collapsible-wrap w-fit !px-0 !border-transparent !border-b-slate-300">
                         <div class="collapsible menu-btn flex justify-between gap-4">
-                            
                             <span class="body-text1 !font-semibold">Is there a per server licence cost?</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="stroke-primary" d="M18 9L12 15L6 9" stroke="#edededd1" stroke-width="2" stroke-linecap="round" stro1, 92, 121, 0.82);"></path>
+                                <path class="stroke-primary" d="M18 9L12 15L6 9" stroke="#edededd1" stroke-width="2" stroke-linecap="round" stro1, 92, 121, 0.82);"></path>
                             </svg>
                         </div>
                         <div class="collapsible-content  text-gray-700">
@@ -193,10 +190,10 @@
                             
                             <span class="body-text1 !font-semibold">What is a 'Hosted application'?</span>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path class="stroke-primary" d="M18 9L12 15L6 9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path class="stroke-primary" d="M18 9L12 15L6 9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
                         </div>
-                        <div class="collapsible-content  text-gray-700">
+                        <div class="collapsible-content text-slate-700">
                             <p class="body-text2 mt-6">A hosted application is an isolated, shared or containerised environment with its own system user, home directory, access rights and optional hard system resource limits.<br><br>On LxRoot you can add unlimited Domain aliases which map to the same document root or another document root within that application/site without incurring any additional cost (this is equivalent to 'Addon domains' or 'Parked domain' functionality in other control panels).</p>
                         </div>
                     </div>
@@ -214,6 +211,71 @@
 
   {{define "script"}}
     <script>
+
+        /* collapsible */
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            
+            coll[i].addEventListener("click", function() {
+
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";    
+                } 
+            });
+        };
+
+        // header scroll effect
+        window.addEventListener('scroll', function() {
+
+            const header = document.getElementById('main-header');
+            if (!header) return; // If #main-header doesn't exist, exit the function
+
+            if (window.scrollY > 97-10) {
+                header.classList.remove('bg-transparent');
+                header.classList.remove('border-b-[#808afd]');
+                header.classList.add('bg-white');
+                header.classList.add('border-b-slate-200');
+                header.querySelectorAll('.nav-item').forEach(function(navItem) {
+                    navItem.classList.remove('text-white');
+                    navItem.classList.add('text-primaryDeep');
+                });
+
+                header.querySelectorAll('.logo-item > svg path').forEach(svg => {
+                    svg.style.fill = '#5865F2'
+                });
+
+                header.querySelectorAll('.nav-item > svg path').forEach(svg => {
+                    svg.style.stroke = '#515c79d1'
+                });
+
+            } else {
+
+                header.classList.remove('bg-white');
+                header.classList.remove('border-b-slate-200');
+                header.classList.add('bg-transparent');
+                header.classList.add('border-b-[#808afd]');
+                header.querySelectorAll('.nav-item').forEach(function(navItem) {
+                    navItem.classList.add('text-white');
+                    navItem.classList.remove('text-primaryDeep');
+                });
+
+                header.querySelectorAll('.logo-item > svg path').forEach(svg => {
+                    svg.style.fill = '#fff'
+                });
+
+                header.querySelectorAll('.nav-item > svg path').forEach(svg => {
+                    svg.style.stroke = '#edededd1'
+                });
+            }
+
+        });
 
         let calculateAppPrice = (numApps) => {
 
