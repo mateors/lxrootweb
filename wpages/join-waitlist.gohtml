@@ -1,0 +1,179 @@
+{{define "content"}}
+
+    <div class="content h-auto">
+
+
+        <!--<section class="hero relative bg-gradient-to-br from-primary via-primaryMiddle to-primaryDeep -mt-[100px] pt-[100px] z-10">
+
+            <div class="bg-[url('../image/pattern/banner__bg1.svg')] bg-cover bg-top bg-no-repeat w-full opacity-100 absolute inset-0 z-10"></div>
+            <div class="container mx-auto px-5 py-16 md:py-24  z-20 flex flex-col items-center justify-center">
+                <p class="caption-text capitalize !font-medium text-ghostWhite">&nbsp;</p>
+                <h1 class="head-1 !font-bold text-center mb-6 text-white">Join-Walitlist</h1>
+                <p class="head-5 mb-10 text-ghostWhite p-2">&nbsp;</p>
+            </div>
+
+        </section>-->
+
+
+        <section class="bg-slate-100 relative z-10">
+
+            <div class="bg-[url('../image/pattern/image_16_png.png')] w-screen md:w-[40%] opacity-[0.03] absolute left-0 top-0 bottom-0 -z-10"></div>
+
+            <div class="container mx-auto px-5 py-12 md:py-20">
+                <div class="bg-white max-w-[1200px] mx-auto w-full rounded-xl md:grid md:grid-cols-[1.2fr,1fr] justify-center shadow-lg overflow-hidden">
+
+                    <div class="faq-content bg-primary text-slate-700 p-5 md:p-14">
+
+                        <h2 class="head-4 !font-bold text-white mb-5">Join the waitlist</h2>
+
+                        <p class="text-white">Experience LxRoot to build your web application in minutes.</p>
+
+
+                    </div>
+
+                    <div class="form-content p-5 pb-10 md:p-14">
+                        <form method="post">
+
+                            <div class="field flex flex-col mb-4">
+                                <label for="name-field">First Name <span class="required-spot">*</span></label>
+                                <input type="text" id="name-field" name="name-field" placeholder="First name here" onblur="validateField('name-field')" required />
+                                <div id="name-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter your full name.</div>
+                            </div>
+
+                            <div class="field flex flex-col mb-4">
+                                <label for="name-field">Last Name <span class="required-spot">*</span></label>
+                                <input type="text" id="name-field" name="name-field" placeholder="First name here" onblur="validateField('name-field')" required />
+                                <div id="name-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter your full name.</div>
+                            </div>
+
+                            <div class="field flex flex-col mb-4">
+                                <label for="name-field">Company </label>
+                                <input type="text" id="name-field" name="name-field" placeholder="First name here" />
+                                <div id="name-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter your full name.</div>
+                            </div>
+
+                            <div class="field flex flex-col mb-4">
+                                <label for="email-field">Email Address <span class="required-spot">*</span></label>
+                                <input type="email" id="email-field" name="email-field" placeholder="Enter email here" onblur="validateField('email-field')" />
+                                <div id="email-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter a valid email address.</div>
+                            </div>
+
+                            <button type="submit" class="w-full filled-button !justify-between gap-2 text-white">
+                                Submit
+                                <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2.03125 13C2.03125 12.6768 2.15965 12.3668 2.38821 12.1382C2.61677 11.9097 2.92677 11.7813 3.25 11.7813H19.8087L15.3888 7.36125C15.1735 7.13022 15.0563 6.82464 15.0618 6.5089C15.0674 6.19316 15.1953 5.89191 15.4186 5.66862C15.6419 5.44532 15.9432 5.31741 16.2589 5.31184C16.5746 5.30627 16.8802 5.42347 17.1112 5.63875L23.6112 12.1388C23.8395 12.3673 23.9677 12.677 23.9677 13C23.9677 13.323 23.8395 13.6327 23.6112 13.8613L17.1112 20.3613C16.9997 20.481 16.8651 20.577 16.7156 20.6436C16.5661 20.7103 16.4047 20.7461 16.2411 20.749C16.0775 20.7519 15.9149 20.7217 15.7632 20.6605C15.6114 20.5992 15.4735 20.5079 15.3578 20.3922C15.2421 20.2765 15.1508 20.1386 15.0896 19.9868C15.0283 19.8351 14.9982 19.6725 15.001 19.5089C15.0039 19.3453 15.0397 19.1839 15.1064 19.0344C15.173 18.8849 15.269 18.7503 15.3888 18.6388L19.8087 14.2188H3.25C2.92677 14.2188 2.61677 14.0903 2.38821 13.8618C2.15965 13.6332 2.03125 13.3232 2.03125 13Z" fill="#fff"></path>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    
+    </div>
+
+{{end}}
+
+{{define "scriptsrc"}}
+    <script src="resources/js/nlib.js"></script>
+{{end}}
+
+{{define "script"}}
+    <script>
+
+        /* dropdown functionality */
+        document.addEventListener("click", e => {
+
+            const isDropdownBtn = e.target.matches("[data-dropdown-btn]");
+            if(!isDropdownBtn && e.target.closest("[data-dropdown]") != null){
+                return;
+            }
+            let currentDropdown;
+            if(isDropdownBtn) {
+                currentDropdown = e.target.closest("[data-dropdown]");
+                currentDropdown.classList.toggle("menu-open");
+            }
+            document.querySelectorAll("[data-dropdown].menu-open").forEach(dropdown => {
+                var clsDropdownBtn = dropdown.querySelector("[data-dropdown-cls]");
+                if(clsDropdownBtn) {
+                    clsDropdownBtn.onclick = () => {
+                        dropdown.classList.remove("menu-open");
+                    }
+                }
+                if(dropdown === currentDropdown){
+                    return;
+                }
+                dropdown.classList.remove("menu-open");
+                
+            });
+
+        });
+
+        /* collapsible */
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        for (i = 0; i < coll.length; i++) {
+            
+            coll[i].addEventListener("click", function() {
+
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";    
+                } 
+            });
+        };
+
+        // header scroll effect
+        window.addEventListener('scroll', function() {
+
+            const header = document.getElementById('main-header');
+            if (!header) return; // If #main-header doesn't exist, exit the function
+
+            if (window.scrollY > 97-10) {
+                header.classList.remove('bg-transparent');
+                header.classList.remove('border-b-[#808afd]');
+                header.classList.add('bg-white');
+                header.classList.add('border-b-slate-200');
+                header.querySelectorAll('.nav-item').forEach(function(navItem) {
+                    navItem.classList.remove('text-white');
+                    navItem.classList.add('text-primaryDeep');
+                });
+
+                header.querySelectorAll('.logo-item > svg path').forEach(svg => {
+                    svg.style.fill = '#5865F2'
+                });
+
+                header.querySelectorAll('.nav-item > svg path').forEach(svg => {
+                    svg.style.stroke = '#515c79d1'
+                });
+
+            } else {
+
+                header.classList.remove('bg-white');
+                header.classList.remove('border-b-slate-200');
+                header.classList.add('bg-transparent');
+                header.classList.add('border-b-[#808afd]');
+                header.querySelectorAll('.nav-item').forEach(function(navItem) {
+                    navItem.classList.add('text-white');
+                    navItem.classList.remove('text-primaryDeep');
+                });
+
+                header.querySelectorAll('.logo-item > svg path').forEach(svg => {
+                    svg.style.fill = '#fff'
+                });
+
+                header.querySelectorAll('.nav-item > svg path').forEach(svg => {
+                    svg.style.stroke = '#edededd1'
+                });
+            }
+
+        });
+
+    </script>
+{{end}}

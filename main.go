@@ -46,6 +46,7 @@ func main() {
 	r.HandleFunc("/faqs", faqs)         //
 	r.HandleFunc("/about", about)       //
 	r.HandleFunc("/contact", contact)   //contact us
+	r.HandleFunc("/join-waitlist", joinWaitlist)
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

@@ -209,175 +209,175 @@
 
 {{end}}
 
-  {{define "scriptsrc"}}
+{{define "scriptsrc"}}
     <script src="resources/js/nlib.js"></script>
-  {{end}}
+{{end}}
 
-  {{define "script"}}
-    <script>
+{{define "script"}}
+<script>
 
-        /* dropdown functionality */
-        document.addEventListener("click", e => {
+    /* dropdown functionality */
+    document.addEventListener("click", e => {
 
-            const isDropdownBtn = e.target.matches("[data-dropdown-btn]");
-            if(!isDropdownBtn && e.target.closest("[data-dropdown]") != null){
+        const isDropdownBtn = e.target.matches("[data-dropdown-btn]");
+        if(!isDropdownBtn && e.target.closest("[data-dropdown]") != null){
+            return;
+        }
+        let currentDropdown;
+        if(isDropdownBtn) {
+            currentDropdown = e.target.closest("[data-dropdown]");
+            currentDropdown.classList.toggle("menu-open");
+        }
+        document.querySelectorAll("[data-dropdown].menu-open").forEach(dropdown => {
+            var clsDropdownBtn = dropdown.querySelector("[data-dropdown-cls]");
+            if(clsDropdownBtn) {
+                clsDropdownBtn.onclick = () => {
+                    dropdown.classList.remove("menu-open");
+                }
+            }
+            if(dropdown === currentDropdown){
                 return;
             }
-            let currentDropdown;
-            if(isDropdownBtn) {
-                currentDropdown = e.target.closest("[data-dropdown]");
-                currentDropdown.classList.toggle("menu-open");
-            }
-            document.querySelectorAll("[data-dropdown].menu-open").forEach(dropdown => {
-                var clsDropdownBtn = dropdown.querySelector("[data-dropdown-cls]");
-                if(clsDropdownBtn) {
-                    clsDropdownBtn.onclick = () => {
-                        dropdown.classList.remove("menu-open");
-                    }
-                }
-                if(dropdown === currentDropdown){
-                    return;
-                }
-                dropdown.classList.remove("menu-open");
-                
-            });
-
-        });
-
-        /* collapsible */
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
-        for (i = 0; i < coll.length; i++) {
+            dropdown.classList.remove("menu-open");
             
-            coll[i].addEventListener("click", function() {
+        });
 
-                this.classList.toggle("active");
-                var content = this.nextElementSibling;
+    });
 
-                if (content.style.maxHeight){
-                    content.style.maxHeight = null;
-                } else {
-                    content.style.maxHeight = content.scrollHeight + "px";    
-                } 
-            });
-        };
+    /* collapsible */
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+    for (i = 0; i < coll.length; i++) {
+        
+        coll[i].addEventListener("click", function() {
 
-        // header scroll effect
-        window.addEventListener('scroll', function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
 
-            const header = document.getElementById('main-header');
-            if (!header) return; // If #main-header doesn't exist, exit the function
-
-            if (window.scrollY > 97-10) {
-                header.classList.remove('bg-transparent');
-                header.classList.remove('border-b-[#808afd]');
-                header.classList.add('bg-white');
-                header.classList.add('border-b-slate-200');
-                header.querySelectorAll('.nav-item').forEach(function(navItem) {
-                    navItem.classList.remove('text-white');
-                    navItem.classList.add('text-primaryDeep');
-                });
-
-                header.querySelectorAll('.logo-item > svg path').forEach(svg => {
-                    svg.style.fill = '#5865F2'
-                });
-
-                header.querySelectorAll('.nav-item > svg path').forEach(svg => {
-                    svg.style.stroke = '#515c79d1'
-                });
-
+            if (content.style.maxHeight){
+                content.style.maxHeight = null;
             } else {
-
-                header.classList.remove('bg-white');
-                header.classList.remove('border-b-slate-200');
-                header.classList.add('bg-transparent');
-                header.classList.add('border-b-[#808afd]');
-                header.querySelectorAll('.nav-item').forEach(function(navItem) {
-                    navItem.classList.add('text-white');
-                    navItem.classList.remove('text-primaryDeep');
-                });
-
-                header.querySelectorAll('.logo-item > svg path').forEach(svg => {
-                    svg.style.fill = '#fff'
-                });
-
-                header.querySelectorAll('.nav-item > svg path').forEach(svg => {
-                    svg.style.stroke = '#edededd1'
-                });
-            }
-
+                content.style.maxHeight = content.scrollHeight + "px";    
+            } 
         });
+    };
 
-        let calculateAppPrice = (numApps) => {
+    // header scroll effect
+    window.addEventListener('scroll', function() {
 
-            const costPerAppRanges = [
-                { min: 1, max: 5000, cost: 0.20 },
-                { min: 5001, max: 25000, cost: 0.15 },
-                { min: 25001, max: 100000, cost: 0.10 }
-            ];
+        const header = document.getElementById('main-header');
+        if (!header) return; // If #main-header doesn't exist, exit the function
 
-            let totalCost = 0;
-            let remainingApps = numApps;
+        if (window.scrollY > 97-10) {
+            header.classList.remove('bg-transparent');
+            header.classList.remove('border-b-[#808afd]');
+            header.classList.add('bg-white');
+            header.classList.add('border-b-slate-200');
+            header.querySelectorAll('.nav-item').forEach(function(navItem) {
+                navItem.classList.remove('text-white');
+                navItem.classList.add('text-primaryDeep');
+            });
 
-            for (const range of costPerAppRanges) {
-                const appsInRange = Math.min(remainingApps, range.max - range.min + 1);
-                totalCost += appsInRange * range.cost;
-                remainingApps -= appsInRange;
-                if (remainingApps <= 0) break;
-            }
+            header.querySelectorAll('.logo-item > svg path').forEach(svg => {
+                svg.style.fill = '#5865F2'
+            });
 
-            // Ensure minimum billing threshold
-            totalCost = Math.max(totalCost, 20);
-            return totalCost.toFixed(2);
+            header.querySelectorAll('.nav-item > svg path').forEach(svg => {
+                svg.style.stroke = '#515c79d1'
+            });
+
+        } else {
+
+            header.classList.remove('bg-white');
+            header.classList.remove('border-b-slate-200');
+            header.classList.add('bg-transparent');
+            header.classList.add('border-b-[#808afd]');
+            header.querySelectorAll('.nav-item').forEach(function(navItem) {
+                navItem.classList.add('text-white');
+                navItem.classList.remove('text-primaryDeep');
+            });
+
+            header.querySelectorAll('.logo-item > svg path').forEach(svg => {
+                svg.style.fill = '#fff'
+            });
+
+            header.querySelectorAll('.nav-item > svg path').forEach(svg => {
+                svg.style.stroke = '#edededd1'
+            });
         }
 
-        let numberFilter = (number) => {
-            let slc=number.split(".");
-            if(slc.length==2){ if (slc[1]=='00') number=slc[0]; }
-            return number;
+    });
+
+    let calculateAppPrice = (numApps) => {
+
+        const costPerAppRanges = [
+            { min: 1, max: 5000, cost: 0.20 },
+            { min: 5001, max: 25000, cost: 0.15 },
+            { min: 25001, max: 100000, cost: 0.10 }
+        ];
+
+        let totalCost = 0;
+        let remainingApps = numApps;
+
+        for (const range of costPerAppRanges) {
+            const appsInRange = Math.min(remainingApps, range.max - range.min + 1);
+            totalCost += appsInRange * range.cost;
+            remainingApps -= appsInRange;
+            if (remainingApps <= 0) break;
         }
 
-        let calc = (number) => {
+        // Ensure minimum billing threshold
+        totalCost = Math.max(totalCost, 20);
+        return totalCost.toFixed(2);
+    }
 
-            let cost= calculateAppPrice(number);
-            $('#hostCounter').val(`${number}`);
-            $('#costCounter').text(numberFilter(cost));
-            let min=Number($('#irange').attr('min'));
-            let max=Number($('#irange').attr('max'));
-            let width= (number - min) * 100 / (max - min);
-            $('#irange').element().style.backgroundSize= `${width}% 100%`;
-            $('#irange').val(`${number}`);
+    let numberFilter = (number) => {
+        let slc=number.split(".");
+        if(slc.length==2){ if (slc[1]=='00') number=slc[0]; }
+        return number;
+    }
 
-            if(number>=100000){
-                $('#cost-wrap').removeClass(["bg-white","border-transparent"]);
-                $('#cost-wrap').addClass(["bg-[#efeffb]","border-primary"]);
-                $('#contact-details').removeClass("opacity-0");
-                $('#contact-details').addClass("opacity-100");
-                $('#hostCounter').prop("type","text");
-                $('#hostCounter').val("100k+");
-            }else{
-                $('#hostCounter').prop("type","number");
-                $('#cost-wrap').removeClass(["bg-[#efeffb]","border-primary"]);
-                $('#cost-wrap').addClass(["bg-white","border-transparent"]);
-                $('#contact-details').removeClass("opacity-100");
-                $('#contact-details').addClass("opacity-0");
-            }
+    let calc = (number) => {
+
+        let cost= calculateAppPrice(number);
+        $('#hostCounter').val(`${number}`);
+        $('#costCounter').text(numberFilter(cost));
+        let min=Number($('#irange').attr('min'));
+        let max=Number($('#irange').attr('max'));
+        let width= (number - min) * 100 / (max - min);
+        $('#irange').element().style.backgroundSize= `${width}% 100%`;
+        $('#irange').val(`${number}`);
+
+        if(number>=100000){
+            $('#cost-wrap').removeClass(["bg-white","border-transparent"]);
+            $('#cost-wrap').addClass(["bg-[#efeffb]","border-primary"]);
+            $('#contact-details').removeClass("opacity-0");
+            $('#contact-details').addClass("opacity-100");
+            $('#hostCounter').prop("type","text");
+            $('#hostCounter').val("100k+");
+        }else{
+            $('#hostCounter').prop("type","number");
+            $('#cost-wrap').removeClass(["bg-[#efeffb]","border-primary"]);
+            $('#cost-wrap').addClass(["bg-white","border-transparent"]);
+            $('#contact-details').removeClass("opacity-100");
+            $('#contact-details').addClass("opacity-0");
         }
+    }
 
-        calc(100);
-        $('#irange').on('input',(e)=>{
+    calc(100);
+    $('#irange').on('input',(e)=>{
 
-            let min=e.target.min;
-            let max=e.target.max;
-            let val=e.target.value;
-            let width= (val - min) * 100 / (max - min);
-            calc(Number(val));
-            //e.target.style.backgroundSize = `${width}% 100%`;
-        });
+        let min=e.target.min;
+        let max=e.target.max;
+        let val=e.target.value;
+        let width= (val - min) * 100 / (max - min);
+        calc(Number(val));
+        //e.target.style.backgroundSize = `${width}% 100%`;
+    });
 
-        $('#hostCounter').on('input',(e)=>{
-            if(Number(e.target.value)>=100000){ calc(100000); }else{ calc(Number(e.target.value)); }
-        });
+    $('#hostCounter').on('input',(e)=>{
+        if(Number(e.target.value)>=100000){ calc(100000); }else{ calc(Number(e.target.value)); }
+    });
 
-    </script>
-  {{end}}
+</script>
+{{end}}
