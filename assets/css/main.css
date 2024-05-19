@@ -5408,6 +5408,10 @@ body.modal-open {
     grid-template-columns: 1fr 1.5fr;
   }
 
+  .md\:grid-cols-\[1fr\2c 1\.5fr] {
+    grid-template-columns: 1fr 1.5fr;
+  }
+
   .md\:grid-cols-\[1fr\2c 2fr\] {
     grid-template-columns: 1fr 2fr;
   }
@@ -5669,4 +5673,7 @@ body.modal-open {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.\!fs36px{
+  font-size: 36px !important;
 }

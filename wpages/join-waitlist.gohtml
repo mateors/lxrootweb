@@ -20,14 +20,34 @@
             <div class="bg-[url('../image/pattern/image_16_png.png')] w-screen md:w-[40%] opacity-[0.03] absolute left-0 top-0 bottom-0 -z-10"></div>
 
             <div class="container mx-auto px-5 py-12 md:py-20">
-                <div class="bg-white max-w-[1200px] mx-auto w-full rounded-xl md:grid md:grid-cols-[1.2fr,1fr] justify-center shadow-lg overflow-hidden">
+
+
+                <div class="bg-white max-w-[960px] mx-auto w-full rounded-xl md:grid md:grid-cols-[1fr,1.5fr] justify-center shadow-lg overflow-hidden">
 
                     <div class="faq-content bg-primary text-slate-700 p-5 md:p-14">
 
                         <h2 class="head-4 !font-bold text-white mb-5">Join the waitlist</h2>
-
                         <p class="text-white">Experience LxRoot to build your web application in minutes.</p>
 
+                        <!--<img width="150px" src="resources/image/cloud-check.svg" />-->
+                        <div class="mt-10 gap-4 flex flex-col">
+
+                            <div class="flex items-center justify-between gap-4">
+                                <span class="material-iconp !fs36px text-white">cloud_done</span>
+                                <p class="text-white">Your fastest path to production</p>
+                            </div>
+
+                            <div class="flex items-center justify-between gap-4">
+                                <span class="material-iconp !fs36px text-white">cloud_done</span>
+                                <p class="text-white">Build, deploy, and scale your apps with LxRoot</p>
+                            </div>
+
+                            <div class="flex items-center justify-between gap-4">
+                                <span class="material-iconp !fs36px text-white">cloud_done</span>
+                                <p class="text-white">Deploy confidently—your stack runs on LxRoot</p>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -36,26 +56,22 @@
 
                             <div class="field flex flex-col mb-4">
                                 <label for="name-field">First Name <span class="required-spot">*</span></label>
-                                <input type="text" id="name-field" name="name-field" placeholder="First name here" onblur="validateField('name-field')" required />
-                                <div id="name-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter your full name.</div>
+                                <input type="text" id="name-field" name="name-field" placeholder="First name here"  required />
                             </div>
 
                             <div class="field flex flex-col mb-4">
                                 <label for="name-field">Last Name <span class="required-spot">*</span></label>
-                                <input type="text" id="name-field" name="name-field" placeholder="First name here" onblur="validateField('name-field')" required />
-                                <div id="name-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter your full name.</div>
+                                <input type="text" id="name-field" name="name-field" placeholder="Last name here" required />
                             </div>
 
                             <div class="field flex flex-col mb-4">
-                                <label for="name-field">Company </label>
-                                <input type="text" id="name-field" name="name-field" placeholder="First name here" />
-                                <div id="name-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter your full name.</div>
+                                <label for="name-field">Company</label>
+                                <input type="text" id="name-field" name="website" placeholder="Company name or website" />
                             </div>
 
                             <div class="field flex flex-col mb-4">
                                 <label for="email-field">Email Address <span class="required-spot">*</span></label>
-                                <input type="email" id="email-field" name="email-field" placeholder="Enter email here" onblur="validateField('email-field')" />
-                                <div id="email-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter a valid email address.</div>
+                                <input type="email" id="email-field" name="email-field" placeholder="Enter email here" required />
                             </div>
 
                             <button type="submit" class="w-full filled-button !justify-between gap-2 text-white">
