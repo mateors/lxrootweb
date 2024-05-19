@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"lxrootweb/utility"
 	"net/http"
 	"os"
@@ -15,8 +16,9 @@ var workingDirectory string
 
 func init() {
 
-	//hmacTest()
 	workingDirectory, _ = os.Getwd()
+	couchbaseConnTest()
+
 }
 
 func main() {
