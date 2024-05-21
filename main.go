@@ -17,7 +17,7 @@ var workingDirectory string
 func init() {
 
 	workingDirectory, _ = os.Getwd()
-	//couchbaseConnTest()
+	couchbaseConnTest()
 
 }
 

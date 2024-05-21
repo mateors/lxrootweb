@@ -3,8 +3,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"math"
+
+	"github.com/couchbase/go_n1ql"
 	//_ "github.com/couchbase/go_n1ql"
 )
 
@@ -69,6 +70,92 @@ func calculateAppPrice(numApps int) float64 {
 	return totalCost
 }
 
+type mapStringScan struct {
+	cp       []interface{}
+	row      map[string]string
+	colCount int
+	colNames []string
+}
+
+func newMapStringScan(columnNames []string) *mapStringScan {
+	lenCN := len(columnNames)
+	s := &mapStringScan{
+		cp:       make([]interface{}, lenCN),
+		row:      make(map[string]string, lenCN),
+		colCount: lenCN,
+		colNames: columnNames,
+	}
+	for i := 0; i < lenCN; i++ {
+		s.cp[i] = new(sql.RawBytes)
+	}
+	return s
+}
+
+func (s *mapStringScan) Update(rows *sql.Rows) error {
+
+	if err := rows.Scan(s.cp...); err != nil {
+		return err
+	}
+
+	for i := 0; i < s.colCount; i++ {
+		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
+			s.row[s.colNames[i]] = string(*rb)
+			*rb = nil // reset pointer to discard current value to avoid a bug
+		} else {
+			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+		}
+	}
+	return nil
+}
+
+func (s *mapStringScan) Get() map[string]string {
+	return s.row
+}
+
+type stringStringScan struct {
+	cp       []interface{}
+	row      []string
+	colCount int
+	colNames []string
+}
+
+func newStringStringScan(columnNames []string) *stringStringScan {
+	lenCN := len(columnNames)
+	s := &stringStringScan{
+		cp:       make([]interface{}, lenCN),
+		row:      make([]string, lenCN*2),
+		colCount: lenCN,
+		colNames: columnNames,
+	}
+	j := 0
+	for i := 0; i < lenCN; i++ {
+		s.cp[i] = new(sql.RawBytes)
+		s.row[j] = s.colNames[i]
+		j = j + 2
+	}
+	return s
+}
+func (s *stringStringScan) Update(rows *sql.Rows) error {
+	if err := rows.Scan(s.cp...); err != nil {
+		return err
+	}
+	j := 0
+	for i := 0; i < s.colCount; i++ {
+		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
+			s.row[j+1] = string(*rb)
+			*rb = nil // reset pointer to discard current value to avoid a bug
+		} else {
+			return fmt.Errorf("Cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+		}
+		j = j + 2
+	}
+	return nil
+}
+
+func (s *stringStringScan) Get() []string {
+	return s.row
+}
+
 func couchbaseConnTest() {
 
 	//couchbase
@@ -80,8 +167,9 @@ func couchbaseConnTest() {
 		return
 	}
 
-	//ac := []byte(`[{"user": "admin:Administrator", "pass": "asdasd"}]`)
-	//go_n1ql.SetQueryParams("creds", string(ac))
+	ac := []byte(`[{"user": "admin:Administrator", "pass": "Mostain321$"}]`)
+	go_n1ql.SetQueryParams("creds", string(ac))
+
 	//go_n1ql.SetQueryParams("timeout", "10s")
 	//go_n1ql.SetQueryParams("scan_consistency", "request_plus")
 
@@ -99,23 +187,45 @@ func couchbaseConnTest() {
 	//go_n1ql.SetQueryParams("timeout", "10s")
 	// go_n1ql.SetQueryParams("scan_consistency", "request_plus")
 
-	rows, err := n1ql.Query("select element (select * from lxroot)")
-
+	rows, err := n1ql.Query("select id,name,age from lxroot;")
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
+	defer rows.Close()
+
+	columnNames, err := rows.Columns()
+	if err != nil {
+		return
+	}
+
+	rc := newMapStringScan(columnNames)
+	tableData := make([]map[string]interface{}, 0)
 
 	for rows.Next() {
-		var contacts string
-		if err := rows.Scan(&contacts); err != nil {
-			log.Fatal(err)
-		}
-		log.Printf("Row returned %s : \n", contacts)
-	}
 
-	if err := rows.Err(); err != nil {
-		log.Fatal(err)
+		//var id, name, age string
+		//var age float64
+
+		// if err := rows.Scan(&id, &name, &age); err != nil {
+		// 	log.Fatal(err)
+		// }
+		//log.Printf("Row returned -> %s,%s,%s : \n", id, name, age)
+
+		err = rc.Update(rows)
+		if err != nil {
+			break
+		}
+		cv := rc.Get()
+		dd := make(map[string]interface{})
+		for _, col := range columnNames {
+			dd[col] = cv[col]
+		}
+		tableData = append(tableData, dd)
 	}
-	rows.Close()
+	fmt.Printf("%v %T\n", tableData, tableData)
+
+	// if err := rows.Err(); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 }
