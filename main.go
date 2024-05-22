@@ -1,8 +1,9 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-
+	_ "lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
@@ -18,6 +19,36 @@ func init() {
 
 	workingDirectory, _ = os.Getwd()
 	//couchbaseConnTest()
+
+	//lxql.OpenConn()
+	//lxql.ParseDSN("username:password@tcp(localhost:8309)/lxrootdb")
+	//n1ql2, err := sql.Open("n1ql", "lxrtestusr:Test54321$@(172.93.55.179:8309)/lxrootdb")
+	n1ql2, err := sql.Open("n1ql", "http://lxrtestusr:Test54321$@172.93.55.179:8093")
+	fmt.Println(err)
+
+	//ac := []byte(`[{"user": "admin:lxrtestusr", "pass": "Test54321$"}]`)
+	//lxql.SetQueryParams("creds", string(ac))
+
+	err = n1ql2.Ping()
+	fmt.Println("ping..", err)
+
+	/*
+		rows, err := n1ql2.Query("select id,name,age from lxroot;")
+		if err != nil {
+			return
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+
+			var id, name, age string
+			if err := rows.Scan(&id, &name, &age); err != nil {
+				log.Fatal(err)
+			}
+			log.Printf("Row returned -> %s,%s,%s : \n", id, name, age)
+		}
+	*/
+	os.Exit(1)
 
 }
 

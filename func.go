@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"math"
-
-	"github.com/couchbase/go_n1ql"
+	"strings"
 	//_ "github.com/couchbase/go_n1ql"
 )
 
@@ -156,93 +156,176 @@ func (s *stringStringScan) Get() []string {
 	return s.row
 }
 
-func couchbaseConnTest() {
+// func couchbaseConnTest() {
 
-	//couchbase
-	//"user:password@/dbname"
-	n1ql, err := sql.Open("n1ql", "http://172.93.55.179:8093")
-	if err != nil {
-		fmt.Println("***", err)
-		//log.Fatal(err)
-		return
-	}
+// 	//couchbase
+// 	//"user:password@/dbname"
+// 	n1ql, err := sql.Open("n1ql", "http://172.93.55.179:8093")
+// 	if err != nil {
+// 		fmt.Println("***", err)
+// 		//log.Fatal(err)
+// 		return
+// 	}
 
-	ac := []byte(`[{"user": "admin:Administrator", "pass": "Mostain321$"}]`)
-	go_n1ql.SetQueryParams("creds", string(ac))
+// 	ac := []byte(`[{"user": "admin:Administrator", "pass": "Mostain321$"}]`)
+// 	go_n1ql.SetQueryParams("creds", string(ac))
 
-	//go_n1ql.SetQueryParams("timeout", "10s")
-	//go_n1ql.SetQueryParams("scan_consistency", "request_plus")
+// 	//go_n1ql.SetQueryParams("timeout", "10s")
+// 	//go_n1ql.SetQueryParams("scan_consistency", "request_plus")
 
-	// err = n1ql.Ping()
-	// if err != nil {
-	// 	fmt.Println("###")
-	// 	log.Fatal(err)
-	// }
+// 	// err = n1ql.Ping()
+// 	// if err != nil {
+// 	// 	fmt.Println("###")
+// 	// 	log.Fatal(err)
+// 	// }
 
-	// fmt.Println("ping success...")
+// 	// fmt.Println("ping success...")
 
-	// Set query parameters
-	//ac := []byte(`[{"user": "admin:Administrator", "pass": "asdasd"}]`)
-	//go_n1ql.SetQueryParams("creds", string(ac))
-	//go_n1ql.SetQueryParams("timeout", "10s")
-	// go_n1ql.SetQueryParams("scan_consistency", "request_plus")
+// 	// Set query parameters
+// 	//ac := []byte(`[{"user": "admin:Administrator", "pass": "asdasd"}]`)
+// 	//go_n1ql.SetQueryParams("creds", string(ac))
+// 	//go_n1ql.SetQueryParams("timeout", "10s")
+// 	// go_n1ql.SetQueryParams("scan_consistency", "request_plus")
 
-	rows, err := n1ql.Query("select id,name,age from lxroot;")
-	if err != nil {
-		return
-	}
-	defer rows.Close()
+// 	rows, err := n1ql.Query("select id,name,age from lxroot;")
+// 	if err != nil {
+// 		return
+// 	}
+// 	defer rows.Close()
 
-	columnNames, err := rows.Columns()
-	if err != nil {
-		return
-	}
+// 	columnNames, err := rows.Columns()
+// 	if err != nil {
+// 		return
+// 	}
 
-	rc := newMapStringScan(columnNames)
-	tableData := make([]map[string]interface{}, 0)
+// 	rc := newMapStringScan(columnNames)
+// 	tableData := make([]map[string]interface{}, 0)
 
-	for rows.Next() {
+// 	for rows.Next() {
 
-		//var id, name, age string
-		//var age float64
+// 		//var id, name, age string
+// 		//var age float64
 
-		// if err := rows.Scan(&id, &name, &age); err != nil {
-		// 	log.Fatal(err)
-		// }
-		//log.Printf("Row returned -> %s,%s,%s : \n", id, name, age)
+// 		// if err := rows.Scan(&id, &name, &age); err != nil {
+// 		// 	log.Fatal(err)
+// 		// }
+// 		//log.Printf("Row returned -> %s,%s,%s : \n", id, name, age)
 
-		err = rc.Update(rows)
-		if err != nil {
+// 		err = rc.Update(rows)
+// 		if err != nil {
+// 			break
+// 		}
+// 		cv := rc.Get()
+// 		dd := make(map[string]interface{})
+// 		for _, col := range columnNames {
+// 			dd[col] = cv[col]
+// 		}
+// 		tableData = append(tableData, dd)
+// 	}
+// 	fmt.Printf("%v %T\n", tableData, tableData)
+
+// 	// if err := rows.Err(); err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+
+// 	// stt, err := n1ql.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc2", {"name":"sanzida","age":32,"id":"doc2"}) RETURNING *`)
+// 	// stt.Exec()
+// 	// fmt.Println("insert:", err)
+
+// 	// stt, err := n1ql.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc3", {"name":"Wania","age":3,"id":"doc3"})`)
+// 	// stt.Exec()
+// 	// fmt.Println("insert:", err)
+
+// 	// stt, err := n1ql.Prepare(`UPSERT INTO lxroot (KEY, VALUE) VALUES ("doc2", {"name":"Sanzida","age":33,"id":"doc2"})`)
+// 	// stt.Exec()
+// 	// fmt.Println("insert:", err)
+
+// 	//SELECT id,name,age FROM lxroot USE KEYS "id::1"
+// 	//res, err := n1ql.Exec("DELETE FROM lxroot USE KEYS ?", "id::1")
+// 	//fmt.Println("delete:", res, err)
+
+// }
+
+func ParseDSN(dsn string) (err error) {
+
+	// [user[:password]@][net[(addr)]]/dbname[?param1=value1&paramN=valueN]
+	// Find the last '/' (since the password or the net addr might contain a '/')
+	var user, passwd, addr, net, dbname string
+	foundSlash := false
+	for i := len(dsn) - 1; i >= 0; i-- {
+		if dsn[i] == '/' {
+			foundSlash = true
+			var j, k int
+
+			// left part is empty if i <= 0
+			if i > 0 {
+				// [username[:password]@][protocol[(address)]]
+				// Find the last '@' in dsn[:i]
+				for j = i; j >= 0; j-- {
+					if dsn[j] == '@' {
+						// username[:password]
+						// Find the first ':' in dsn[:j]
+						for k = 0; k < j; k++ {
+							if dsn[k] == ':' {
+								passwd = dsn[k+1 : j]
+								break
+							}
+						}
+						user = dsn[:k]
+
+						break
+					}
+				}
+
+				// [protocol[(address)]]
+				// Find the first '(' in dsn[j+1:i]
+				for k = j + 1; k < i; k++ {
+					if dsn[k] == '(' {
+						// dsn[i-1] must be == ')' if an address is specified
+						if dsn[i-1] != ')' {
+							if strings.ContainsRune(dsn[k+1:i], ')') {
+								return errors.New("invalid DSN: did you forget to escape a param value")
+							}
+							return errors.New("invalid DSN: network address not terminated (missing closing brace)")
+						}
+						addr = dsn[k+1 : i-1]
+						break
+					}
+				}
+				net = dsn[j+1 : k]
+			}
+
+			// dbname[?param1=value1&...&paramN=valueN]
+			// Find the first '?' in dsn[i+1:]
+			for j = i + 1; j < len(dsn); j++ {
+				if dsn[j] == '?' {
+					//if err = parseDSNParams(cfg, dsn[j+1:]); err != nil {
+					//return
+					//}
+					break
+				}
+			}
+
+			dbname = dsn[i+1 : j]
+			// if cfg.DBName, err = url.PathUnescape(dbname); err != nil {
+			// 	return fmt.Errorf("invalid dbname %q: %w", dbname, err)
+			// }
 			break
 		}
-		cv := rc.Get()
-		dd := make(map[string]interface{})
-		for _, col := range columnNames {
-			dd[col] = cv[col]
-		}
-		tableData = append(tableData, dd)
 	}
-	fmt.Printf("%v %T\n", tableData, tableData)
 
-	// if err := rows.Err(); err != nil {
-	// 	log.Fatal(err)
+	if !foundSlash && len(dsn) > 0 {
+		return errors.New("invalid DSN: missing the slash separating the database name")
+	}
+
+	// if err = cfg.normalize(); err != nil {
+	// 	return  err
 	// }
-
-	// stt, err := n1ql.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc2", {"name":"sanzida","age":32,"id":"doc2"}) RETURNING *`)
-	// stt.Exec()
-	// fmt.Println("insert:", err)
-
-	// stt, err := n1ql.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc3", {"name":"Wania","age":3,"id":"doc3"})`)
-	// stt.Exec()
-	// fmt.Println("insert:", err)
-
-	// stt, err := n1ql.Prepare(`UPSERT INTO lxroot (KEY, VALUE) VALUES ("doc2", {"name":"Sanzida","age":33,"id":"doc2"})`)
-	// stt.Exec()
-	// fmt.Println("insert:", err)
-
-	//SELECT id,name,age FROM lxroot USE KEYS "id::1"
-
-	res, err := n1ql.Exec("DELETE FROM lxroot USE KEYS ?", "id::1")
-	fmt.Println("delete:", res, err)
-
+	fmt.Println(user, passwd, addr, net, dbname)
+	// Qparams["user"] = user
+	// Qparams["passwd"] = passwd
+	// Qparams["address"] = addr
+	// Qparams["protocol"] = net
+	// Qparams["dbname"] = dbname
+	return
 }
