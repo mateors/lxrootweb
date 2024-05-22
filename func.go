@@ -228,4 +228,21 @@ func couchbaseConnTest() {
 	// 	log.Fatal(err)
 	// }
 
+	// stt, err := n1ql.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc2", {"name":"sanzida","age":32,"id":"doc2"}) RETURNING *`)
+	// stt.Exec()
+	// fmt.Println("insert:", err)
+
+	// stt, err := n1ql.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc3", {"name":"Wania","age":3,"id":"doc3"})`)
+	// stt.Exec()
+	// fmt.Println("insert:", err)
+
+	// stt, err := n1ql.Prepare(`UPSERT INTO lxroot (KEY, VALUE) VALUES ("doc2", {"name":"Sanzida","age":33,"id":"doc2"})`)
+	// stt.Exec()
+	// fmt.Println("insert:", err)
+
+	//SELECT id,name,age FROM lxroot USE KEYS "id::1"
+
+	res, err := n1ql.Exec("DELETE FROM lxroot USE KEYS ?", "id::1")
+	fmt.Println("delete:", res, err)
+
 }
