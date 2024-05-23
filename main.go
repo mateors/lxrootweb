@@ -18,7 +18,7 @@ func init() {
 
 	workingDirectory, _ = os.Getwd()
 	//couchbaseConnTest()
-	lxqlCon()
+	//lxqlCon()
 
 }
 
