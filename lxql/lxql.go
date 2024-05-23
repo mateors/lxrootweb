@@ -37,21 +37,21 @@ type n1qlDriver struct{}
 func init() {
 	sql.Register("n1ql", &n1qlDriver{})
 	params = make(map[string]string)
-	fmt.Println("params...")
+	//fmt.Println("params...")
 }
 
 //username:password@protocol(address)/dbname?param=value
 func (n *n1qlDriver) Open(dataSourceName string) (driver.Conn, error) {
-	fmt.Println("open...", dataSourceName)
+	//fmt.Println("open...", dataSourceName)
 	return openConn2(dataSourceName)
 }
 
 func setQueryParams(v *url.Values) {
 
-	fmt.Println("paramsLen:", params, len(params))
+	//fmt.Println("paramsLen:", params, len(params))
 	for key, value := range params {
 		v.Set(key, value)
-		fmt.Println(key, "==>", value)
+		//fmt.Println(key, "==>", value)
 	}
 }
 
@@ -61,15 +61,15 @@ func prepareRequest(query string, queryAPI string, args []driver.Value) (*http.R
 	postData := url.Values{}
 	postData.Set("statement", query)
 
-	// if len(args) > 0 {
-	// 	paStr := buildPositionalArgList(args)
-	// 	if len(paStr) > 0 {
-	// 		postData.Set("args", paStr)
-	// 	}
-	// }
+	if len(args) > 0 {
+		paStr := buildPositionalArgList(args)
+		if len(paStr) > 0 {
+			postData.Set("args", paStr)
+		}
+	}
 
 	setQueryParams(&postData)
-	fmt.Println("prepareRequest...", postData)
+	//fmt.Println("prepareRequest...", postData)
 	request, _ := http.NewRequest("POST", queryAPI, bytes.NewBufferString(postData.Encode()))
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	return request, nil
@@ -370,7 +370,14 @@ func (conn *n1qlConn) Begin() (driver.Tx, error) {
 
 func (conn *n1qlConn) Query(query string, args []driver.Value) (driver.Rows, error) {
 
-	//fmt.Println("query...", query)
+	if len(args) > 0 {
+		var argCount int
+		query, argCount = prepareQuery(query)
+		if argCount != len(args) {
+			return nil, fmt.Errorf("argument count mismatch %d != %d", argCount, len(args))
+		}
+		query, _ = preparePositionalArgs(query, argCount, args)
+	}
 	return conn.performQuery(query, nil)
 }
 
@@ -409,6 +416,7 @@ func (conn *n1qlConn) performExec(query string, requestValues *url.Values) (driv
 		return nil, fmt.Errorf("N1QL: Failed to parse response. Error %v", err)
 	}
 
+	//fmt.Printf("metrics:%c %T\n", resultMap["metrics"], resultMap["metrics"])
 	var execErr error
 	res := &n1qlResult{}
 	for name, results := range resultMap {
@@ -484,12 +492,15 @@ type n1qlStmt struct {
 
 func (stmt *n1qlStmt) Close() error {
 
+	stmt.prepared = ""
+	stmt.signature = ""
+	stmt.argCount = 0
+	stmt = nil
 	return nil
 }
 
 func (stmt *n1qlStmt) NumInput() int {
-
-	return 0
+	return stmt.argCount
 }
 
 func buildPositionalArgList(args []driver.Value) string {
@@ -560,5 +571,21 @@ func (stmt *n1qlStmt) Exec(args []driver.Value) (driver.Result, error) {
 
 func (stmt *n1qlStmt) Query(args []driver.Value) (driver.Rows, error) {
 
-	return nil, nil
+	fmt.Println("stmtQuery", args, len(args))
+	if stmt.prepared == "" {
+		return nil, fmt.Errorf("N1QL: Prepared statement not found")
+	}
+
+retry:
+	requestValues, err := stmt.prepareRequest(args)
+	if err != nil {
+		return nil, err
+	}
+	rows, err := stmt.conn.performQuery("", requestValues)
+	if err != nil && stmt.name != "" {
+		// retry once if we used a named prepared statement
+		stmt.name = ""
+		goto retry
+	}
+	return rows, err
 }

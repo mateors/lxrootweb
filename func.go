@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"math"
 	"strings"
 )
@@ -346,29 +345,70 @@ func lxqlCon() {
 	err = n1ql2.Ping()
 	fmt.Println("ping..", err)
 
-	rows, err := n1ql2.Query("select id,name,age from lxroot;")
-	if err != nil {
-		return
-	}
-	defer rows.Close()
+	/*
+		stt, err := n1ql2.Prepare("SELECT id,name,age FROM lxroot WHERE name=? AND age=?")
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
-	for rows.Next() {
-
-		var id, name, age string
-		if err := rows.Scan(&id, &name, &age); err != nil {
+		rows, err := stt.Query("Sanzida", 33)
+		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("Row returned -> %s,%s,%s : \n", id, name, age)
-	}
 
-	stt, err := n1ql2.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc4", {"name":"Rabeya Begum","age":50,"id":"doc4"})`)
-	fmt.Println("prepare:", err)
+		for rows.Next() {
 
-	res, err := stt.Exec()
-	fmt.Println("exec:", err)
+			var id, name, age string
+			if err := rows.Scan(&id, &name, &age); err != nil {
+				log.Fatal(err)
+			}
+			log.Printf("-> %s,%s,%s : \n", id, name, age)
+		}
+	*/
 
-	lid, err := res.LastInsertId()
-	fmt.Println("lastInsert:", lid, err)
+	/*
+		stmt, err := n1ql2.Prepare("Upsert INTO lxroot values (?,?)")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Map Values need to be marshaled
+		value, _ := json.Marshal(map[string]interface{}{"name": "irish", "type": "contact"})
+		result, err := stmt.Exec("irish4", value)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		rowsAffected, err := result.RowsAffected()
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Rows affected %d", rowsAffected)
+
+		for i := 0; i < 20; i++ {
+
+			key := fmt.Sprintf("irish%d", i)
+			result, err = stmt.Exec(key, value)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			ra, err := result.RowsAffected()
+			if err != nil {
+				log.Fatal(err)
+			}
+			rowsAffected += ra
+		}
+		log.Printf("Total Rows Affected %d", rowsAffected)
+		stmt.Close()
+	*/
+
+	// lid, err := res.LastInsertId()
+	// fmt.Println("lastInsert:", lid, err)
+
+	//res, err := n1ql2.Exec("DELETE FROM lxroot USE KEYS ?", "doc4")
+	//fmt.Println("delete:", res, err)
 
 	//os.Exit(1)
 }
