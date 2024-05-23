@@ -6,9 +6,7 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"os"
 	"strings"
-	//_ "github.com/couchbase/go_n1ql"
 )
 
 func featureBySlug(slugName string, rows []map[string]interface{}) map[string]interface{} {
@@ -334,6 +332,7 @@ func ParseDSN(dsn string) (err error) {
 
 func lxqlCon() {
 
+	//go_n1ql.OpenN1QLConnection()
 	//lxql.OpenConn()
 	//lxql.ParseDSN("username:password@tcp(localhost:8309)/lxrootdb")
 	//n1ql2, err := sql.Open("n1ql", "lxrtestusr:Test54321$@(172.93.55.179:8309)/lxrootdb")
@@ -362,5 +361,14 @@ func lxqlCon() {
 		log.Printf("Row returned -> %s,%s,%s : \n", id, name, age)
 	}
 
-	os.Exit(1)
+	stt, err := n1ql2.Prepare(`INSERT INTO lxroot (KEY, VALUE) VALUES ("doc4", {"name":"Rabeya Begum","age":50,"id":"doc4"})`)
+	fmt.Println("prepare:", err)
+
+	res, err := stt.Exec()
+	fmt.Println("exec:", err)
+
+	lid, err := res.LastInsertId()
+	fmt.Println("lastInsert:", lid, err)
+
+	//os.Exit(1)
 }

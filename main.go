@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	//_ "lxrootweb/lxql"
+	_ "lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
@@ -18,6 +18,7 @@ func init() {
 
 	workingDirectory, _ = os.Getwd()
 	//couchbaseConnTest()
+	lxqlCon()
 
 }
 
