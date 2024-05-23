@@ -1,24 +1,57 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 	_ "lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
 	"path/filepath"
+	"reflect"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 var workingDirectory string
+var typeRegistry = make(map[string]reflect.Type)
+
+const (
+	SERVERIP    = "172.93.55.179" //
+	DBUSER      = "lxrtestusr"
+	DBPASS      = "Test54321$" //
+	DBPORT      = "8093"
+	BUCKET_NAME = "lxroot"
+	SCOPE_NAME  = "_default"
+)
+
+var db *sql.DB
+var err error
 
 func init() {
 
 	workingDirectory, _ = os.Getwd()
 	//couchbaseConnTest()
 	//lxqlCon()
+	registerType(Company{})
+
+	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
+	db, err = sql.Open("n1ql", dataSourceName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("db ping successfull")
+
+	tableName := customTableName("Customer")
+
+	//err = createCollection("company", db)
+	fmt.Println(tableName)
 
 }
 
