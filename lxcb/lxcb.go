@@ -1,4 +1,4 @@
-package lxql
+package lxcb
 
 import (
 	"bytes"

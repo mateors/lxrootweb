@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	_ "lxrootweb/lxql"
+	_ "lxrootweb/lxcb"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
@@ -73,9 +73,9 @@ func init() {
 	//fmt.Println(err, cols)
 	//fmt.Println(customTableName("WaitList"))
 
-	name := structName(Company{})
-	name2 := structName(&WaitList{})
-	fmt.Println(name, name2)
+	//name := structName(Company{})
+	//name2 := structName(&WaitList{})
+	//fmt.Println(name, name2)
 
 }
 
