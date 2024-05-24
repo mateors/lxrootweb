@@ -12,7 +12,7 @@ type Company struct {
 
 //Access #2 login type admin,super,user,etc
 type Access struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"`
 	CompanyID  string `json:"cid"`    //foreign key
 	Serial     int64  `json:"serial"` //company wise increase
@@ -23,7 +23,7 @@ type Access struct {
 //Account #3 ::cid::account_id
 type Account struct {
 	//ContactInfo []Contact `json:"contact_info,omitempty"`
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`                  //account
 	CompanyID   string `json:"cid"`                   //foreign key
 	Serial      int64  `json:"serial"`                //company wise increase
@@ -49,7 +49,7 @@ type Account struct {
 
 //CustomField ...
 type CustomField struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"` //account
 	CompanyID  string `json:"cid"`  //foreign key
 	Serial     int64  `json:"serial"`
@@ -63,18 +63,18 @@ type CustomField struct {
 
 //CustomFieldValue ...
 type CustomFieldValue struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"` //account
 	CompanyID  string `json:"cid"`  //foreign key
 	Serial     int64  `json:"serial"`
-	FieldID    string `json:"field_id"`    //CustomFieldAID
+	FieldID    string `json:"field_id"`    //CustomFieldid
 	FieldValue string `json:"field_value"` //account
 	Status     int    `json:"status"`
 }
 
 //Login #4  all user account login table
 type Login struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"`
 	CompanyID  string `json:"cid"`         //foreign key
 	Serial     int64  `json:"serial"`      //company wise increasing
@@ -91,7 +91,7 @@ type Login struct {
 
 //Contact info for account and user
 type Contact struct {
-	ID        string `json:"aid"`
+	ID        string `json:"id"`
 	Type      string `json:"type"`   //table_name
 	CompanyID string `json:"cid"`    //foreign key
 	Serial    int64  `json:"serial"` //companywise increase
@@ -106,7 +106,7 @@ type Contact struct {
 
 //Address ...
 type Address struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"` //foreign key
 	Serial      int64  `json:"serial"`
@@ -123,13 +123,13 @@ type Address struct {
 
 //ActivityLog ***
 type ActivityLog struct {
-	ID           string `json:"aid"`
+	ID           string `json:"id"`
 	Type         string `json:"type"`
 	CompanyID    string `json:"cid"`    //foreign key
 	Serial       int64  `json:"serial"` //company wise increase
 	ActivityType string `json:"activity_type"`
 	OwnerTable   string `json:"owner_table"` //table_name
-	Parameter    string `json:"parameter"`   //key=val or aid
+	Parameter    string `json:"parameter"`   //key=val or id
 	LogDetails   string `json:"log_details"`
 	IPAddress    string `json:"ip_address"`
 	LoginID      string `json:"login_id"`      //optional foreign key
@@ -140,7 +140,7 @@ type ActivityLog struct {
 
 //DeviceLog tracks user device info (where they login to the system)
 type DeviceLog struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"`      //foreign key
 	Serial      int64  `json:"serial"`   //company wise increase
@@ -157,7 +157,7 @@ type DeviceLog struct {
 
 //LoginSession keeps user login session for 24 hours or more
 type LoginSession struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"`        //foreign key
 	Serial      int64  `json:"serial"`     //company wise increase
@@ -175,7 +175,7 @@ type LoginSession struct {
 
 //Setting table keep only one file
 type Settings struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"`
 	CompanyID  string `json:"cid"` //foreign key
 	Serial     int64  `json:"serial"`
@@ -186,7 +186,7 @@ type Settings struct {
 
 //Message table
 type Message struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"`          //foreign key
 	Serial      int64  `json:"serial"`       //company wise increase
@@ -201,7 +201,7 @@ type Message struct {
 
 //Verification message
 type Verification struct {
-	ID                  string `json:"aid"`
+	ID                  string `json:"id"`
 	Type                string `json:"type"`
 	CompanyID           string `json:"cid"`                  //foreign key
 	Serial              int64  `json:"serial"`               //company wise increase
@@ -214,7 +214,7 @@ type Verification struct {
 
 //VisitorSession info
 type VisitorSession struct {
-	ID             string `json:"aid"`
+	ID             string `json:"id"`
 	Type           string `json:"type"`
 	CompanyID      string `json:"cid"`    //foreign key
 	Serial         int64  `json:"serial"` //company wise increase
@@ -236,7 +236,7 @@ type VisitorSession struct {
 
 //AccountHead+AccountGroup merged into achead Achead
 type Achead struct {
-	ID                   string  `json:"aid"`           //unique id*
+	ID                   string  `json:"id"`            //unique id*
 	Type                 string  `json:"type"`          //table
 	CompanyID            string  `json:"cid"`           //foreign key
 	Serial               int64   `json:"serial"`        //company wise increase *
@@ -258,7 +258,7 @@ type Achead struct {
 
 //Warehouse table xlsx file 07
 type Warehouse struct {
-	ID               string `json:"aid"`
+	ID               string `json:"id"`
 	Type             string `json:"type"`
 	CompanyID        string `json:"cid"`            //foreign key
 	Serial           int64  `json:"serial"`         //company wise increase
@@ -270,7 +270,7 @@ type Warehouse struct {
 
 //UOM = Unit of Measurement
 type UOM struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"`
 	CompanyID  string `json:"cid"`    //foreign key
 	Serial     int64  `json:"serial"` //company wise increase
@@ -281,7 +281,7 @@ type UOM struct {
 
 //Tax ..
 type Tax struct {
-	ID                string  `json:"aid"`
+	ID                string  `json:"id"`
 	Type              string  `json:"type"`
 	CompanyID         string  `json:"cid"`            //foreign key
 	Serial            int64   `json:"serial"`         //company wise increase
@@ -298,7 +298,7 @@ type Tax struct {
 //Department itemDepartment -> ItemLine or department are same just one under another
 //TableMap::-> Deprtment & ItemLine
 type Department struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"`         //foreign key
 	Serial      int64  `json:"serial"`      //company wise increase
@@ -313,7 +313,7 @@ type Department struct {
 //Category or ItemCategory/ItemGroup keeps product group/category info
 //TableMap::-> ItemGroup
 type Category struct {
-	ID            string `json:"aid"`
+	ID            string `json:"id"`
 	Type          string `json:"type"`
 	CompanyID     string `json:"cid"`           //foreign key
 	Serial        int64  `json:"serial"`        //company wise increase
@@ -329,7 +329,7 @@ type Category struct {
 
 //ItemReward ... invoice qty 1 == 50 points
 type ItemReward struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`         //item_reward
 	CompanyID   string `json:"cid"`          //foreign key
 	Serial      int64  `json:"serial"`       //company wise increase
@@ -342,7 +342,7 @@ type ItemReward struct {
 
 //Item keeps product/Item info
 type Item struct {
-	ID                          string  `json:"aid"`
+	ID                          string  `json:"id"`
 	Type                        string  `json:"type"`
 	CompanyID                   string  `json:"cid"`         //foreign key
 	Serial                      int64   `json:"serial"`      //company wise increase
@@ -381,7 +381,7 @@ type Item struct {
 
 //ItemAttribute ..
 type ItemAttribute struct {
-	ID           string `json:"aid"`
+	ID           string `json:"id"`
 	Type         string `json:"type"`
 	CompanyID    string `json:"cid"`           //foreign key
 	Serial       int64  `json:"serial"`        //company wise increase
@@ -395,7 +395,7 @@ type ItemAttribute struct {
 
 //ItemAttributeValue ..
 type ItemAttributeValue struct {
-	ID              string `json:"aid"`
+	ID              string `json:"id"`
 	Type            string `json:"type"`
 	CompanyID       string `json:"cid"`             //foreign key
 	Serial          int64  `json:"serial"`          //company wise increase
@@ -408,7 +408,7 @@ type ItemAttributeValue struct {
 
 //Rateplan ...
 type Rateplan struct {
-	ID         string `json:"aid"`
+	ID         string `json:"id"`
 	Type       string `json:"type"` //type=rateplan
 	CompanyID  string `json:"cid"`
 	Serial     int64  `json:"serial"`     //company wise increase
@@ -420,7 +420,7 @@ type Rateplan struct {
 
 //Rate ...
 type Rate struct {
-	ID               string `json:"aid"`
+	ID               string `json:"id"`
 	Type             string `json:"type"` //type=rate
 	CompanyID        string `json:"cid"`
 	Serial           int64  `json:"serial"`
@@ -436,7 +436,7 @@ type Rate struct {
 
 //FileStore general table ***
 type FileStore struct {
-	ID           string `json:"aid"`
+	ID           string `json:"id"`
 	Type         string `json:"type"`
 	CompanyID    string `json:"cid"`
 	Serial       int64  `json:"serial"`      //company wise increase
@@ -451,7 +451,7 @@ type FileStore struct {
 
 //DocKeeper keeps all document info
 type DocKeeper struct {
-	ID             string  `json:"aid"`
+	ID             string  `json:"id"`
 	Type           string  `json:"type"`
 	CompanyID      string  `json:"cid"`                    //foreign key
 	WarehouseID    string  `json:"warehouse_id,omitempty"` //foreign key
@@ -476,7 +476,7 @@ type DocKeeper struct {
 
 //TransactionRecord keeps all transaction info like sales, purchase, online oreder
 type TransactionRecord struct {
-	ID             string  `json:"aid"`
+	ID             string  `json:"id"`
 	Type           string  `json:"type"`
 	CompanyID      string  `json:"cid"`    //foreign key
 	Serial         int64   `json:"serial"` //company wise increase
@@ -501,7 +501,7 @@ type TransactionRecord struct {
 
 //StockMovement keeps stock transfer from warehouse to warehouse or other
 type StockMovement struct {
-	ID            string `json:"aid"`
+	ID            string `json:"id"`
 	Type          string `json:"type"`
 	CompanyID     string `json:"cid"`        //foreign key
 	Serial        int64  `json:"serial"`     //company wise increase
@@ -519,7 +519,7 @@ type StockMovement struct {
 
 //LedgerTransaction table stores accounting transaction between ledgers/accounting_header
 type LedgerTransaction struct {
-	ID           string  `json:"aid"`
+	ID           string  `json:"id"`
 	Type         string  `json:"type"`
 	CompanyID    string  `json:"cid"`          //foreign key
 	Serial       int64   `json:"serial"`       //company wise increase
@@ -542,7 +542,7 @@ type LedgerTransaction struct {
 
 //ShippingAddress ...
 type ShippingAddress struct {
-	ID               string `json:"aid"`
+	ID               string `json:"id"`
 	Type             string `json:"type"`
 	CompanyID        string `json:"cid"`        //foreign key
 	Serial           int64  `json:"serial"`     //company wise increase
@@ -563,13 +563,13 @@ type ShippingAddress struct {
 
 //PaymentOption ...
 type PaymentOption struct {
-	ID               string `json:"aid"`
+	ID               string `json:"id"`
 	Type             string `json:"type"`
 	CompanyID        string `json:"cid"`    //foreign key
 	Serial           int64  `json:"serial"` //company wise increase
 	Position         int    `json:"position"`
 	IsDefault        int    `json:"isdefault"`
-	ProviderID       string `json:"account_id"` //foriegn key, payment provider AccountAID
+	ProviderID       string `json:"account_id"` //foriegn key, payment provider Accountid
 	OptionName       string `json:"name"`       //foriegn key
 	OptionDetails    string `json:"details"`
 	ChargeApplicable int    `json:"charge_applicable"`
@@ -581,13 +581,13 @@ type PaymentOption struct {
 
 //ShippingOption ...
 type ShippingOption struct {
-	ID              string  `json:"aid"`
+	ID              string  `json:"id"`
 	Type            string  `json:"type"`
 	CompanyID       string  `json:"cid"`    //foreign key
 	Serial          int64   `json:"serial"` //company wise increase
 	Position        int     `json:"position"`
 	IsDefault       int     `json:"isdefault"`
-	SupplierID      string  `json:"account_id"` //*** Account Table AID
+	SupplierID      string  `json:"account_id"` //*** Account Table id
 	ProviderName    string  `json:"name"`       //account_name
 	ProviderDetails string  `json:"details"`
 	DeliveryTime    int     `json:"delivery_time"` //'how many days it takes to deliver',
@@ -599,25 +599,39 @@ type ShippingOption struct {
 
 //DocPayShipInfo ...
 type DocPayShipInfo struct {
-	ID                 string  `json:"aid"`
-	Type               string  `json:"type"`
-	CompanyID          string  `json:"cid"`            //foreign key
-	Serial             int64   `json:"serial"`         //company wise increase
-	DocNumber          string  `json:"doc_number"`     //foriegn key
-	PaymentMethod      string  `json:"payment_method"` //foreign key
-	PaymentCharge      float64 `json:"payment_charge"` //extra payment fees
-	PaymentFrom        string  `json:"payment_from"`
-	PaymentTrxID       string  `json:"payment_trxid"`
-	ReceiptURL         string  `json:"receipt_url"`
-	ShippingMethod     string  `json:"shipping_method"` //foriegn key == ShippingOption AID
-	ShippingCharge     float64 `json:"shipping_charge"`
-	ShippingAddressAID string  `json:"shipping_address"` //foreign key
-	ShippingStatus     string  `json:"shipping_status"`  //shipped,processing,stuck,delivered
-	ShippingDate       string  `json:"shipping_date"`
-	DeliveryDate       string  `json:"delivery_date"`
-	Remarks            string  `json:"remarks"`
-	CreateDate         string  `json:"create_date"`
-	UpdateDate         string  `json:"update_date"`
-	Status             int     `json:"status"` //0=Inactive, 1=Active, 9=Deleted
+	ID                string  `json:"id"`
+	Type              string  `json:"type"`
+	CompanyID         string  `json:"cid"`            //foreign key
+	Serial            int64   `json:"serial"`         //company wise increase
+	DocNumber         string  `json:"doc_number"`     //foriegn key
+	PaymentMethod     string  `json:"payment_method"` //foreign key
+	PaymentCharge     float64 `json:"payment_charge"` //extra payment fees
+	PaymentFrom       string  `json:"payment_from"`
+	PaymentTrxID      string  `json:"payment_trxid"`
+	ReceiptURL        string  `json:"receipt_url"`
+	ShippingMethod    string  `json:"shipping_method"` //foriegn key == ShippingOption id
+	ShippingCharge    float64 `json:"shipping_charge"`
+	ShippingAddressid string  `json:"shipping_address"` //foreign key
+	ShippingStatus    string  `json:"shipping_status"`  //shipped,processing,stuck,delivered
+	ShippingDate      string  `json:"shipping_date"`
+	DeliveryDate      string  `json:"delivery_date"`
+	Remarks           string  `json:"remarks"`
+	CreateDate        string  `json:"create_date"`
+	UpdateDate        string  `json:"update_date"`
+	Status            int     `json:"status"` //0=Inactive, 1=Active, 9=Deleted
 
+}
+
+type WaitList struct {
+	ID             string `json:"id"`
+	Type           string `json:"type"`
+	CompanyID      string `json:"cid"` //foreign key
+	Serial         int64  `json:"serial"`
+	FirstName      string `json:"first_name"`
+	LastName       string `json:"last_name"`
+	CompanyWebsite string `json:"company_url"`
+	Email          string `json:"email"`
+	IpAddress      string `json:"ip_address"`
+	CreateDate     string `json:"create_date"`
+	Status         int    `json:"status"` //0=Inactive, 1=Active, 9=Deleted
 }

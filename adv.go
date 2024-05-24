@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-
-	"github.com/rs/xid"
 )
 
 type structFieldDetails struct {
@@ -122,6 +120,14 @@ func makeInstance(name string) interface{} {
 		return nil
 	}
 	return reflect.New(rval).Elem().Interface()
+}
+
+func structName(myvar interface{}) string {
+	if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
+		return t.Elem().Name()
+	} else {
+		return t.Name()
+	}
 }
 
 // Part of Advance strategy
@@ -318,44 +324,41 @@ func upsertQueryBuilder(bucketName, docID, bytesTxt string) (nqlStatement string
 
 func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
 
-	//Struct to its fields
-	//tableName := form["table"].(string)
-	//json.Marshal(&form)
-	//tableToBucket(modelName)
-	modelName, isOk := form["table"].(string) //collection
-	if !isOk {
-		return fmt.Errorf("table missing")
+	modelName, isFound := form["table"].(string) //collection
+	if !isFound {
+		return fmt.Errorf("collection name missing")
 	}
-	tableName, isOk := form["type"].(string)
-	if !isOk {
+	docID, isFound := form["id"].(string)
+	if !isFound {
+		return fmt.Errorf("id missing")
+	}
+	tableName, isFound := form["type"].(string)
+	if !isFound {
 		tableName = customTableName(modelName)
 	}
-	docID, isOk := form["id"].(string)
-	if !isOk {
-		return fmt.Errorf("table missing")
+	_, isFound = form["serial"].(string)
+	if !isFound {
+		form["serial"] = nextSerial(tableName)
 	}
-
 	form2 := structValueProcess(modelName, form) //n1ql
 	jsonTxt := vMapToJsonStr(form2)
-	//fmt.Println(jsonTxt)
 	query := upsertQueryBuilder(tableToBucket(tableName), docID, jsonTxt)
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-
-	res, err := stmt.Exec()
+	_, err = stmt.Exec()
 	if err != nil {
 		return err
 	}
-	lcount, _ := res.RowsAffected()
-	fmt.Println("insert:", lcount)
+	//lcount, _ := res.RowsAffected()
+	//fmt.Println("insert:", lcount)
 	return nil
 }
 
 // CheckCount Get row count using where condition
-func CheckCount(table, where string, db *sql.DB) (count int64) {
+func CheckCount(table, where string, db *sql.DB) (count int) {
 
 	sql := fmt.Sprintf("SELECT count(*)as cnt FROM %v WHERE %v;", tableToBucket(table), where)
 	rows := db.QueryRow(sql)
@@ -367,7 +370,8 @@ func CheckCount(table, where string, db *sql.DB) (count int64) {
 	}
 	json.Unmarshal(jsonBytes, &cmap)
 	if len(cmap) > 0 {
-		count, _ = strconv.ParseInt(fmt.Sprint(cmap["cnt"]), 10, 64) //float64
+		//count, _ = strconv.ParseInt(fmt.Sprint(cmap["cnt"]), 10, 64) //float64
+		count, _ = strconv.Atoi(fmt.Sprint(cmap["cnt"]))
 	}
 	return
 }
@@ -410,20 +414,4 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 		tableData = append(tableData, dd)
 	}
 	return tableData, nil
-}
-
-func addCompany(companyName string) error {
-
-	modelName := "Company"
-	var form = make(map[string]interface{})
-	id := xid.New().String()
-	form["id"] = id
-	form["company_name"] = companyName
-	form["table"] = modelName
-	form["type"] = customTableName(modelName)
-	form["serial"] = 1
-	form["status"] = 1
-
-	err = InsertUpdateMap(form, db)
-	return err
 }

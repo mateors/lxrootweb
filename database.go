@@ -3,6 +3,13 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
+
+	"github.com/rs/xid"
+)
+
+var (
+	COMPANY_TABLE = "Company"
 )
 
 // func checkCollectionExist(collectionName string) bool {
@@ -98,4 +105,39 @@ func basicForm() {
 
 	err = InsertUpdateMap(form, db)
 	fmt.Println(err)
+}
+
+func nextSerial(tableName string) int {
+	return CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
+}
+
+func addCompany(companyName string) error {
+
+	table := customTableName(COMPANY_TABLE)
+	var form = make(map[string]interface{})
+	id := xid.New().String()
+	form["id"] = id
+	form["company_name"] = companyName
+	form["table"] = COMPANY_TABLE //model
+	form["type"] = table
+	form["serial"] = nextSerial(table)
+	form["status"] = 1
+	err = InsertUpdateMap(form, db)
+	return err
+}
+
+func modelAction(modelName string, form url.Values) error {
+
+	var mForm = make(map[string]interface{})
+	//table := customTableName(modelName) //database table
+	mForm["table"] = modelName
+	mForm["id"] = xid.New().String()
+	//mForm["serial"] = nextSerial(table)
+
+	for key := range form {
+		//val := form.Get(key)
+		mForm[key] = form.Get(key)
+	}
+	err = InsertUpdateMap(mForm, db)
+	return err
 }

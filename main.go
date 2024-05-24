@@ -38,6 +38,7 @@ func init() {
 	//lxqlCon()
 	if DRIVER_NAME == "n1ql" {
 		registerType(Company{})
+		registerType(WaitList{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -53,9 +54,9 @@ func init() {
 
 	//tableName := customTableName("AccountTable")
 	//err = createCollection("company", db)
-	//err = addCompany("LXROOT LLC")
+	//err = addCompany("MATEORS DOT COM LLC")
 	//count := CheckCount("company", "type='company'", db)
-	//fmt.Println(count)
+	//fmt.Println(err)
 
 	// sql := fmt.Sprintf("SELECT id,company_name,serial,status FROM %s;", tableToBucket("company"))
 	// rows, err := GetRows(sql, db)
@@ -68,8 +69,13 @@ func init() {
 	// }
 
 	//slc := strStructToFields("Test")
-	cols, err := ReadTable2Columns("Company", db)
-	fmt.Println(err, cols)
+	//cols, err := ReadTable2Columns("Company", db)
+	//fmt.Println(err, cols)
+	//fmt.Println(customTableName("WaitList"))
+
+	name := structName(Company{})
+	name2 := structName(&WaitList{})
+	fmt.Println(name, name2)
 
 }
 
