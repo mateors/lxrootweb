@@ -2,7 +2,7 @@ package main
 
 //Company #1 wise database
 type Company struct {
-	ID          string `json:"aid"`
+	ID          string `json:"id"`
 	Type        string `json:"type"`
 	Serial      int64  `json:"serial"`
 	CompanyName string `json:"company_name,omitempty"`

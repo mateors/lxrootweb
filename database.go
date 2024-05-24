@@ -91,7 +91,7 @@ func basicForm() {
 
 	var form = make(map[string]interface{})
 	form["id"] = "id::1"
-	form["name"] = "Mostain"
+	form["company_name"] = "Mostain"
 	form["age"] = "40"
 	form["lang"] = []string{"golang", "rust"}
 	form["table"] = "Company"

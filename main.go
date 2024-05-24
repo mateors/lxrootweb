@@ -48,10 +48,11 @@ func init() {
 	}
 	log.Println("db ping successfull")
 
-	tableName := customTableName("Customer")
-
+	//tableName := customTableName("AccountTable")
 	//err = createCollection("company", db)
-	fmt.Println(tableName)
+	//err = addCompany("LXROOT LLC")
+	count := CheckCount("company", "type='company'", db)
+	fmt.Println(count)
 
 }
 

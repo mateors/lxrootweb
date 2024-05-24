@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/rs/xid"
 )
 
 type structFieldDetails struct {
@@ -20,6 +22,92 @@ type structFieldDetails struct {
 type charInfo struct {
 	Index int
 	Char  rune
+}
+
+type mapStringScan struct {
+	cp       []interface{}
+	row      map[string]string
+	colCount int
+	colNames []string
+}
+
+func newMapStringScan(columnNames []string) *mapStringScan {
+	lenCN := len(columnNames)
+	s := &mapStringScan{
+		cp:       make([]interface{}, lenCN),
+		row:      make(map[string]string, lenCN),
+		colCount: lenCN,
+		colNames: columnNames,
+	}
+	for i := 0; i < lenCN; i++ {
+		s.cp[i] = new(sql.RawBytes)
+	}
+	return s
+}
+
+func (s *mapStringScan) Update(rows *sql.Rows) error {
+
+	if err := rows.Scan(s.cp...); err != nil {
+		return err
+	}
+
+	for i := 0; i < s.colCount; i++ {
+		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
+			s.row[s.colNames[i]] = string(*rb)
+			*rb = nil // reset pointer to discard current value to avoid a bug
+		} else {
+			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+		}
+	}
+	return nil
+}
+
+func (s *mapStringScan) Get() map[string]string {
+	return s.row
+}
+
+type stringStringScan struct {
+	cp       []interface{}
+	row      []string
+	colCount int
+	colNames []string
+}
+
+func newStringStringScan(columnNames []string) *stringStringScan {
+	lenCN := len(columnNames)
+	s := &stringStringScan{
+		cp:       make([]interface{}, lenCN),
+		row:      make([]string, lenCN*2),
+		colCount: lenCN,
+		colNames: columnNames,
+	}
+	j := 0
+	for i := 0; i < lenCN; i++ {
+		s.cp[i] = new(sql.RawBytes)
+		s.row[j] = s.colNames[i]
+		j = j + 2
+	}
+	return s
+}
+func (s *stringStringScan) Update(rows *sql.Rows) error {
+	if err := rows.Scan(s.cp...); err != nil {
+		return err
+	}
+	j := 0
+	for i := 0; i < s.colCount; i++ {
+		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
+			s.row[j+1] = string(*rb)
+			*rb = nil // reset pointer to discard current value to avoid a bug
+		} else {
+			return fmt.Errorf("Cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+		}
+		j = j + 2
+	}
+	return nil
+}
+
+func (s *stringStringScan) Get() []string {
+	return s.row
 }
 
 func registerType(emptyStruct interface{}) {
@@ -138,9 +226,9 @@ func splitByUpperCase(text string) []string {
 	return list
 }
 
-func customTableName(text string) string {
+func customTableName(structName string) string {
 
-	list := splitByUpperCase(text)
+	list := splitByUpperCase(structName)
 	for i, part := range list {
 		list[i] = strings.ToLower(part)
 	}
@@ -208,6 +296,10 @@ func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
 	if !isOk {
 		return fmt.Errorf("table missing")
 	}
+	tableName, isOk := form["type"].(string)
+	if !isOk {
+		tableName = customTableName(modelName)
+	}
 	docID, isOk := form["id"].(string)
 	if !isOk {
 		return fmt.Errorf("table missing")
@@ -215,10 +307,8 @@ func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
 
 	form2 := structValueProcess(modelName, form) //n1ql
 	jsonTxt := vMapToJsonStr(form2)
-	fmt.Println(jsonTxt)
-	query := upsertQueryBuilder(BUCKET_NAME, docID, jsonTxt)
-	fmt.Println(query)
-
+	//fmt.Println(jsonTxt)
+	query := upsertQueryBuilder(tableToBucket(tableName), docID, jsonTxt)
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		return err
@@ -231,6 +321,39 @@ func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
 	}
 	lcount, _ := res.RowsAffected()
 	fmt.Println("insert:", lcount)
-
 	return nil
+}
+
+// CheckCount Get row count using where condition
+func CheckCount(table, where string, db *sql.DB) (count int64) {
+
+	sql := fmt.Sprintf("SELECT count(*)as cnt FROM %v WHERE %v;", tableToBucket(table), where)
+	rows := db.QueryRow(sql)
+	var cmap = make(map[string]interface{}, 0)
+	var jsonBytes []uint8
+	err = rows.Scan(&jsonBytes)
+	if err != nil {
+		log.Println("CheckCount:", err.Error())
+	}
+	json.Unmarshal(jsonBytes, &cmap)
+	if len(cmap) > 0 {
+		count, _ = strconv.ParseInt(fmt.Sprint(cmap["cnt"]), 10, 64) //float64
+	}
+	return
+}
+
+func addCompany(companyName string) error {
+
+	modelName := "Company"
+	var form = make(map[string]interface{})
+	id := xid.New().String()
+	form["id"] = id
+	form["company_name"] = companyName
+	form["table"] = modelName
+	form["type"] = customTableName(modelName)
+	form["serial"] = 1
+	form["status"] = 1
+
+	err = InsertUpdateMap(form, db)
+	return err
 }
