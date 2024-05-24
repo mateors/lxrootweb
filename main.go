@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	_ "lxrootweb/lxcb"
+	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
@@ -37,8 +38,14 @@ func init() {
 	//couchbaseConnTest()
 	//lxqlCon()
 	if DRIVER_NAME == "n1ql" {
-		registerType(Company{})
-		registerType(WaitList{})
+
+		//registerType(Company{})
+		//registerType(WaitList{})
+		lxql.BUCKET = BUCKET_NAME
+		lxql.SCOPE = SCOPE_NAME
+		//lxql.SetBucket()
+		lxql.RegisterType(Company{})
+		lxql.RegisterType(WaitList{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)

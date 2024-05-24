@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"lxrootweb/lxql"
 	"net/url"
 
 	"github.com/rs/xid"
@@ -103,12 +104,12 @@ func basicForm() {
 	form["lang"] = []string{"golang", "rust"}
 	form["table"] = "Company"
 
-	err = InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, db)
 	fmt.Println(err)
 }
 
 func nextSerial(tableName string) int {
-	return CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
+	return lxql.CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
 }
 
 func addCompany(companyName string) error {
@@ -122,22 +123,23 @@ func addCompany(companyName string) error {
 	form["type"] = table
 	form["serial"] = nextSerial(table)
 	form["status"] = 1
-	err = InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, db)
 	return err
 }
 
 func modelAction(modelName string, form url.Values) error {
 
 	var mForm = make(map[string]interface{})
-	//table := customTableName(modelName) //database table
+	table := customTableName(modelName) //database table
 	mForm["table"] = modelName
 	mForm["id"] = xid.New().String()
-	//mForm["serial"] = nextSerial(table)
+	mForm["type"] = table
+	mForm["cid"] = 1
+	mForm["serial"] = nextSerial(table)
 
 	for key := range form {
-		//val := form.Get(key)
 		mForm[key] = form.Get(key)
 	}
-	err = InsertUpdateMap(mForm, db)
+	err = lxql.InsertUpdateMap(mForm, db)
 	return err
 }
