@@ -17,6 +17,7 @@ type structFieldDetails struct {
 	FiledName string
 	TagName   string
 	Type      string
+	OmiyEmpty bool
 }
 
 type charInfo struct {
@@ -99,7 +100,7 @@ func (s *stringStringScan) Update(rows *sql.Rows) error {
 			s.row[j+1] = string(*rb)
 			*rb = nil // reset pointer to discard current value to avoid a bug
 		} else {
-			return fmt.Errorf("Cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
 		}
 		j = j + 2
 	}
@@ -116,7 +117,11 @@ func registerType(emptyStruct interface{}) {
 	typeRegistry[reflect.TypeOf(emptyStruct).Name()] = reflect.TypeOf(emptyStruct)
 }
 func makeInstance(name string) interface{} {
-	return reflect.New(typeRegistry[name]).Elem().Interface()
+	rval, isFound := typeRegistry[name]
+	if !isFound {
+		return nil
+	}
+	return reflect.New(rval).Elem().Interface()
 }
 
 // Part of Advance strategy
@@ -148,9 +153,34 @@ func strStructToFieldsType(structName string) (fieldList []*structFieldDetails) 
 		if omitFound {
 			commaFoundAt := strings.Index(fieldTag, ",")
 			ntag := fieldTag[0:commaFoundAt]
-			fieldList = append(fieldList, &structFieldDetails{fieldName, ntag, typeName})
+			fieldList = append(fieldList, &structFieldDetails{fieldName, ntag, typeName, omitFound})
 		} else {
-			fieldList = append(fieldList, &structFieldDetails{fieldName, fieldTag, typeName})
+			fieldList = append(fieldList, &structFieldDetails{fieldName, fieldTag, typeName, omitFound})
+		}
+	}
+	return fieldList
+}
+
+func strStructToFields(structName string) []string {
+
+	fieldList := []string{}
+	sInstance := makeInstance(structName) //"main.Account"
+	if sInstance == nil {
+		return nil
+	}
+	iVal := reflect.ValueOf(sInstance)
+	iTypeOf := iVal.Type()
+	for i := 0; i < iVal.NumField(); i++ {
+
+		fieldName := iTypeOf.Field(i).Name
+		fieldTag := iTypeOf.Field(i).Tag.Get("json")
+		if fieldTag == "" {
+			fieldList = append(fieldList, fieldName)
+		} else if strings.Contains(fieldTag, ",") {
+			slc := strings.Split(fieldTag, ",")
+			fieldList = append(fieldList, slc[0])
+		} else {
+			fieldList = append(fieldList, fieldTag)
 		}
 	}
 	return fieldList
@@ -340,6 +370,63 @@ func CheckCount(table, where string, db *sql.DB) (count int64) {
 		count, _ = strconv.ParseInt(fmt.Sprint(cmap["cnt"]), 10, 64) //float64
 	}
 	return
+}
+
+// ReadTable2Columns Get table all columns as a slice of string
+func ReadTable2Columns(table string, db *sql.DB) ([]string, error) {
+
+	sql := fmt.Sprintf("SHOW COLUMNS FROM `%v`;", table)
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	var vfield, vtype, vnull, vkey, vextra string
+	var vdefault *string
+
+	cols := []string{}
+	for rows.Next() {
+		err = rows.Scan(&vfield, &vtype, &vnull, &vkey, &vdefault, &vextra)
+		if err != nil {
+			return nil, err
+		}
+		cols = append(cols, vfield)
+	}
+	return cols, nil
+}
+
+// GetAllRowsByQuery Get all table rows using raw sql query
+func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
+
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	columnNames, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+
+	rc := newMapStringScan(columnNames)
+	tableData := make([]map[string]interface{}, 0)
+
+	for rows.Next() {
+
+		err := rc.Update(rows)
+		if err != nil {
+			break
+		}
+		cv := rc.Get()
+		dd := make(map[string]interface{})
+		for _, col := range columnNames {
+			dd[col] = cv[col]
+		}
+		tableData = append(tableData, dd)
+	}
+	return tableData, nil
 }
 
 func addCompany(companyName string) error {

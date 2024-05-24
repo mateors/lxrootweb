@@ -51,8 +51,21 @@ func init() {
 	//tableName := customTableName("AccountTable")
 	//err = createCollection("company", db)
 	//err = addCompany("LXROOT LLC")
-	count := CheckCount("company", "type='company'", db)
-	fmt.Println(count)
+	//count := CheckCount("company", "type='company'", db)
+	//fmt.Println(count)
+
+	// sql := fmt.Sprintf("SELECT id,company_name,serial,status FROM %s;", tableToBucket("company"))
+	// rows, err := GetRows(sql, db)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return
+	// }
+	// for _, row := range rows {
+	// 	fmt.Println(row)
+	// }
+
+	//slc := strStructToFields("Test")
+	//fmt.Println(slc)
 
 }
 
