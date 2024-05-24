@@ -25,6 +25,7 @@ const (
 	DBPORT      = "8093"
 	BUCKET_NAME = "lxroot"
 	SCOPE_NAME  = "_default"
+	DRIVER_NAME = "n1ql"
 )
 
 var db *sql.DB
@@ -35,10 +36,12 @@ func init() {
 	workingDirectory, _ = os.Getwd()
 	//couchbaseConnTest()
 	//lxqlCon()
-	registerType(Company{})
+	if DRIVER_NAME == "n1ql" {
+		registerType(Company{})
+	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
-	db, err = sql.Open("n1ql", dataSourceName)
+	db, err = sql.Open(DRIVER_NAME, dataSourceName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,7 +68,8 @@ func init() {
 	// }
 
 	//slc := strStructToFields("Test")
-	//fmt.Println(slc)
+	cols, err := ReadTable2Columns("Company", db)
+	fmt.Println(err, cols)
 
 }
 

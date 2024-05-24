@@ -373,27 +373,10 @@ func CheckCount(table, where string, db *sql.DB) (count int64) {
 }
 
 // ReadTable2Columns Get table all columns as a slice of string
-func ReadTable2Columns(table string, db *sql.DB) ([]string, error) {
+func ReadTable2Columns(table string, db *sql.DB) (cols []string, err error) {
 
-	sql := fmt.Sprintf("SHOW COLUMNS FROM `%v`;", table)
-	rows, err := db.Query(sql)
-	if err != nil {
-		return nil, err
-	}
-
-	defer rows.Close()
-	var vfield, vtype, vnull, vkey, vextra string
-	var vdefault *string
-
-	cols := []string{}
-	for rows.Next() {
-		err = rows.Scan(&vfield, &vtype, &vnull, &vkey, &vdefault, &vextra)
-		if err != nil {
-			return nil, err
-		}
-		cols = append(cols, vfield)
-	}
-	return cols, nil
+	cols = strStructToFields(table)
+	return
 }
 
 // GetAllRowsByQuery Get all table rows using raw sql query
