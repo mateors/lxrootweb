@@ -39,11 +39,8 @@ func init() {
 	//lxqlCon()
 	if DRIVER_NAME == "n1ql" {
 
-		//registerType(Company{})
-		//registerType(WaitList{})
 		lxql.BUCKET = BUCKET_NAME
 		lxql.SCOPE = SCOPE_NAME
-		//lxql.SetBucket()
 		lxql.RegisterType(Company{})
 		lxql.RegisterType(WaitList{})
 	}
@@ -63,6 +60,9 @@ func init() {
 	//err = createCollection("company", db)
 	//err = addCompany("MATEORS DOT COM LLC")
 	//count := CheckCount("company", "type='company'", db)
+
+	//DELETE FROM lxroot._default.company USE KEYS ["cp8346a2r9eu4jj9mhjg","cp8858a2r9et68vde730"]
+	//_, err = db.Exec("DELETE FROM lxroot._default.company WHERE id='cp8ba4i2r9eu5orkqda0';")
 	//fmt.Println(err)
 
 	// sql := fmt.Sprintf("SELECT id,company_name,serial,status FROM %s;", tableToBucket("company"))

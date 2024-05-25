@@ -134,7 +134,6 @@ func modelAction(modelName string, form url.Values) error {
 	mForm["table"] = modelName
 	mForm["id"] = xid.New().String()
 	mForm["type"] = table
-	mForm["cid"] = 1
 	mForm["serial"] = nextSerial(table)
 
 	for key := range form {
