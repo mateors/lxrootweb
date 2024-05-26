@@ -21,10 +21,9 @@
 
             <div class="bg-[url('../image/pattern/image_16_png.png')] w-screen md:w-[40%] opacity-[0.03] absolute left-0 top-0 bottom-0 -z-10"></div>
 
-            <div class="container mx-auto px-5 py-12 md:py-20">
+            <div id="container" class="container mx-auto px-5 py-12 md:py-20">
 
-
-                <div class="bg-white max-w-[960px] mx-auto w-full rounded-xl md:grid md:grid-cols-[1fr,1.5fr] justify-center shadow-lg overflow-hidden">
+                <div style="display:none" class="bg-white max-w-[960px] mx-auto w-full rounded-xl md:grid md:grid-cols-[1fr,1.5fr] justify-center shadow-lg overflow-hidden">
 
                     <div class="faq-content bg-primary text-slate-700 p-5 md:p-14">
 
@@ -87,6 +86,14 @@
                     </div>
 
                 </div>
+
+                <div class="my-10 bg-white max-w-[960px] mx-auto w-full rounded-xl justify-center shadow-lg overflow-hidden hidden">
+                    <div class="flex flex-col w-full p-5 md:p-14">
+                        <h1 class="head-1 text-slate-700">Done!</h1>
+                        <p class="text-slate-600 mt-2">Thank you for submitting your request. You will receive an email shortly; please check your inbox and junk folder. We will keep you informed and provide updates as soon as <strong>LxRoot</strong> is released.</p>
+                    </div>
+                </div>
+                
             </div>
 
         </section>
@@ -194,6 +201,9 @@
 
         });
 
+        console.log($('#container').childItem(0).remove());
+        console.log($('#container').childItem(0).removeClass("hidden"));
+
         $('#mForm').submit( (e) => {
         
             e.preventDefault();
@@ -208,6 +218,8 @@
             }).then( (data) => {
 
                 console.log("done:->",data);
+
+                //$('#container').childItem(0).remove()
 
             }).catch( (err) => {
                 console.log('fail:',err);

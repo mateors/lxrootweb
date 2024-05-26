@@ -778,7 +778,7 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 		var errNo int = 1
 		var errMsg string = "OK"
 		r.ParseForm()
-		//fmt.Println(r.Form)
+		commonDataSet(r)
 
 		ctoken, err := getCookie("ctoken", r) //cross check with form token
 		logError("ctoken", err)

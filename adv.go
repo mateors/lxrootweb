@@ -14,6 +14,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/mateors/mtool"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -222,4 +223,49 @@ func vParser(vtype, key string, form url.Values) (output interface{}) {
 		output = value
 	}
 	return
+}
+
+func tokenPullNSet(r *http.Request) error {
+
+	ctoken, err := getCookie("ctoken", r) //cross check with form token
+	if err != nil {
+		log.Println("ERR_1tokenPullNSet:", err)
+		return err
+	}
+	token, err := getCookie("token", r) //API_TOKEN
+	if err != nil {
+		log.Println("ERR_2tokenPullNSet:", err)
+		return err
+	}
+	r.Form.Set("token", token)   //API
+	r.Form.Set("ctoken", ctoken) //uuid.NewV4()
+	return nil
+}
+
+func companyId(website string) string {
+
+	sql := fmt.Sprintf("SELECT id FROM %s WHERE website='%s';", tableToBucket("company"), website)
+	prow := db.QueryRow(sql)
+	var cmap = make(map[string]interface{}, 0)
+	var jsonBytes []uint8
+	err := prow.Scan(&jsonBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+	json.Unmarshal(jsonBytes, &cmap)
+	return cmap["id"].(string)
+}
+
+func commonDataSet(r *http.Request) error {
+
+	ctoken, err := getCookie("ctoken", r) //cross check with form token
+	if err != nil {
+		log.Println("ERR_token:", err)
+		return err
+	}
+	r.Form.Set("cid", COMPANY_ID)
+	r.Form.Set("create_date", mtool.TimeNow())
+	r.Form.Set("ctoken", ctoken)
+	r.Form.Set("status", "1")
+	return nil
 }

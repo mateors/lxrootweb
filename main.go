@@ -32,6 +32,7 @@ const (
 
 var db *sql.DB
 var err error
+var COMPANY_ID string
 
 func init() {
 
@@ -56,6 +57,7 @@ func init() {
 		log.Fatal(err)
 	}
 	log.Println("db ping successfull")
+	COMPANY_ID = companyId("lxroot.com") //company id need to be inserted before proceed
 
 	//tableName := customTableName("AccountTable")
 	//err = createCollection("company", db)
@@ -84,6 +86,7 @@ func init() {
 	//name := structName(Company{})
 	//name2 := structName(&WaitList{})
 	//fmt.Println(name, name2)
+	//fmt.Println(COMPANY_ID)
 
 }
 
