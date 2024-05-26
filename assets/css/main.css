@@ -652,6 +652,7 @@ html {
   --clr-graniteGray: #62606b;
   --clr-ghostWhite: #f8f9ff;
   --clr-white: #ffffff;
+  --color-text-base: #4b5563;
 }
 
 *, ::before, ::after {
@@ -2429,7 +2430,9 @@ html {
 .hidden {
   display: none;
 }
-
+.\!hidden {
+  display: none !important;
+}
 .\!h-10 {
   height: 2.5rem !important;
 }
@@ -5682,4 +5685,32 @@ body.modal-open {
 }
 .\!fs36px{
   font-size: 36px !important;
+}
+
+
+.spinner {
+  border-radius: 50%;
+  border-width: 1px;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--clr-white);
+  animation-duration: 0.75s;
+  animation-name: spinner-border;
+  border-right-color: transparent;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+.spinner.s32 {
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spinner-border {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

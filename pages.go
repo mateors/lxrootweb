@@ -798,10 +798,9 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 			errNo = 0
 			modelName := structName(WaitList{})
 			err := modelUpsert(modelName, r.Form)
-			fmt.Println(err, r.Form)
-			//fMap := modelFilter(modelName, r.Form)
-			//fmt.Println(fMap)
-
+			if err == nil {
+				errMsg = "Thank you for submitting your request. You will receive an email shortly; please check your inbox and junk folder. We will keep you informed and provide updates as soon as <strong>LxRoot</strong> is released."
+			}
 		}
 
 		var row = make(map[string]interface{})
@@ -812,7 +811,6 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		//fmt.Println(string(bs))
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(bs))
 	}
