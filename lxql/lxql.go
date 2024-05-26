@@ -118,14 +118,6 @@ func (s *stringStringScan) Get() []string {
 	return s.row
 }
 
-// func structName(myvar interface{}) string {
-// 	if t := reflect.TypeOf(myvar); t.Kind() == reflect.Ptr {
-// 		return t.Elem().Name()
-// 	} else {
-// 		return t.Name()
-// 	}
-// }
-
 func RegisterType(emptyStruct interface{}) {
 	//fmt.Println(reflect.TypeOf(emptyStruct).String()) //main.Account
 	//fmt.Println(reflect.TypeOf(emptyStruct).Name())   //Account
