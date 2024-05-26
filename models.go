@@ -181,6 +181,7 @@ type Settings struct {
 	Serial     int64  `json:"serial"`
 	FieldName  string `json:"field_name"`
 	FieldValue string `json:"field_value"`
+	Purpose    string `json:"purpose"`
 	Status     int    `json:"status"`
 }
 

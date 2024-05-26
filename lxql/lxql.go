@@ -317,20 +317,29 @@ func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
 	return nil
 }
 
+func scanMap(jsonBytes []uint8) map[string]interface{} {
+
+	var cmap = make(map[string]interface{}, 0)
+	err := json.Unmarshal(jsonBytes, &cmap)
+	if err != nil {
+		return nil
+	}
+	return cmap
+}
+
 // CheckCount Get row count using where condition
 func CheckCount(table, where string, db *sql.DB) (count int) {
 
-	sql := fmt.Sprintf("SELECT count(*)as cnt FROM %v WHERE %v;", tableToBucket(table), where)
+	sql := fmt.Sprintf("SELECT count(*)as cnt FROM %s WHERE %s;", tableToBucket(table), where)
 	rows := db.QueryRow(sql)
-	var cmap = make(map[string]interface{}, 0)
 	var jsonBytes []uint8
 	err := rows.Scan(&jsonBytes)
 	if err != nil {
 		log.Println("CheckCount:", err.Error())
+		return 0
 	}
-	json.Unmarshal(jsonBytes, &cmap)
+	cmap := scanMap(jsonBytes)
 	if len(cmap) > 0 {
-		//count, _ = strconv.ParseInt(fmt.Sprint(cmap["cnt"]), 10, 64) //float64
 		count, _ = strconv.Atoi(fmt.Sprint(cmap["cnt"]))
 	}
 	return
@@ -373,4 +382,23 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 		tableData = append(tableData, dd)
 	}
 	return tableData, nil
+}
+
+// FieldByValue Get one field_value using where clause
+func FieldByValue(table, fieldName, where string, db *sql.DB) string {
+
+	sql := fmt.Sprintf("SELECT %s FROM %s WHERE %s;", fieldName, table, where)
+	rows := db.QueryRow(sql)
+	var vfield string
+	var jsonBytes []uint8
+	err := rows.Scan(&jsonBytes)
+	if err != nil {
+		log.Println("CheckCount:", err.Error())
+		return ""
+	}
+	cmap := scanMap(jsonBytes)
+	if len(cmap) > 0 {
+		vfield = fmt.Sprint(cmap[fieldName])
+	}
+	return vfield
 }

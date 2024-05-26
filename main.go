@@ -45,6 +45,7 @@ func init() {
 		lxql.SCOPE = SCOPE_NAME
 		lxql.RegisterModel(Company{})
 		lxql.RegisterModel(WaitList{})
+		lxql.RegisterModel(Settings{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -58,6 +59,15 @@ func init() {
 	}
 	log.Println("db ping successfull")
 	COMPANY_ID = companyId("lxroot.com") //company id need to be inserted before proceed
+
+	//err = SendEmail([]string{"billahmdmostain@gmail.com"}, "WELCOME", "Welcome to LxRoot")
+	//fmt.Println(err)
+
+	//fmt.Println(settingsValue("emailuser"))
+	// addSettings("emailuser", "info@lxroot.com", "sysemail")
+	// addSettings("emailpass", "test4321", "sysemail")
+	// addSettings("emailserver", "mail.lxroot.com", "sysemail")
+	// addSettings("emailport", "587", "sysemail")
 
 	//tableName := customTableName("AccountTable")
 	//err = createCollection("company", db)
@@ -83,9 +93,9 @@ func init() {
 	//fmt.Println(err, cols)
 	//fmt.Println(customTableName("WaitList"))
 
-	//name := structName(Company{})
+	//name := structName(Settings{})
 	//name2 := structName(&WaitList{})
-	//fmt.Println(name, name2)
+	//fmt.Println(customTableName(structName(Settings{})))
 	//fmt.Println(COMPANY_ID)
 
 }

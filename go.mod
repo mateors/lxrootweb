@@ -9,6 +9,7 @@ require (
 	github.com/couchbase/gomemcached v0.3.1 // indirect
 	github.com/couchbase/goutils v0.1.2 // indirect
 	github.com/go-chi/chi/v5 v5.0.12 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/mateors/money v0.0.0-20200823090156-43894c563246 // indirect

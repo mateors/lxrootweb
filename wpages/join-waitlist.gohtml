@@ -224,8 +224,7 @@
             submitBtn.empty();
             submitBtn.addChild(elmDivSpinner());
             submitBtn.addChild(document.createTextNode('Please wait'));
-            //submitBtn.prop('disabled', true);
-
+            submitBtn.prop('disabled', true);
 
             $.ajax({
                 async: true,

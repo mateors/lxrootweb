@@ -142,3 +142,25 @@ func modelUpsert(modelName string, form url.Values) error {
 	err = lxql.InsertUpdateMap(mForm, db)
 	return err
 }
+
+func addSettings(fieldName, fieldValue, purpose string) error {
+
+	modelName := structName(Settings{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id := xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["serial"] = nextSerial(table)
+	form["table"] = modelName
+	form["field_name"] = fieldName
+	form["field_value"] = fieldValue
+	form["purpose"] = purpose
+	form["status"] = 1
+	return lxql.InsertUpdateMap(form, db)
+}
+
+func settingsValue(fieldName string) string {
+	return lxql.FieldByValue(tableToBucket("settings"), "field_value", fmt.Sprintf("field_name='%s'", fieldName), db)
+}

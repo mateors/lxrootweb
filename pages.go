@@ -799,7 +799,19 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 			modelName := structName(WaitList{})
 			err := modelUpsert(modelName, r.Form)
 			if err == nil {
-				errMsg = "Thank you for submitting your request. You will receive an email shortly; please check your inbox and junk folder. We will keep you informed and provide updates as soon as <strong>LxRoot</strong> is released."
+
+				email := r.FormValue("email")
+				errMsg = settingsValue("waitlist_confirmation") //to display after form submission
+
+				subject := "Thank You for Joining the LxRoot Waitlist!"
+				emailTemplate := settingsValue("waitlist_email")
+
+				dmap := make(map[string]interface{})
+				dmap["first_name"] = r.FormValue("first_name")
+				dmap["last_name"] = r.FormValue("last_name")
+				emailBody, _ := templatePrepare(emailTemplate, dmap)
+				err = SendEmail([]string{email}, subject, emailBody)
+				logError("waitListSendEmail", err)
 			}
 		}
 

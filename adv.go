@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"net/url"
@@ -263,9 +265,34 @@ func commonDataSet(r *http.Request) error {
 		log.Println("ERR_token:", err)
 		return err
 	}
+	ipAddress := cleanIp(mtool.ReadUserIP(r))
+	r.Form.Set("ip_address", ipAddress)
 	r.Form.Set("cid", COMPANY_ID)
 	r.Form.Set("create_date", mtool.TimeNow())
 	r.Form.Set("ctoken", ctoken)
 	r.Form.Set("status", "1")
 	return nil
+}
+
+func cleanIp(ipwithport string) string {
+	slc := strings.Split(ipwithport, ":")
+	if len(slc) == 2 {
+		return slc[0]
+	}
+	return ipwithport
+}
+
+func templatePrepare(tmpltText string, dmap map[string]interface{}) (string, error) {
+
+	var tplOutput bytes.Buffer
+	tpl := template.New("email")
+	eml, err := tpl.Parse(tmpltText)
+	if err != nil {
+		return "", err
+	}
+	err = eml.Execute(&tplOutput, dmap)
+	if err != nil {
+		return "", err
+	}
+	return tplOutput.String(), nil
 }
