@@ -82,6 +82,7 @@ type stringStringScan struct {
 }
 
 func newStringStringScan(columnNames []string) *stringStringScan {
+
 	lenCN := len(columnNames)
 	s := &stringStringScan{
 		cp:       make([]interface{}, lenCN),
@@ -118,11 +119,10 @@ func (s *stringStringScan) Get() []string {
 	return s.row
 }
 
-func RegisterType(emptyStruct interface{}) {
-	//fmt.Println(reflect.TypeOf(emptyStruct).String()) //main.Account
-	//fmt.Println(reflect.TypeOf(emptyStruct).Name())   //Account
+func RegisterModel(emptyStruct interface{}) {
 	typeRegistry[reflect.TypeOf(emptyStruct).Name()] = reflect.TypeOf(emptyStruct)
 }
+
 func makeInstance(name string) interface{} {
 	rval, isFound := typeRegistry[name]
 	if !isFound {
@@ -131,8 +131,7 @@ func makeInstance(name string) interface{} {
 	return reflect.New(rval).Elem().Interface()
 }
 
-// Part of Advance strategy
-func strStructToFieldsType(structName string) (fieldList []*structFieldDetails) {
+func structNameToFields(structName string) (fieldList []*structFieldDetails) {
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -194,20 +193,24 @@ func strStructToFields(structName string) []string {
 func structValueProcess(structName string, form map[string]interface{}) map[string]interface{} {
 
 	var rform = make(map[string]interface{})
-	fslc := strStructToFieldsType(structName) //
+	fslc := structNameToFields(structName) //
+
 	for _, fd := range fslc {
 
-		val := fmt.Sprintf("%v", form[fd.TagName])
+		val, isParsed := form[fd.TagName]
+		if !isParsed {
+			val = ""
+		}
 		if fd.Type == "int" {
-			kval, _ := strconv.Atoi(val)
+			kval, _ := strconv.Atoi(fmt.Sprint(val))
 			rform[fd.TagName] = kval
 
 		} else if fd.Type == "int64" {
-			kval, _ := strconv.ParseInt(val, 10, 64)
+			kval, _ := strconv.ParseInt(fmt.Sprint(val), 10, 64)
 			rform[fd.TagName] = kval
 
 		} else if fd.Type == "float64" {
-			kval, _ := strconv.ParseFloat(val, 64)
+			kval, _ := strconv.ParseFloat(fmt.Sprint(val), 64)
 			rform[fd.TagName] = kval
 
 		} else if fd.Type == "string" {
@@ -247,13 +250,11 @@ func splitByUpperCase(text string) []string {
 	splitIndex := 0
 	for i, c := range ci {
 		if i > 0 {
-			//fmt.Println(i, text[splitIndex:c.Index]) //c.Index, c.Char, fmt.Sprintf(`%c`, c.Char)
 			list = append(list, text[splitIndex:c.Index])
 			splitIndex = c.Index
 		}
 	}
 	if splitIndex < len(text) {
-		//fmt.Println(name[splitIndex:])
 		list = append(list, text[splitIndex:])
 	}
 	return list

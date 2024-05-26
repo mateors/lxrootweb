@@ -1,19 +1,22 @@
 package main
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
+	"net/http"
+	"net/url"
 	"reflect"
+	"strconv"
 	"strings"
 	"unicode"
+
+	uuid "github.com/satori/go.uuid"
 )
 
-type structFieldDetails struct {
-	FiledName string
-	TagName   string
-	Type      string
-	OmiyEmpty bool
-}
 type charInfo struct {
 	Index int
 	Char  rune
@@ -79,4 +82,144 @@ func customTableName(structName string) string {
 		list[i] = strings.ToLower(part)
 	}
 	return strings.Join(list, "_")
+}
+
+// Anti CSRF token
+func csrfToken() string {
+	return uuid.NewV4().String()
+}
+
+func hmacHash(message, secretKey string) string {
+	mac := hmac.New(sha256.New, []byte(secretKey))
+	mac.Write([]byte(message))
+	return fmt.Sprintf("%x", mac.Sum(nil))
+}
+
+func getCookie(cookieName string, r *http.Request) (string, error) {
+
+	ecookie, err := r.Cookie(cookieName)
+	if err != nil {
+		return "", err
+	}
+	return ecookie.Value, nil
+}
+
+func delCookie(cookieName string, r *http.Request, w http.ResponseWriter) error {
+
+	pcookie, err := r.Cookie(cookieName)
+	if err != http.ErrNoCookie {
+		pcookie.Name = cookieName
+		pcookie.MaxAge = -1
+		pcookie.Value = ""
+		pcookie.Path = "/"
+		pcookie.HttpOnly = true
+		http.SetCookie(w, pcookie)
+	}
+	return err
+}
+
+func setCookie(cookieName, value string, timeInSec int, w http.ResponseWriter) {
+
+	c := &http.Cookie{
+		Name:     cookieName,
+		Value:    value,
+		MaxAge:   timeInSec, //300, //5 minutes = 300 seconds
+		SameSite: http.SameSiteLaxMode,
+		HttpOnly: true,
+	}
+	http.SetCookie(w, c)
+}
+
+func fCall(m map[string]interface{}, name string, params ...interface{}) (result []reflect.Value, err error) {
+
+	f := reflect.ValueOf(m[name])
+	if len(params) != f.Type().NumIn() {
+		err = errors.New("the number of params is not adapted")
+		return
+	}
+	in := make([]reflect.Value, len(params))
+	for k, param := range params {
+		in[k] = reflect.ValueOf(param)
+	}
+	result = f.Call(in)
+	return
+
+}
+
+// slice:=["ERROR invalid username", "valid"]
+func errorInSlice(slice []string, val string) (int, bool) {
+	for i, item := range slice {
+		if strings.Contains(item, val) {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+func CheckMultipleConditionTrue(args map[string]interface{}, funcsMap map[string]interface{}) string {
+
+	var response string
+	resAray := make([]string, 0)
+	for key := range funcsMap {
+		result, err := fCall(funcsMap, key, args) //result is type of []reflect.Value
+		if err != nil {
+			log.Println(err)
+		}
+		res, isOk := result[0].Interface().(string) //Converting reflect.Value to string
+		if !isOk {
+			log.Println("error at CheckMultipleConditionTrue")
+		}
+		resAray = append(resAray, res)
+	}
+	i, errorExist := errorInSlice(resAray, "ERROR")
+	if errorExist {
+		response = fmt.Sprintf("%v", resAray[i]) //ERROR EXIST in CheckError =>>
+	} else {
+		response = "OKAY"
+	}
+	return response
+}
+
+func validCSRF(args map[string]interface{}) string {
+	ctokenh, isOk := args["ctoken"].(string)
+	if isOk {
+		ftoken := fmt.Sprint(args["ftoken"])
+		ftokenh := hmacHash(ftoken, ENCDECPASS)
+		//fmt.Println("<>", ftoken, ctokenh, ftokenh)
+		if ftokenh == ctokenh {
+			return "valid"
+		}
+	}
+	return "ERROR invalid ctoken"
+}
+
+func logError(prefix string, err error) {
+	if err != nil {
+		log.Printf("ERR_%s: %s", prefix, err.Error())
+	}
+}
+
+// value parser
+func vParser(vtype, key string, form url.Values) (output interface{}) {
+
+	value := form.Get(key)
+	if vtype == "int" {
+		cval, _ := strconv.Atoi(value)
+		output = cval
+
+	} else if vtype == "int64" {
+		cval, _ := strconv.ParseInt(value, 10, 64)
+		output = cval
+
+	} else if vtype == "float64" {
+		cval, _ := strconv.ParseFloat(value, 64)
+		output = cval
+
+	} else if vtype == "slice" {
+		output = form[key]
+
+	} else {
+		output = value
+	}
+	return
 }

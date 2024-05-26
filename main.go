@@ -27,6 +27,7 @@ const (
 	BUCKET_NAME = "lxroot"
 	SCOPE_NAME  = "_default"
 	DRIVER_NAME = "n1ql"
+	ENCDECPASS  = "MosT$sLxRoot"
 )
 
 var db *sql.DB
@@ -41,8 +42,8 @@ func init() {
 
 		lxql.BUCKET = BUCKET_NAME
 		lxql.SCOPE = SCOPE_NAME
-		lxql.RegisterType(Company{})
-		lxql.RegisterType(WaitList{})
+		lxql.RegisterModel(Company{})
+		lxql.RegisterModel(WaitList{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)

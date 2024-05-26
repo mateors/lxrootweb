@@ -127,7 +127,7 @@ func addCompany(companyName string) error {
 	return err
 }
 
-func modelAction(modelName string, form url.Values) error {
+func modelUpsert(modelName string, form url.Values) error {
 
 	var mForm = make(map[string]interface{})
 	table := customTableName(modelName) //database table

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -748,22 +749,71 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			CsrfToken    string
 		}{
 			Title:        "Join-waitlist | LxRoot",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-312px)]",
+			CsrfToken:    ctoken,
 		}
 
 		err = tmplt.Execute(w, data)
 		if err != nil {
 			log.Println(err)
 		}
+
+	} else if r.Method == http.MethodPost {
+
+		var errNo int = 1
+		var errMsg string = "OK"
+		r.ParseForm()
+		//fmt.Println(r.Form)
+
+		ctoken, err := getCookie("ctoken", r) //cross check with form token
+		logError("ctoken", err)
+		r.Form.Set("ctoken", ctoken)
+
+		funcsMap := map[string]interface{}{
+			"validPermission": validCSRF,
+		}
+		rmap := make(map[string]interface{})
+		for key := range r.Form {
+			rmap[key] = r.FormValue(key)
+		}
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
+
+		if response == "OKAY" {
+
+			errNo = 0
+			modelName := structName(WaitList{})
+			err := modelUpsert(modelName, r.Form)
+			fmt.Println(err, r.Form)
+			//fMap := modelFilter(modelName, r.Form)
+			//fmt.Println(fMap)
+
+		}
+
+		var row = make(map[string]interface{})
+		row["error"] = errNo
+		row["message"] = errMsg
+		bs, err := json.Marshal(row)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		//fmt.Println(string(bs))
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, string(bs))
 	}
 }

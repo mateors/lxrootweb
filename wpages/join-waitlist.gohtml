@@ -1,5 +1,7 @@
 {{define "content"}}
 
+    {{$ftoken := .CsrfToken}}
+
     <div class="content h-auto">
 
 
@@ -52,26 +54,27 @@
                     </div>
 
                     <div class="form-content p-5 pb-10 md:p-14">
-                        <form method="post">
+                        <form id="mForm" method="post">
+                            <input type="hidden" name="ftoken" value="{{$ftoken}}" />
 
                             <div class="field flex flex-col mb-4">
-                                <label for="name-field">First Name <span class="required-spot">*</span></label>
-                                <input type="text" id="name-field" name="name-field" placeholder="First name here"  required />
+                                <label for="fname">First Name <span class="required-spot">*</span></label>
+                                <input type="text" id="fname" name="first_name" placeholder="First name here"  required />
                             </div>
 
                             <div class="field flex flex-col mb-4">
-                                <label for="name-field">Last Name <span class="required-spot">*</span></label>
-                                <input type="text" id="name-field" name="name-field" placeholder="Last name here" required />
+                                <label for="lname">Last Name <span class="required-spot">*</span></label>
+                                <input type="text" id="lname" name="last_name" placeholder="Last name here" required />
                             </div>
 
                             <div class="field flex flex-col mb-4">
-                                <label for="name-field">Company</label>
-                                <input type="text" id="name-field" name="website" placeholder="Company name or website" />
+                                <label for="company">Company</label>
+                                <input type="text" id="company" name="company_url" placeholder="Company name or website" />
                             </div>
 
                             <div class="field flex flex-col mb-4">
-                                <label for="email-field">Email Address <span class="required-spot">*</span></label>
-                                <input type="email" id="email-field" name="email-field" placeholder="Enter email here" required />
+                                <label for="email">Email Address <span class="required-spot">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="Enter email here" required />
                             </div>
 
                             <button type="submit" class="w-full filled-button !justify-between gap-2 text-white">
@@ -188,6 +191,28 @@
                     svg.style.stroke = '#edededd1'
                 });
             }
+
+        });
+
+        $('#mForm').submit( (e) => {
+        
+            e.preventDefault();
+
+            $.ajax({
+                async: true,
+                type: "POST",
+                dataType: "json", //text
+                url: "/join-waitlist",
+                data: $(this).serialize(),
+
+            }).then( (data) => {
+
+                console.log("done:->",data);
+
+            }).catch( (err) => {
+                console.log('fail:',err);
+            });
+            return false;
 
         });
 
