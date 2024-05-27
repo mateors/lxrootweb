@@ -1,0 +1,112 @@
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "settings",
+    "field_name": "waitlist_confirmation",
+    "field_value": "Thank you for submitting your request. You will receive an email shortly; please check your inbox and junk folder. We will keep you informed and provide updates as soon as \u003cstrong\u003eLxRoot\u003c/strong\u003e is released.",
+    "id": "cp9kbei2r9eo1ka2r4hg",
+    "purpose": "template",
+    "scope": "_default",
+    "serial": 6,
+    "status": 1,
+    "type": "settings"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "settings",
+    "field_name": "waitlist_email",
+    "field_value": "Dear {{.first_name}} {{.last_name}},\n\nThank you for your interest in LxRoot! We are thrilled to have you on board. 🚀\n\nBy joining our waitlist, you’ve secured your spot to be among the first to receive updates, exclusive sneak peeks, and notifications about the official release. As we prepare to launch, we’ll keep you informed every step of the way.\n\nIn the meantime, feel free to explore our website, follow us on social media, and share your excitement with fellow tech enthusiasts. Your support means the world to us!\n\nStay tuned for more exciting news, and thank you for being a part of the LxRoot community.\n\nBest regards,\nThe LxRoot Team",
+    "id": "cp9k8ki2r9eo11g2mbc0",
+    "purpose": "template",
+    "scope": "_default",
+    "serial": 5,
+    "status": 1,
+    "type": "settings"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "settings",
+    "field_name": "emailuser",
+    "field_value": "info@lxroot.com",
+    "id": "cp9g54a2r9eusnbt2kg0",
+    "purpose": "sysemail",
+    "scope": "_default",
+    "serial": 1,
+    "status": 1,
+    "type": "settings"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "settings",
+    "field_name": "emailpass",
+    "field_value": "test4321",
+    "id": "cp9g54i2r9eusnbt2kgg",
+    "purpose": "sysemail",
+    "scope": "_default",
+    "serial": 2,
+    "status": 1,
+    "type": "settings"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "wait_list",
+    "company_url": "LxRoot LLC",
+    "create_date": "2024-05-26 22:06:15",
+    "email": "ehsan@lxroot.com",
+    "first_name": "Ehsan",
+    "id": "cp9lrtvrupfgf7k84ah0",
+    "ip_address": "2603:900a:1603:8170::8263",
+    "last_name": "Karim",
+    "scope": "_default",
+    "serial": 2,
+    "status": 1,
+    "type": "wait_list"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "settings",
+    "field_name": "emailport",
+    "field_value": "587",
+    "id": "cp9g5522r9eusnbt2khg",
+    "purpose": "sysemail",
+    "scope": "_default",
+    "serial": 4,
+    "status": 1,
+    "type": "settings"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "settings",
+    "field_name": "emailserver",
+    "field_value": "mail.lxroot.com",
+    "id": "cp9g54q2r9eusnbt2kh0",
+    "purpose": "sysemail",
+    "scope": "_default",
+    "serial": 3,
+    "status": 1,
+    "type": "settings"
+}
+{
+    "cid": "cp7v4322r9este5q6i5g",
+    "collection": "wait_list",
+    "company_url": "mateors.com",
+    "create_date": "2024-05-26 20:42:02",
+    "email": "bill.rassel@gmail.com",
+    "first_name": "SANZIDA",
+    "id": "cp9kkenrupfgf7k84agg",
+    "ip_address": "103.124.226.97",
+    "last_name": "YASMIN",
+    "scope": "_default",
+    "serial": 1,
+    "status": 1,
+    "type": "wait_list"
+}
+{
+    "collection": "company",
+    "company_name": "LXROOT LLC",
+    "id": "cp7v4322r9este5q6i5g",
+    "scope": "_default",
+    "serial": 1,
+    "status": 1,
+    "type": "company",
+    "website": "lxroot.com"
+}
