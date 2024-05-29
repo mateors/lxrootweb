@@ -46,6 +46,11 @@ func init() {
 		lxql.RegisterModel(Company{})
 		lxql.RegisterModel(WaitList{})
 		lxql.RegisterModel(Settings{})
+		lxql.RegisterModel(Country{})
+		lxql.RegisterModel(Account{})
+		lxql.RegisterModel(Login{})
+		lxql.RegisterModel(ActivityLog{})
+		lxql.RegisterModel(Address{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -107,7 +112,8 @@ func init() {
 	// for i, row := range rows {
 	// 	fmt.Println(i, row)
 	// }
-
+	//countryImportFromExcel("data/country.xlsx")
+	//os.Exit(1)
 }
 
 func main() {

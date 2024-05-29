@@ -20,30 +20,44 @@ type Access struct {
 	Status     int    `json:"status"`
 }
 
+type Country struct {
+	ID             string `json:"id"`
+	Type           string `json:"type"`
+	CompanyID      string `json:"cid"`                     //foreign key
+	Serial         int64  `json:"serial"`                  //company wise increase
+	Name           string `json:"name"`                    //country name
+	IsoCode        string `json:"iso_code"`                //2 char = bd
+	CountryCode    string `json:"country_code"`            // +880
+	CurrencyName   string `json:"currency_name,omitempty"` //BDT
+	CurrencySymbol string `json:"currency_symbol"`         //TK
+	Status         int    `json:"status"`
+}
+
 //Account #3 ::cid::account_id
 type Account struct {
 	//ContactInfo []Contact `json:"contact_info,omitempty"`
-	ID          string `json:"id"`
-	Type        string `json:"type"`                  //account
-	CompanyID   string `json:"cid"`                   //foreign key
-	Serial      int64  `json:"serial"`                //company wise increase
-	ParentID    string `json:"parent_id,omitempty"`   //if any parent
-	Photo       string `json:"photo,omitempty"`       //account owner photo
-	RateplanID  string `json:"rateplan_id,omitempty"` //if topup client
-	AccountType string `json:"account_type"`          //vendor,goods_supplier,customer,consumer,payment_provider,shipping_provider
-	AccountName string `json:"account_name"`          //supplier business name or username
-	CustomID    string `json:"customid"`              //unique customer IDENTIFICATION
-	Code        string `json:"code"`                  //supplier or customer code
-	LoginID     string `json:"login_id"`              //foreign key
-	FirstName   string `json:"first_name,omitempty"`
-	LastName    string `json:"last_name,omitempty"`
-	DateOfBirth string `json:"dob,omitempty"`
-	Gender      string `json:"gender,omitempty"`  //female,male,other
-	Mobile      string `json:"mobile"`            //phone
-	Email       string `json:"email"`             //
-	Remarks     string `json:"remarks,omitempty"` //avg salary
+	//LoginID     string `json:"login_id"`              //foreign key
+	ID          string `json:"id"`                     //system auto generated
+	Type        string `json:"type"`                   //account
+	CompanyID   string `json:"cid"`                    //foreign key
+	Serial      int64  `json:"serial"`                 //company wise increase
+	ParentID    string `json:"parent_id"`              //if any parent
+	Photo       string `json:"photo,omitempty"`        //account owner photo
+	RateplanID  string `json:"rateplan_id,omitempty"`  //
+	AccountType string `json:"account_type"`           //vendor,customer,goods_supplier,consumer,payment_provider,shipping_provider
+	AccountName string `json:"account_name"`           //supplier business name or username
+	CustomID    string `json:"customid,omitempty"`     //unique customer IDENTIFICATION
+	Code        string `json:"code"`                   //Ledger | supplier | customer code
+	FirstName   string `json:"first_name"`             //
+	LastName    string `json:"last_name"`              //
+	DateOfBirth string `json:"dob,omitempty"`          //
+	Gender      string `json:"gender,omitempty"`       //female,male,other
+	Phone       string `json:"phone"`                  //phone
+	Email       string `json:"email"`                  //
+	ReferralUrl string `json:"referral_url,omitempty"` //referral_url
+	Industry    string `json:"industry"`               //industry
 	CreateDate  string `json:"create_date"`
-	UpdateDate  string `json:"update_date,omitempty"`
+	UpdateDate  string `json:"update_date"`
 	Status      int    `json:"status"`
 }
 
@@ -112,7 +126,7 @@ type Address struct {
 	Serial      int64  `json:"serial"`
 	AccountID   string `json:"account_id"`   //foreign_key
 	AddressType string `json:"address_type"` //billing,shipping
-	Country     string `json:"country"`
+	Country     string `json:"country"`      //iso_code
 	State       string `json:"state"`
 	City        string `json:"city"`
 	Address1    string `json:"address1"`

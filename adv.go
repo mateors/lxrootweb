@@ -217,21 +217,15 @@ func validSignupField(args map[string]interface{}) string {
 func validEmail(args map[string]interface{}) string {
 
 	email := args["email"].(string)
-	sql := fmt.Sprintf("SELECT count(*)as cnt FROM %s WHERE username='%s';", tableToBucket("login"), email)
-	//fmt.Println(sql)
-	rows, err := lxql.GetRows(sql, db)
-	if err != nil {
-		return "ERROR wrong query"
-	}
-	if len(rows) > 0 {
-		//fmt.Println(rows, len(rows))
-		//for _, row := range rows {
-		//fmt.Printf("%v %T\n", row, row)
-		//fmt.Println(row["cnt"])
-		//for key, val := range row {
-		//fmt.Printf("%v %v %T\n", key, val, val)
-		//}
-		//}
+	// sql := fmt.Sprintf("SELECT count(*)as cnt FROM %s WHERE username='%s';", tableToBucket("login"), email)
+	// //fmt.Println(sql)
+	// rows, err := lxql.GetRows(sql, db)
+	// if err != nil {
+	// 	return "ERROR wrong query"
+	// }
+	// count := rows[0]["cnt"].(float64)
+	count := lxql.CheckCount(tableToBucket("login"), fmt.Sprintf(`username="%s"`, email), db)
+	if count > 0 {
 		return "ERROR email already exist"
 	}
 	return "valid"
@@ -336,4 +330,22 @@ func templatePrepare(tmpltText string, dmap map[string]interface{}) (string, err
 		return "", err
 	}
 	return tplOutput.String(), nil
+}
+
+func countryImportFromExcel(filePath string) error {
+
+	rows, err := excelReader(filePath, "Sheet1", nil)
+	if err != nil {
+		return err
+	}
+
+	for _, row := range rows {
+		//fmt.Println(row)
+		name := row["name"].(string)
+		isoCode := row["iso_code"].(string)
+		countryCode := row["country_code"].(string)
+		err := addCountry(name, isoCode, countryCode)
+		fmt.Println(err, name, isoCode, countryCode)
+	}
+	return nil
 }

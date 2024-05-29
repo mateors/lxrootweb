@@ -831,6 +831,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+
 	} else if r.Method == http.MethodPost {
 
 		r.ParseForm()
@@ -849,7 +850,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			rmap[key] = r.FormValue(key)
 		}
 		response := CheckMultipleConditionTrue(rmap, funcsMap)
-		fmt.Println(response)
+		//fmt.Println(response)
 		errMsg = response
 		if response == "OKAY" {
 

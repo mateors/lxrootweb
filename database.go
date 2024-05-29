@@ -164,3 +164,21 @@ func addSettings(fieldName, fieldValue, purpose string) error {
 func settingsValue(fieldName string) string {
 	return lxql.FieldByValue(tableToBucket("settings"), "field_value", fmt.Sprintf("field_name='%s'", fieldName), db)
 }
+
+func addCountry(name, isoCode, countryCode string) error {
+
+	modelName := structName(Country{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id := xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["serial"] = nextSerial(table)
+	form["table"] = modelName
+	form["name"] = name
+	form["iso_code"] = isoCode
+	form["country_code"] = countryCode
+	form["status"] = 1
+	return lxql.InsertUpdateMap(form, db)
+}
