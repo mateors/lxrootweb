@@ -5625,17 +5625,36 @@ body.modal-open {
   .\!lg\:order-0{
     order:0 !important;
   }
+  .lg\:grid {
+    display: grid;
+  }
 }
 
-@media only screen and (min-width: 1280) {
+@media only screen and (min-width: 1280px) {
   .xlg\:hidden{
     display:none;
   }
+  .xlg\:grid {
+    display: grid;
+  }
+  .xlg\:py-20 {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .xlg\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .xlg\:pr-24 {
+    padding-right: 6rem;
+  }
+  .xlg\:flex-row {
+    flex-direction: row;
+  }
 }
+
 /*# sourceMappingURL=main.css.map */
-
-
-
 .clip-circle {
   clip-path: circle(270px at center);
 }
@@ -5713,4 +5732,8 @@ body.modal-open {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.flexb{
+  flex: 1 1 0px;
 }

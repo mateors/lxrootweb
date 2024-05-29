@@ -488,12 +488,16 @@
     </footer>
   </body>
   <script>
+
     function validateField(fieldName) {
+
       const fieldValue = document.getElementById(fieldName).value;
       const fieldInput = document.getElementById(fieldName);
       const errorElement = document.getElementById(fieldName + "-error");
       const errorIcon = document.getElementById(fieldName + "-error-icon");
+
       console.log(fieldName, fieldValue);
+
       if (fieldValue.trim() === "") {
         errorElement.classList.remove("hidden");
         errorIcon.classList.remove('hidden');
@@ -503,6 +507,7 @@
         errorIcon.classList.add('hidden');
         fieldInput.classList.remove('error');
       }
+      
       const passIcon = document.getElementById(fieldName + "-pass-icon");
       if (fieldValue.trim() === "") {
         passIcon.classList.add("right-8");
@@ -512,7 +517,7 @@
     }
 
     const passIconBtn = document.getElementById('pass-field-pass-icon');
-    if (passIconBtn) {
+    if (passIconBtn){
         passIconBtn.addEventListener('click', function() {
             const passField = document.getElementById('pass-field');
             const passIconCheck = passIconBtn.querySelector('.check');

@@ -128,6 +128,7 @@ func main() {
 	r.HandleFunc("/about", about)       //
 	r.HandleFunc("/contact", contact)   //contact us
 	r.HandleFunc("/join-waitlist", joinWaitlist)
+	r.HandleFunc("/signin", signin)     //signup + checkout
 
 	//r.HandleFunc("/webhook", webhookHandler)
 
