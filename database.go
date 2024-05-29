@@ -108,9 +108,9 @@ func basicForm() {
 	fmt.Println(err)
 }
 
-func nextSerial(tableName string) int {
-	return lxql.CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
-}
+// func nextSerial(tableName string) int {
+// 	return lxql.CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
+// }
 
 func addCompany(companyName string) error {
 
@@ -121,7 +121,6 @@ func addCompany(companyName string) error {
 	form["company_name"] = companyName
 	form["table"] = COMPANY_TABLE //model
 	form["type"] = table
-	form["serial"] = nextSerial(table)
 	form["status"] = 1
 	err = lxql.InsertUpdateMap(form, db)
 	return err
@@ -134,7 +133,6 @@ func modelUpsert(modelName string, form url.Values) error {
 	mForm["table"] = modelName
 	mForm["id"] = xid.New().String()
 	mForm["type"] = table
-	mForm["serial"] = nextSerial(table)
 
 	for key := range form {
 		mForm[key] = form.Get(key)
@@ -152,7 +150,6 @@ func addSettings(fieldName, fieldValue, purpose string) error {
 	form["id"] = id
 	form["type"] = table
 	form["cid"] = COMPANY_ID
-	form["serial"] = nextSerial(table)
 	form["table"] = modelName
 	form["field_name"] = fieldName
 	form["field_value"] = fieldValue
@@ -174,7 +171,6 @@ func addCountry(name, isoCode, countryCode string) error {
 	form["id"] = id
 	form["type"] = table
 	form["cid"] = COMPANY_ID
-	form["serial"] = nextSerial(table)
 	form["table"] = modelName
 	form["name"] = name
 	form["iso_code"] = isoCode

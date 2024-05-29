@@ -103,7 +103,7 @@ func init() {
 	//fmt.Println(customTableName(structName(Settings{})))
 	//fmt.Println(COMPANY_ID)
 
-	// sql := "SELECT * FROM lxroot._default.wait_list"
+	// sql := "SELECT * FROM lxroot._default.country"
 	// rows, err := lxql.GetRows(sql, db)
 	// if err != nil {
 	// 	return
@@ -112,8 +112,11 @@ func init() {
 	// for i, row := range rows {
 	// 	fmt.Println(i, row)
 	// }
-	//countryImportFromExcel("data/country.xlsx")
-	//os.Exit(1)
+	// stime := time.Now()
+	// countryImportFromExcel("data/country.xlsx")
+	// timeTaken := time.Since(stime).Seconds()
+	// fmt.Println("timeTaken:", timeTaken, "s")
+	// os.Exit(1)
 }
 
 func main() {
