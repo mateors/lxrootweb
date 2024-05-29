@@ -808,17 +808,23 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			CsrfToken    string
 		}{
 			Title:        "Signup | LxRoot",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			CsrfToken:    ctoken,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -829,7 +835,39 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 		r.ParseForm()
 
-		fmt.Println(r.Form)
+		var errNo int = 1
+		var errMsg string
+		commonDataSet(r)
+
+		funcsMap := map[string]interface{}{
+			"validPermission":  validCSRF,
+			"validSignupField": validSignupField,
+			"validEmail":       validEmail,
+		}
+		rmap := make(map[string]interface{})
+		for key := range r.Form {
+			rmap[key] = r.FormValue(key)
+		}
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
+		fmt.Println(response)
+		errMsg = response
+		if response == "OKAY" {
+
+			errNo = 0
+			errMsg = "OK"
+			fmt.Println(r.Form)
+		}
+
+		var row = make(map[string]interface{})
+		row["error"] = errNo
+		row["message"] = errMsg
+		bs, err := json.Marshal(row)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, string(bs))
 	}
 }
 

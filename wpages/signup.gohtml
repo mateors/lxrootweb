@@ -21,6 +21,8 @@
 
 {{define "content"}}
 
+      {{$ftoken := .CsrfToken}}
+
       <div class="content h-full">
 
         <div data-message-container class="toast-container top-center"></div>
@@ -85,7 +87,8 @@
 
             </div>
 
-            <form action="/signup" autocomplete="off" method="post">
+            <form id="mForm" action="/signup" autocomplete="off" method="post">
+              <input type="hidden" name="ftoken" value="{{$ftoken}}" />
               <div class="md:grid grid-cols-2 gap-3">
                 <div class="field flex flex-col mb-4">
                   <label for="fname-field">First Name <span class="required-spot">*</span></label>
@@ -147,6 +150,7 @@
           </div>
           <!-- <div class="bg-blue-500 ">x</div> -->
         </div>
+
       </div>
 
 {{end}}
@@ -159,6 +163,18 @@
 {{define "script"}}
 
   <script>
+
+    function elmDivSpinner(isLarger){
+        //console.log(typeof isLarger, typeof isLarger === 'undefined');
+        let divspn=document.createElement("div");
+        if (typeof isLarger === 'undefined'){
+            divspn.className="spinner";
+        }else{
+            divspn.classList.add("spinner","s32");
+        }
+        return divspn;
+    }
+
     //showToastMessage("Congratulations! You have successfully registered with LxRoot. 🎉");
     let validator = (selector, msg) => {
 
@@ -194,5 +210,35 @@
       }
     
     });
+
+    $('#mForm').submit( (e) => {
+    
+        e.preventDefault();
+        let submitBtn=$('#mForm').find('button[type="submit"]');
+        let btnText=submitBtn.text();
+        //submitBtn.empty();
+       // submitBtn.addChild(elmDivSpinner());
+        //submitBtn.addChild(document.createTextNode('Please wait'));
+        //submitBtn.prop('disabled', true);
+
+        $.ajax({
+            async: true,
+            type: "POST",
+            dataType: "json", //text
+            url: "/signup",
+            data: $(this).serialize(),
+
+        }).then( (resp) => {
+
+            console.log(resp);
+            //setTimeout( () => { location.href="/"; }, 15000);
+
+        }).catch( (err) => {
+            console.log('fail:',err);
+        });
+
+        return false;
+    });
+
   </script>
 {{end}}

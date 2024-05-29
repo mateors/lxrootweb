@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"lxrootweb/lxql"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -194,6 +195,46 @@ func validCSRF(args map[string]interface{}) string {
 		}
 	}
 	return "ERROR invalid ctoken"
+}
+
+func validSignupField(args map[string]interface{}) string {
+
+	firstName := args["first_name"].(string)
+	if firstName == "" {
+		return "ERROR first_name is required"
+	}
+	lastName := args["last_name"].(string)
+	if lastName == "" {
+		return "ERROR last_name is required"
+	}
+	passwd := args["passwd"].(string)
+	if passwd == "" {
+		return "ERROR password is required"
+	}
+	return "valid"
+}
+
+func validEmail(args map[string]interface{}) string {
+
+	email := args["email"].(string)
+	sql := fmt.Sprintf("SELECT count(*)as cnt FROM %s WHERE username='%s';", tableToBucket("login"), email)
+	//fmt.Println(sql)
+	rows, err := lxql.GetRows(sql, db)
+	if err != nil {
+		return "ERROR wrong query"
+	}
+	if len(rows) > 0 {
+		//fmt.Println(rows, len(rows))
+		//for _, row := range rows {
+		//fmt.Printf("%v %T\n", row, row)
+		//fmt.Println(row["cnt"])
+		//for key, val := range row {
+		//fmt.Printf("%v %v %T\n", key, val, val)
+		//}
+		//}
+		return "ERROR email already exist"
+	}
+	return "valid"
 }
 
 func logError(prefix string, err error) {

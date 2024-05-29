@@ -98,6 +98,16 @@ func init() {
 	//fmt.Println(customTableName(structName(Settings{})))
 	//fmt.Println(COMPANY_ID)
 
+	// sql := "SELECT * FROM lxroot._default.wait_list"
+	// rows, err := lxql.GetRows(sql, db)
+	// if err != nil {
+	// 	return
+	// }
+	// fmt.Println("len:", len(rows))
+	// for i, row := range rows {
+	// 	fmt.Println(i, row)
+	// }
+
 }
 
 func main() {
@@ -128,7 +138,7 @@ func main() {
 	r.HandleFunc("/about", about)       //
 	r.HandleFunc("/contact", contact)   //contact us
 	r.HandleFunc("/join-waitlist", joinWaitlist)
-	r.HandleFunc("/signin", signin)     //signup + checkout
+	r.HandleFunc("/signin", signin) //signup + checkout
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

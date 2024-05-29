@@ -47,6 +47,7 @@ func resultToRows(results io.Reader, resp *http.Response, signature interface{},
 }
 
 func (rows *n1qlRows) populateRows() {
+	
 	var resultRows []interface{}
 	defer rows.resp.Body.Close()
 

@@ -28,96 +28,103 @@ type charInfo struct {
 	Char  rune
 }
 
-type mapStringScan struct {
-	cp       []interface{}
-	row      map[string]string
-	colCount int
-	colNames []string
-}
+// type mapStringScan struct {
+// 	cp []interface{} //results
+// 	//row      map[string]string
+// 	row      map[string]interface{}
+// 	colCount int
+// 	colNames []string
+// }
 
 func SetBucket(name string) {
 	BUCKET = name
 }
 
-func newMapStringScan(columnNames []string) *mapStringScan {
-	lenCN := len(columnNames)
-	s := &mapStringScan{
-		cp:       make([]interface{}, lenCN),
-		row:      make(map[string]string, lenCN),
-		colCount: lenCN,
-		colNames: columnNames,
-	}
-	for i := 0; i < lenCN; i++ {
-		s.cp[i] = new(sql.RawBytes)
-	}
-	return s
-}
+// func newMapStringScan(columnNames []string) *mapStringScan {
+// 	lenCN := len(columnNames)
+// 	s := &mapStringScan{
+// 		cp: make([]interface{}, lenCN),
+// 		//row:      make(map[string]string, lenCN),
+// 		row:      make(map[string]interface{}, lenCN),
+// 		colCount: lenCN,
+// 		colNames: columnNames,
+// 	}
+// 	for i := 0; i < lenCN; i++ {
+// 		s.cp[i] = new(sql.RawBytes)
+// 	}
+// 	return s
+// }
 
-func (s *mapStringScan) Update(rows *sql.Rows) error {
+// func (s *mapStringScan) Update(rows *sql.Rows) error {
 
-	if err := rows.Scan(s.cp...); err != nil {
-		return err
-	}
+// 	if err := rows.Scan(s.cp...); err != nil {
+// 		return err
+// 	}
 
-	for i := 0; i < s.colCount; i++ {
-		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
-			s.row[s.colNames[i]] = string(*rb)
-			*rb = nil // reset pointer to discard current value to avoid a bug
-		} else {
-			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
-		}
-	}
-	return nil
-}
+// 	for i := 0; i < s.colCount; i++ {
+// 		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
 
-func (s *mapStringScan) Get() map[string]string {
-	return s.row
-}
+// 			fmt.Printf("**->%v, %c %T\n", s.colNames[i], *rb, *rb)
+// 			//row := scanMap2(*rb)
+// 			s.row[s.colNames[i]] = string(*rb)
+// 			//s.row[s.colNames[i]] = row[s.colNames[i]]
+// 			*rb = nil // reset pointer to discard current value to avoid a bug
 
-type stringStringScan struct {
-	cp       []interface{}
-	row      []string
-	colCount int
-	colNames []string
-}
+// 		} else {
+// 			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+// 		}
+// 	}
+// 	return nil
+// }
 
-func newStringStringScan(columnNames []string) *stringStringScan {
+// func (s *mapStringScan) Get() map[string]interface{} {
+// 	return s.row
+// }
 
-	lenCN := len(columnNames)
-	s := &stringStringScan{
-		cp:       make([]interface{}, lenCN),
-		row:      make([]string, lenCN*2),
-		colCount: lenCN,
-		colNames: columnNames,
-	}
-	j := 0
-	for i := 0; i < lenCN; i++ {
-		s.cp[i] = new(sql.RawBytes)
-		s.row[j] = s.colNames[i]
-		j = j + 2
-	}
-	return s
-}
-func (s *stringStringScan) Update(rows *sql.Rows) error {
-	if err := rows.Scan(s.cp...); err != nil {
-		return err
-	}
-	j := 0
-	for i := 0; i < s.colCount; i++ {
-		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
-			s.row[j+1] = string(*rb)
-			*rb = nil // reset pointer to discard current value to avoid a bug
-		} else {
-			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
-		}
-		j = j + 2
-	}
-	return nil
-}
+// type stringStringScan struct {
+// 	cp       []interface{}
+// 	row      []string
+// 	colCount int
+// 	colNames []string
+// }
 
-func (s *stringStringScan) Get() []string {
-	return s.row
-}
+// func newStringStringScan(columnNames []string) *stringStringScan {
+
+// 	lenCN := len(columnNames)
+// 	s := &stringStringScan{
+// 		cp:       make([]interface{}, lenCN),
+// 		row:      make([]string, lenCN*2),
+// 		colCount: lenCN,
+// 		colNames: columnNames,
+// 	}
+// 	j := 0
+// 	for i := 0; i < lenCN; i++ {
+// 		s.cp[i] = new(sql.RawBytes)
+// 		s.row[j] = s.colNames[i]
+// 		j = j + 2
+// 	}
+// 	return s
+// }
+// func (s *stringStringScan) Update(rows *sql.Rows) error {
+// 	if err := rows.Scan(s.cp...); err != nil {
+// 		return err
+// 	}
+// 	j := 0
+// 	for i := 0; i < s.colCount; i++ {
+// 		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
+// 			s.row[j+1] = string(*rb)
+// 			*rb = nil // reset pointer to discard current value to avoid a bug
+// 		} else {
+// 			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+// 		}
+// 		j = j + 2
+// 	}
+// 	return nil
+// }
+
+// func (s *stringStringScan) Get() []string {
+// 	return s.row
+// }
 
 func RegisterModel(emptyStruct interface{}) {
 	typeRegistry[reflect.TypeOf(emptyStruct).Name()] = reflect.TypeOf(emptyStruct)
@@ -360,26 +367,32 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 	}
 
 	defer rows.Close()
-	columnNames, err := rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-
-	rc := newMapStringScan(columnNames)
 	tableData := make([]map[string]interface{}, 0)
 
 	for rows.Next() {
 
-		err := rc.Update(rows)
-		if err != nil {
-			break
+		var jsonBytes []uint8
+		if err := rows.Scan(&jsonBytes); err != nil {
+			return nil, err
 		}
-		cv := rc.Get()
-		dd := make(map[string]interface{})
-		for _, col := range columnNames {
-			dd[col] = cv[col]
+		rmap := scanMap(jsonBytes)
+		var row = make(map[string]interface{})
+		for key := range rmap {
+
+			switch val := rmap[key].(type) {
+
+			case float64:
+				row[key] = val
+				tableData = append(tableData, row)
+
+			case map[string]interface{}:
+				tableData = append(tableData, val)
+
+			default:
+				// if type is other than above
+				fmt.Println("GetRows() Type is unknown!")
+			}
 		}
-		tableData = append(tableData, dd)
 	}
 	return tableData, nil
 }
