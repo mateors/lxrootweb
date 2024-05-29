@@ -594,41 +594,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func signup(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == http.MethodGet {
-
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
-			"templates/base.gohtml",
-			"templates/header2.gohtml",
-			"templates/footer2.gohtml",
-			"wpages/signup.gohtml", //signupm.gohtml
-		)
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		base := GetBaseURL(r)
-		data := struct {
-			Title        string
-			Base         string
-			BodyClass    string
-			MainDivClass string
-		}{
-			Title:        "Authenticate | LxRoot",
-			Base:         base,
-			BodyClass:    "",
-			MainDivClass: "main min-h-[calc(100vh-52px)]",
-		}
-
-		err = tmplt.Execute(w, data)
-		if err != nil {
-			log.Println(err)
-		}
-	}
-}
-
 func faqs(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
@@ -825,6 +790,46 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(bs))
+	}
+}
+
+func signup(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/signup.gohtml", //signupm.gohtml
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+		}{
+			Title:        "Signup | LxRoot",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-52px)]",
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+	} else if r.Method == http.MethodPost {
+
+		r.ParseForm()
+
+		fmt.Println(r.Form)
 	}
 }
 

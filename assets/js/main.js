@@ -387,6 +387,7 @@ const messageContainer = document.querySelector('[data-message-container]');
 
 // Function to create a new toast message
 function createToastMessage(message) {
+
     const toastMessage = document.createElement('div');
     toastMessage.classList.add('w-fit', 'message', 'px-5', 'py-3', 'mb-5', 'bg-secondary', 'text-white', 'flex', 'gap-5', 'items-center', 'justify-between', 'transition');
     toastMessage.dataset.toastmessage = true;
@@ -398,35 +399,30 @@ function createToastMessage(message) {
             DISMISS
         </button>
     `;
-
     // Add event listener to the close button
     const closeButton = toastMessage.querySelector('[data-close-message]');
     closeButton.addEventListener('click', () => {
         toastMessage.remove();
     });
-
     return toastMessage;
 }
 
 // Function to show the toast message
 function showToastMessage(message) {
+
     const toastMessage = createToastMessage(message);
     messageContainer.append(toastMessage);
 
     // Shift existing messages upwards
     const messages = messageContainer.querySelectorAll('[data-toastmessage]');
     messages.forEach((msg, index) => {
+
         msg.classList.add('slide-up');
         msg.style.bottom = `${(index + 1) * 200}px`; // Adjust as per your layout
 
-        setTimeout(() => {
-            msg.classList.add("opacity-0");
-        }, 5000);
-        setTimeout(() => {
-            msg.classList.add("hidden");
-        }, 6000);
+        setTimeout(() => { msg.classList.add("opacity-0"); }, 5000);
+        setTimeout(() => { msg.classList.add("hidden");    }, 6000);
     });
-
     
 }
 
