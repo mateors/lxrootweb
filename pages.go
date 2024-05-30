@@ -857,6 +857,27 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			errNo = 0
 			errMsg = "OK"
 			fmt.Println(r.Form)
+
+			accessName := "client"
+			accessId := ""
+			username := r.FormValue("username")
+			passwd := r.FormValue("passwd")
+
+			modelName := structName(Account{})
+			modelUpsert(modelName, r.Form)
+			parentId := ""
+			accountType := accessName
+			email := r.FormValue("email")
+			firstName := r.FormValue("first_name")
+			lastName := r.FormValue("last_name")
+			accountName := fmt.Sprintf("%s %s", firstName, lastName)
+			code := ""
+			accountId, err := addAccount(parentId, accountType, email, accountName, firstName, lastName, code)
+			if err == nil {
+				addAddress(accountId, "billing", "", "", "", "", "", "")
+				addLogin(accountId, accessId, accessName, username, passwd)
+			}
+
 		}
 
 		var row = make(map[string]interface{})

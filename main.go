@@ -47,10 +47,11 @@ func init() {
 		lxql.RegisterModel(WaitList{})
 		lxql.RegisterModel(Settings{})
 		lxql.RegisterModel(Country{})
+		lxql.RegisterModel(Access{})
 		lxql.RegisterModel(Account{})
+		lxql.RegisterModel(Address{})
 		lxql.RegisterModel(Login{})
 		lxql.RegisterModel(ActivityLog{})
-		lxql.RegisterModel(Address{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -116,7 +117,26 @@ func init() {
 	// countryImportFromExcel("data/country.xlsx")
 	// timeTaken := time.Since(stime).Seconds()
 	// fmt.Println("timeTaken:", timeTaken, "s")
-	// os.Exit(1)
+
+	// addAccess("superadmin")
+	// addAccess("admin")
+	// addAccess("client")
+	// addAccess("partner")
+	//id := accessIdByName("client")
+	//fmt.Println(id)
+	// sql := fmt.Sprintf("SELECT id,name,iso_code,status FROM %s LIMIT 10;", tableToBucket("country"))
+	// rows, err := lxql.GetRows(sql, db)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return
+	// }
+	// for i, row := range rows {
+	// 	fmt.Println(i, row, len(row))
+	// }
+	// query := "SELECT * FROM lxroot._default.access WHERE access_name='admin';"
+	// row, err := singleRow(query)
+	// fmt.Println(err, row)
+	//os.Exit(1)
 }
 
 func main() {
@@ -139,15 +159,15 @@ func main() {
 	r.HandleFunc("/pricing", pricing)
 	r.HandleFunc("/terms", terms)
 	r.HandleFunc("/privacy", privacy)
-	r.HandleFunc("/shop", shop)         //store page
-	r.HandleFunc("/product", product)   //product_details
-	r.HandleFunc("/checkout", checkout) //checkout + signup
-	r.HandleFunc("/signup", signup)     //signup + checkout
-	r.HandleFunc("/faqs", faqs)         //
-	r.HandleFunc("/about", about)       //
-	r.HandleFunc("/contact", contact)   //contact us
-	r.HandleFunc("/join-waitlist", joinWaitlist)
-	r.HandleFunc("/signin", signin) //signup + checkout
+	r.HandleFunc("/shop", shop)                  //store page
+	r.HandleFunc("/product", product)            //product_details
+	r.HandleFunc("/checkout", checkout)          //checkout + signup
+	r.HandleFunc("/faqs", faqs)                  //
+	r.HandleFunc("/about", about)                //
+	r.HandleFunc("/contact", contact)            //contact us
+	r.HandleFunc("/join-waitlist", joinWaitlist) //WaitList
+	r.HandleFunc("/signup", signup)              //signup + checkout
+	r.HandleFunc("/signin", signin)              //signup + checkout
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

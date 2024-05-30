@@ -189,7 +189,6 @@ func validCSRF(args map[string]interface{}) string {
 	if isOk {
 		ftoken := fmt.Sprint(args["ftoken"])
 		ftokenh := hmacHash(ftoken, ENCDECPASS)
-		//fmt.Println("<>", ftoken, ctokenh, ftokenh)
 		if ftokenh == ctokenh {
 			return "valid"
 		}
@@ -217,13 +216,6 @@ func validSignupField(args map[string]interface{}) string {
 func validEmail(args map[string]interface{}) string {
 
 	email := args["email"].(string)
-	// sql := fmt.Sprintf("SELECT count(*)as cnt FROM %s WHERE username='%s';", tableToBucket("login"), email)
-	// //fmt.Println(sql)
-	// rows, err := lxql.GetRows(sql, db)
-	// if err != nil {
-	// 	return "ERROR wrong query"
-	// }
-	// count := rows[0]["cnt"].(float64)
 	count := lxql.CheckCount(tableToBucket("login"), fmt.Sprintf(`username="%s"`, email), db)
 	if count > 0 {
 		return "ERROR email already exist"
@@ -346,6 +338,110 @@ func countryImportFromExcel(filePath string) error {
 		countryCode := row["country_code"].(string)
 		err := addCountry(name, isoCode, countryCode)
 		fmt.Println(err, name, isoCode, countryCode)
+	}
+	return nil
+}
+
+func bytesToStr(slc []uint8) string {
+
+	var str string
+	for _, c := range slc {
+		if c != 34 { //remove "
+			str += fmt.Sprintf("%c", c)
+		}
+	}
+	return str
+}
+
+func colsToRowMap(cols []string, orow map[string]interface{}) map[string]interface{} {
+
+	//var orow = make(map[string]interface{})
+	if len(cols) > 1 {
+		for key := range orow {
+			slc := orow[key].([]uint8)
+			orow[key] = bytesToStr(slc)
+		}
+
+	} else if len(cols) == 1 {
+
+		var row = make(map[string]map[string]interface{})
+		col := cols[0]
+		json.Unmarshal(orow[col].([]uint8), &row)
+		for key := range row {
+			orow = row[key]
+		}
+	}
+	return orow
+}
+
+func singleRow(sql string) (map[string]interface{}, error) {
+
+	var orow = make(map[string]interface{})
+
+	sql = strings.ToLower(sql)
+	cols := GetColumnNamesFromQuery(sql) //[]string{"id", "status"}
+	row := make([][]byte, len(cols))
+	rowPtr := make([]any, len(cols))
+
+	for i := range row {
+		rowPtr[i] = &row[i]
+	}
+
+	srow := db.QueryRow(sql)
+	err := srow.Scan(rowPtr...)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, rowp := range rowPtr {
+
+		switch val := rowp.(type) {
+
+		case *[]uint8:
+			orow[cols[i]] = *val
+
+		default:
+			fmt.Println("GetRows() Type is unknown!")
+		}
+	}
+
+	orow = colsToRowMap(cols, orow)
+	return orow, nil
+}
+
+func GetColumnNamesFromQuery(query string) []string {
+
+	query = strings.ToLower(query)
+	// Remove leading/trailing whitespaces and semicolon (if any)
+	query = strings.TrimSpace(query)
+	if strings.HasSuffix(query, ";") {
+		query = query[:len(query)-1]
+	}
+
+	// Split the query by spaces
+	parts := strings.Fields(query)
+
+	// Find the index of "SELECT" and "FROM" keywords
+	selectIndex := -1
+	fromIndex := -1
+	for i, part := range parts {
+		if strings.EqualFold(part, "select") {
+			selectIndex = i
+		} else if strings.EqualFold(part, "from") {
+			fromIndex = i
+			break
+		}
+	}
+
+	// Extract column names between "SELECT" and "FROM"
+	if selectIndex != -1 && fromIndex != -1 && fromIndex > selectIndex+1 {
+
+		columns := parts[selectIndex+1 : fromIndex]
+		// Remove commas from column names
+		for i, col := range columns {
+			columns[i] = strings.TrimSuffix(col, ",")
+		}
+		return columns
 	}
 	return nil
 }

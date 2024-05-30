@@ -3,9 +3,11 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"lxrootweb/lxql"
 	"net/url"
 
+	"github.com/mateors/mtool"
 	"github.com/rs/xid"
 )
 
@@ -177,4 +179,98 @@ func addCountry(name, isoCode, countryCode string) error {
 	form["country_code"] = countryCode
 	form["status"] = 1
 	return lxql.InsertUpdateMap(form, db)
+}
+
+func addAccess(accessName string) error {
+
+	modelName := structName(Access{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id := xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["access_name"] = accessName
+	form["status"] = 1
+	return lxql.InsertUpdateMap(form, db)
+}
+
+func addAccount(parentId, accountType, email, accountName, firstName, lastName, code string) (id string, err error) {
+
+	modelName := structName(Account{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["parent_id"] = parentId
+	form["account_type"] = accountType //vendor,customer
+	form["account_name"] = accountName
+	form["code"] = code
+	form["first_name"] = firstName
+	form["last_name"] = lastName
+	form["email"] = email
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, db)
+	return id, err
+}
+
+func addAddress(accountId, addressType, country, state, city, address1, address2, zip string) (id string, err error) {
+
+	modelName := structName(Account{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["account_id"] = accountId
+	form["address_type"] = addressType //billing
+	form["country"] = country
+	form["state"] = state
+	form["city"] = city
+	form["address1"] = address1
+	form["address2"] = address2
+	form["zip"] = zip
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, db)
+	return id, err
+}
+
+func addLogin(accountId, accessId, accessName, username, plainPassword string) (id string, err error) {
+
+	modelName := structName(Login{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["account_id"] = accountId
+	form["access_id"] = accessId     //billing
+	form["access_name"] = accessName //superadmin,admin,client,partner
+	form["username"] = username
+	form["passwd"] = mtool.HashBcrypt(plainPassword)
+	form["tfa_status"] = 0
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, db)
+	return id, err
+}
+
+func accessIdByName(accessName string) string {
+
+	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)
+	row, err := singleRow(sql)
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
+	return row["id"].(string)
 }

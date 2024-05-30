@@ -28,58 +28,58 @@ type charInfo struct {
 	Char  rune
 }
 
-// type mapStringScan struct {
-// 	cp []interface{} //results
-// 	//row      map[string]string
-// 	row      map[string]interface{}
-// 	colCount int
-// 	colNames []string
-// }
+type mapStringScan struct {
+	cp []interface{} //results
+	//row      map[string]string
+	row      map[string]interface{}
+	colCount int
+	colNames []string
+}
 
 func SetBucket(name string) {
 	BUCKET = name
 }
 
-// func newMapStringScan(columnNames []string) *mapStringScan {
-// 	lenCN := len(columnNames)
-// 	s := &mapStringScan{
-// 		cp: make([]interface{}, lenCN),
-// 		//row:      make(map[string]string, lenCN),
-// 		row:      make(map[string]interface{}, lenCN),
-// 		colCount: lenCN,
-// 		colNames: columnNames,
-// 	}
-// 	for i := 0; i < lenCN; i++ {
-// 		s.cp[i] = new(sql.RawBytes)
-// 	}
-// 	return s
-// }
+func newMapStringScan(columnNames []string) *mapStringScan {
+	lenCN := len(columnNames)
+	s := &mapStringScan{
+		cp: make([]interface{}, lenCN),
+		//row:      make(map[string]string, lenCN),
+		row:      make(map[string]interface{}, lenCN),
+		colCount: lenCN,
+		colNames: columnNames,
+	}
+	for i := 0; i < lenCN; i++ {
+		s.cp[i] = new(sql.RawBytes)
+	}
+	return s
+}
 
-// func (s *mapStringScan) Update(rows *sql.Rows) error {
+func (s *mapStringScan) Update(rows *sql.Rows) error {
 
-// 	if err := rows.Scan(s.cp...); err != nil {
-// 		return err
-// 	}
+	if err := rows.Scan(s.cp...); err != nil {
+		return err
+	}
 
-// 	for i := 0; i < s.colCount; i++ {
-// 		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
+	for i := 0; i < s.colCount; i++ {
+		if rb, ok := s.cp[i].(*sql.RawBytes); ok {
 
-// 			fmt.Printf("**->%v, %c %T\n", s.colNames[i], *rb, *rb)
-// 			//row := scanMap2(*rb)
-// 			s.row[s.colNames[i]] = string(*rb)
-// 			//s.row[s.colNames[i]] = row[s.colNames[i]]
-// 			*rb = nil // reset pointer to discard current value to avoid a bug
+			fmt.Printf("**->%v, %c %T\n", s.colNames[i], *rb, *rb)
+			//row := scanMap2(*rb)
+			s.row[s.colNames[i]] = string(*rb)
+			//s.row[s.colNames[i]] = row[s.colNames[i]]
+			*rb = nil // reset pointer to discard current value to avoid a bug
 
-// 		} else {
-// 			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
-// 		}
-// 	}
-// 	return nil
-// }
+		} else {
+			return fmt.Errorf("cannot convert index %d column %s to type *sql.RawBytes", i, s.colNames[i])
+		}
+	}
+	return nil
+}
 
-// func (s *mapStringScan) Get() map[string]interface{} {
-// 	return s.row
-// }
+func (s *mapStringScan) Get() map[string]interface{} {
+	return s.row
+}
 
 // type stringStringScan struct {
 // 	cp       []interface{}
@@ -358,6 +358,37 @@ func ReadTable2Columns(table string, db *sql.DB) (cols []string, err error) {
 	return
 }
 
+func bytesToStr(slc []uint8) string {
+
+	var str string
+	for _, c := range slc {
+		if c != 34 { //remove "
+			str += fmt.Sprintf("%c", c)
+		}
+	}
+	return str
+}
+
+func colsToRowMap(cols []string, orow map[string]interface{}) map[string]interface{} {
+
+	if len(cols) > 1 {
+		for key := range orow {
+			slc := orow[key].([]uint8)
+			orow[key] = bytesToStr(slc)
+		}
+
+	} else if len(cols) == 1 {
+
+		var row = make(map[string]map[string]interface{})
+		col := cols[0]
+		json.Unmarshal(orow[col].([]uint8), &row)
+		for key := range row {
+			orow = row[key]
+		}
+	}
+	return orow
+}
+
 // GetAllRowsByQuery Get all table rows using raw sql query
 func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 
@@ -366,33 +397,38 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 		return nil, err
 	}
 
+	cols, err := rows.Columns()
+	if err != nil {
+		return nil, err
+	}
+	row := make([][]byte, len(cols))
+	rowPtr := make([]any, len(cols))
+
+	for i := range row {
+		rowPtr[i] = &row[i]
+	}
 	defer rows.Close()
 	tableData := make([]map[string]interface{}, 0)
 
 	for rows.Next() {
 
-		var jsonBytes []uint8
-		if err := rows.Scan(&jsonBytes); err != nil {
+		if err := rows.Scan(rowPtr...); err != nil {
 			return nil, err
 		}
-		rmap := scanMap(jsonBytes)
-		var row = make(map[string]interface{})
-		for key := range rmap {
+		var orow = make(map[string]interface{})
 
-			switch val := rmap[key].(type) {
+		for i, rowp := range rowPtr {
 
-			case float64:
-				row[key] = val
-				tableData = append(tableData, row)
+			switch val := rowp.(type) {
 
-			case map[string]interface{}:
-				tableData = append(tableData, val)
+			case *[]uint8:
+				orow[cols[i]] = *val
 
 			default:
-				// if type is other than above
 				fmt.Println("GetRows() Type is unknown!")
 			}
 		}
+		tableData = append(tableData, colsToRowMap(cols, orow))
 	}
 	return tableData, nil
 }

@@ -2,7 +2,6 @@ package main
 
 //Company #1 wise database
 type Company struct {
-	//Serial      int64  `json:"serial"`
 	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyName string `json:"company_name,omitempty"`
@@ -34,7 +33,6 @@ type Country struct {
 //Account #3 ::cid::account_id
 type Account struct {
 	//ContactInfo []Contact `json:"contact_info,omitempty"`
-	//LoginID     string `json:"login_id"`              //foreign key
 	ID          string `json:"id"`                     //system auto generated
 	Type        string `json:"type"`                   //account
 	CompanyID   string `json:"cid"`                    //foreign key
@@ -55,6 +53,22 @@ type Account struct {
 	Industry    string `json:"industry"`               //industry
 	CreateDate  string `json:"create_date"`
 	UpdateDate  string `json:"update_date"`
+	Status      int    `json:"status"`
+}
+
+//Address ...
+type Address struct {
+	ID          string `json:"id"`
+	Type        string `json:"type"`
+	CompanyID   string `json:"cid"`          //foreign key
+	AccountID   string `json:"account_id"`   //foreign_key
+	AddressType string `json:"address_type"` //billing,shipping
+	Country     string `json:"country"`      //iso_code
+	State       string `json:"state"`
+	City        string `json:"city"`
+	Address1    string `json:"address1"`
+	Address2    string `json:"address2"`
+	Zip         string `json:"zip"`
 	Status      int    `json:"status"`
 }
 
@@ -81,22 +95,6 @@ type CustomFieldValue struct {
 	Status     int    `json:"status"`
 }
 
-//Login #4  all user account login table
-type Login struct {
-	ID         string `json:"id"`
-	Type       string `json:"type"`
-	CompanyID  string `json:"cid"`         //foreign key
-	AccountID  string `json:"account_id"`  //foreign key
-	AccessID   string `json:"access_id"`   //foreign key
-	AccessName string `json:"access_name"` //customer type
-	UserName   string `json:"username"`    //email or mobile as username
-	Password   string `json:"passw"`       //password
-	Pincode    string `json:"pincode"`     //pincode
-	CreateDate string `json:"create_date"`
-	LastLogin  string `json:"last_login,omitempty"`
-	Status     int    `json:"status"`
-}
-
 //Contact info for account and user
 type Contact struct {
 	ID          string `json:"id"`
@@ -110,19 +108,21 @@ type Contact struct {
 	Status      int    `json:"status"`
 }
 
-//Address ...
-type Address struct {
+//Login #4  all user account login table
+type Login struct {
 	ID          string `json:"id"`
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"`          //foreign key
-	AccountID   string `json:"account_id"`   //foreign_key
-	AddressType string `json:"address_type"` //billing,shipping
-	Country     string `json:"country"`      //iso_code
-	State       string `json:"state"`
-	City        string `json:"city"`
-	Address1    string `json:"address1"`
-	Address2    string `json:"address2"`
-	Zip         string `json:"zip"`
+	AccountID   string `json:"account_id"`   //foreign key
+	AccessID    string `json:"access_id"`    //foreign key
+	AccessName  string `json:"access_name"`  //customer type
+	UserName    string `json:"username"`     //email or mobile as username
+	Password    string `json:"passw"`        //password
+	TfaStatus   int    `json:"tfa_status"`   //TFA = 0,1
+	TfaMedium   string `json:"tfa_medium"`   //TFA
+	TfaSetupkey string `json:"tfa_setupkey"` //TFA
+	CreateDate  string `json:"create_date"`
+	LastLogin   string `json:"last_login,omitempty"` //update date
 	Status      int    `json:"status"`
 }
 
@@ -132,31 +132,30 @@ type ActivityLog struct {
 	Type         string `json:"type"`
 	CompanyID    string `json:"cid"` //foreign key
 	ActivityType string `json:"activity_type"`
-	OwnerTable   string `json:"owner_table"` //table_name
-	Parameter    string `json:"parameter"`   //key=val or id
+	OwnerTable   string `json:"table_name"` //owner_table
+	Parameter    string `json:"parameter"`  //key=val or id
 	LogDetails   string `json:"log_details"`
 	IPAddress    string `json:"ip_address"`
-	LoginID      string `json:"login_id"`      //optional foreign key
-	LoginSession string `json:"login_session"` //foreign key
+	LoginID      string `json:"login_id"` //optional foreign key
 	CreateDate   string `json:"create_date"`
 	Status       int    `json:"status"`
 }
 
 //DeviceLog tracks user device info (where they login to the system)
-// type DeviceLog struct {
-// 	ID          string `json:"id"`
-// 	Type        string `json:"type"`
-// 	CompanyID   string `json:"cid"`      //foreign key
-// 	LoginID     string `json:"login_id"` //foreign key
-// 	Browser     string `json:"browser"`
-// 	DeviceType  string `json:"device_type"`
-// 	Os          string `json:"os"`
-// 	Platform    string `json:"platform"`
-// 	ScreenSize  string `json:"screen_size"`
-// 	GeoLocation string `json:"geolocation,omitempty"`
-// 	CreateDate  string `json:"create_date"`
-// 	Status      int    `json:"status"`
-// }
+type DeviceLog struct {
+	ID          string `json:"id"`
+	Type        string `json:"type"`
+	CompanyID   string `json:"cid"`      //foreign key
+	LoginID     string `json:"login_id"` //foreign key
+	Browser     string `json:"browser"`
+	DeviceType  string `json:"device_type"`
+	Os          string `json:"os"`
+	Platform    string `json:"platform"`
+	ScreenSize  string `json:"screen_size"`
+	GeoLocation string `json:"geolocation,omitempty"`
+	CreateDate  string `json:"create_date"`
+	Status      int    `json:"status"`
+}
 
 //LoginSession keeps user login session for 24 hours or more
 type LoginSession struct {
@@ -169,8 +168,8 @@ type LoginSession struct {
 	IPAddress   string `json:"ip_address"`
 	IPCity      string `json:"city"`
 	IPCountry   string `json:"country"`
-	LoginTime   string `json:"login_time"`
-	LogoutTime  string `json:"logout_time"`
+	LoginTime   string `json:"login_time"`  //
+	LogoutTime  string `json:"logout_time"` //
 	CreateDate  string `json:"create_date"`
 	Status      int    `json:"status"`
 }
