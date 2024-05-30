@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"text/template"
 
 	"github.com/go-chi/chi/v5"
@@ -849,12 +850,18 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			rmap[key] = r.FormValue(key)
 		}
 		response := CheckMultipleConditionTrue(rmap, funcsMap)
-		//fmt.Println(response)
-		errMsg = response
-		if response == "OKAY" {
 
-			//fmt.Println(r.Form)
-			email := r.FormValue("email")
+		if response == "ERROR email already exist" {
+			errNo = 1
+			errMsg = response
+
+		} else if response == "ERROR password is required" {
+			errNo = 2
+			errMsg = response
+
+		} else if response == "OKAY" {
+
+			email := strings.ToLower(r.FormValue("email"))
 			firstName := r.FormValue("first_name")
 			lastName := r.FormValue("last_name")
 			passwd := r.FormValue("passwd")
@@ -868,20 +875,21 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			accountName := fmt.Sprintf("%s %s", firstName, lastName)
 			accountId, err := addAccount(parentId, accountType, email, accountName, firstName, lastName)
 			if err != nil {
-				errNo = 2
+				errNo = 3
 				errMsg = err.Error()
 			}
 			if err == nil {
-
 				_, err = addAddress(accountId, "billing", "", "", "", "", "", "")
 				logError("addAddress", err)
-
 				_, err = addLogin(accountId, accessId, accessName, username, passwd)
 				logError("addLogin", err)
 				errNo = 0
-				errMsg = "OK"
+				errMsg = "Congratulations! You have successfully registered with LxRoot. 🎉"
 			}
 
+		} else {
+			errNo = 9
+			errMsg = "Unknown error! please report"
 		}
 
 		var row = make(map[string]interface{})

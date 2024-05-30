@@ -215,7 +215,11 @@ func validSignupField(args map[string]interface{}) string {
 
 func validEmail(args map[string]interface{}) string {
 
-	email := args["email"].(string)
+	email, isOk := args["email"].(string)
+	if !isOk {
+		return "ERROR email missing"
+	}
+	email = strings.ToLower(email)
 	count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), db)
 	if count > 0 {
 		return "ERROR email already exist"

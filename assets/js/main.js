@@ -435,3 +435,36 @@ toastButtons.forEach(button => {
         showToastMessage(message);
     });
 });
+
+
+function elmDivSpinner(isLarger){
+    //console.log(typeof isLarger, typeof isLarger === 'undefined');
+    let divspn=document.createElement("div");
+    if (typeof isLarger === 'undefined'){
+        divspn.className="spinner";
+    }else{
+        divspn.classList.add("spinner","s32");
+    }
+    return divspn;
+}
+
+//showToastMessage("Congratulations! You have successfully registered with LxRoot. 🎉");
+let validator = (selector, msg) => {
+
+  let fVal=$(selector).val();
+  let errMsg=$(selector).parent().next().text();
+  let count=$(selector).parent().childrenLength();
+  if (msg==""){ msg=errMsg; }
+
+  if(fVal.trim()===""){
+    $(selector).addClass('error');
+    $(selector).parent().next().removeClass("hidden");
+    $(selector).parent().childItem(count-1).removeClass("hidden");
+
+  }else{
+    $(selector).removeClass('error');
+    $(selector).parent().next().addClass("hidden");
+    $(selector).parent().childItem(count-1).addClass("hidden");
+  }
+  $(selector).parent().next().text(msg);
+}
