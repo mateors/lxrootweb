@@ -214,7 +214,7 @@ func addAccount(parentId, accountType, email, accountName, firstName, lastName s
 	form["last_name"] = lastName
 	form["email"] = email
 	form["create_date"] = mtool.TimeNow()
-	form["status"] = 1
+	form["status"] = 0 //in active by default
 	err = lxql.InsertUpdateMap(form, db)
 	return id, err
 }
@@ -259,7 +259,7 @@ func addLogin(accountId, accessId, accessName, username, plainPassword string) (
 	form["passw"] = mtool.HashBcrypt(plainPassword)
 	form["tfa_status"] = 0
 	form["create_date"] = mtool.TimeNow()
-	form["status"] = 1
+	form["status"] = 0 //inactive by default
 	err = lxql.InsertUpdateMap(form, db)
 	return id, err
 }

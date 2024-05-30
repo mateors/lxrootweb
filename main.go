@@ -140,7 +140,10 @@ func init() {
 	// email := ""
 	// count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), db)
 	// fmt.Println(count)
-	//os.Exit(1)
+	// var name, location, verifyUrl string = "SANZIDA YASMIN", "Rangpur, Bangladesh", "https://lxroot.com/verify?email=bill.rassel@gmail.com&token=112121212"
+	// markup, err := signupEmailTemplateParser(name, location, verifyUrl)
+	// fmt.Println(err, markup)
+	// os.Exit(1)
 }
 
 func main() {
