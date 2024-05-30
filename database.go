@@ -196,7 +196,7 @@ func addAccess(accessName string) error {
 	return lxql.InsertUpdateMap(form, db)
 }
 
-func addAccount(parentId, accountType, email, accountName, firstName, lastName, code string) (id string, err error) {
+func addAccount(parentId, accountType, email, accountName, firstName, lastName string) (id string, err error) {
 
 	modelName := structName(Account{})
 	table := customTableName(modelName)
@@ -209,7 +209,7 @@ func addAccount(parentId, accountType, email, accountName, firstName, lastName, 
 	form["parent_id"] = parentId
 	form["account_type"] = accountType //vendor,customer
 	form["account_name"] = accountName
-	form["code"] = code
+	form["code"] = id
 	form["first_name"] = firstName
 	form["last_name"] = lastName
 	form["email"] = email
@@ -221,7 +221,7 @@ func addAccount(parentId, accountType, email, accountName, firstName, lastName, 
 
 func addAddress(accountId, addressType, country, state, city, address1, address2, zip string) (id string, err error) {
 
-	modelName := structName(Account{})
+	modelName := structName(Address{})
 	table := customTableName(modelName)
 	var form = make(map[string]interface{})
 	id = xid.New().String()
@@ -256,7 +256,7 @@ func addLogin(accountId, accessId, accessName, username, plainPassword string) (
 	form["access_id"] = accessId     //billing
 	form["access_name"] = accessName //superadmin,admin,client,partner
 	form["username"] = username
-	form["passwd"] = mtool.HashBcrypt(plainPassword)
+	form["passw"] = mtool.HashBcrypt(plainPassword)
 	form["tfa_status"] = 0
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 1
@@ -269,7 +269,7 @@ func accessIdByName(accessName string) string {
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)
 	row, err := singleRow(sql)
 	if err != nil {
-		log.Println(err)
+		log.Println("accessIdByName:", err, sql)
 		return ""
 	}
 	return row["id"].(string)

@@ -216,7 +216,7 @@ func validSignupField(args map[string]interface{}) string {
 func validEmail(args map[string]interface{}) string {
 
 	email := args["email"].(string)
-	count := lxql.CheckCount(tableToBucket("login"), fmt.Sprintf(`username="%s"`, email), db)
+	count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), db)
 	if count > 0 {
 		return "ERROR email already exist"
 	}
@@ -441,7 +441,12 @@ func GetColumnNamesFromQuery(query string) []string {
 		for i, col := range columns {
 			columns[i] = strings.TrimSuffix(col, ",")
 		}
-		return columns
+		var rcols []string
+		for _, col := range columns {
+			slc := strings.Split(col, ",")
+			rcols = slc
+		}
+		return rcols
 	}
 	return nil
 }

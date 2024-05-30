@@ -122,6 +122,7 @@ func init() {
 	// addAccess("admin")
 	// addAccess("client")
 	// addAccess("partner")
+	//slc := GetColumnNamesFromQuery("SELECT id,status FROM lxroot._default.access WHERE access_name='client';")
 	//id := accessIdByName("client")
 	//fmt.Println(id)
 	// sql := fmt.Sprintf("SELECT id,name,iso_code,status FROM %s LIMIT 10;", tableToBucket("country"))
@@ -136,6 +137,9 @@ func init() {
 	// query := "SELECT * FROM lxroot._default.access WHERE access_name='admin';"
 	// row, err := singleRow(query)
 	// fmt.Println(err, row)
+	// email := ""
+	// count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), db)
+	// fmt.Println(count)
 	//os.Exit(1)
 }
 

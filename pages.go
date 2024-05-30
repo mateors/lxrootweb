@@ -835,7 +835,6 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 
 		r.ParseForm()
-
 		var errNo int = 1
 		var errMsg string
 		commonDataSet(r)
@@ -854,28 +853,33 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		errMsg = response
 		if response == "OKAY" {
 
-			errNo = 0
-			errMsg = "OK"
-			fmt.Println(r.Form)
-
-			accessName := "client"
-			accessId := ""
-			username := r.FormValue("username")
-			passwd := r.FormValue("passwd")
-
-			modelName := structName(Account{})
-			modelUpsert(modelName, r.Form)
-			parentId := ""
-			accountType := accessName
+			//fmt.Println(r.Form)
 			email := r.FormValue("email")
 			firstName := r.FormValue("first_name")
 			lastName := r.FormValue("last_name")
+			passwd := r.FormValue("passwd")
+
+			accessName := "client"
+			accessId := accessIdByName(accessName)
+			username := email
+
+			parentId := ""
+			accountType := accessName
 			accountName := fmt.Sprintf("%s %s", firstName, lastName)
-			code := ""
-			accountId, err := addAccount(parentId, accountType, email, accountName, firstName, lastName, code)
+			accountId, err := addAccount(parentId, accountType, email, accountName, firstName, lastName)
+			if err != nil {
+				errNo = 2
+				errMsg = err.Error()
+			}
 			if err == nil {
-				addAddress(accountId, "billing", "", "", "", "", "", "")
-				addLogin(accountId, accessId, accessName, username, passwd)
+
+				_, err = addAddress(accountId, "billing", "", "", "", "", "", "")
+				logError("addAddress", err)
+
+				_, err = addLogin(accountId, accessId, accessName, username, passwd)
+				logError("addLogin", err)
+				errNo = 0
+				errMsg = "OK"
 			}
 
 		}

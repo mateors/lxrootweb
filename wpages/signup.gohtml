@@ -216,10 +216,10 @@
         e.preventDefault();
         let submitBtn=$('#mForm').find('button[type="submit"]');
         let btnText=submitBtn.text();
-        //submitBtn.empty();
-       // submitBtn.addChild(elmDivSpinner());
-        //submitBtn.addChild(document.createTextNode('Please wait'));
-        //submitBtn.prop('disabled', true);
+        submitBtn.empty();
+        submitBtn.addChild(elmDivSpinner());
+        submitBtn.addChild(document.createTextNode('Please wait'));
+        submitBtn.prop('disabled', true);
 
         $.ajax({
             async: true,
