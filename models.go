@@ -51,6 +51,7 @@ type Account struct {
 	Email       string `json:"email"`                  //
 	ReferralUrl string `json:"referral_url,omitempty"` //referral_url
 	Industry    string `json:"industry"`               //industry
+	Remarks     string `json:"remarks"`                //remarks
 	CreateDate  string `json:"create_date"`
 	UpdateDate  string `json:"update_date"`
 	Status      int    `json:"status"`

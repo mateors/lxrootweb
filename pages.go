@@ -930,7 +930,10 @@ func verify(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 
-			database.DB.Exec("UPDATE ? SET status=1 WHERE id=?", tableToBucket("account"), "")
+			
+			sql := fmt.Sprintf("UPDATE %s SET status=0 WHERE id=%q", tableToBucket("account"), "cpcaq4i2r9emrfgpk940")
+			database.DB.Exec(sql) //
+
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:green;font-size:64px;">%s <a href="/signin">Sign in</a></h1>`, "Verified")
 		}
 		fmt.Fprintln(w, message)

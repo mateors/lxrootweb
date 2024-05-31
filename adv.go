@@ -391,7 +391,7 @@ func singleRow(sql string) (map[string]interface{}, error) {
 	var orow = make(map[string]interface{})
 
 	sql = strings.ToLower(sql)
-	cols := GetColumnNamesFromQuery(sql) //[]string{"id", "status"}
+	cols := getColsFromSql(sql) //GetColumnNamesFromQuery(sql)
 	row := make([][]byte, len(cols))
 	rowPtr := make([]any, len(cols))
 

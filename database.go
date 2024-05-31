@@ -9,6 +9,7 @@ import (
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/url"
+	"strings"
 
 	"github.com/mateors/mtool"
 	"github.com/rs/xid"
@@ -313,4 +314,35 @@ func verifySignup(email, token string) error {
 		return nil
 	}
 	return errors.New("invalid token")
+}
+
+func cleanText(input string) string {
+	return strings.Join(strings.Fields(input), " ")
+}
+
+func getColsFromSql(sql string) (cols []string) {
+
+	csql := strings.ToLower(cleanText(sql))
+	si := strings.Index(csql, "select")
+	fi := strings.Index(csql, "from")
+	commaSeparatedFields := csql[si+7 : fi]
+	slc := strings.Split(commaSeparatedFields, ",")
+	for _, col := range slc {
+		cols = append(cols, strings.TrimSpace(col))
+	}
+	return
+}
+
+
+
+func usernameToAccounInfo(username string) (map[string]interface{}, error) {
+
+	sql := fmt.Sprintf(`SELECT a.cid,a.account_type,
+	a.first_name,a.last_name,a.code,a.customid,a.phone,
+	a.email,a.photo,a.referral_url,a.status,l.access_name,
+	l.last_login,l.passw,l.tfa_medium,l.tfa_setupkey,l.tfa_status 
+	FROM lxroot._default.login l 
+	LEFT JOIN lxroot._default.account a ON a.id=l.account_id
+	WHERE l.username="%s"`, username)
+	return singleRow(sql)
 }
