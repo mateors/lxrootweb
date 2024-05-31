@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"lxrootweb/database"
 	"net/http"
 	"strings"
 	"text/template"
@@ -928,7 +929,8 @@ func verify(w http.ResponseWriter, r *http.Request) {
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:red;font-size:64px;">%s</h1>`, err.Error())
 
 		} else {
-			
+
+			database.DB.Exec("UPDATE ? SET status=1 WHERE id=?", tableToBucket("account"), "")
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:green;font-size:64px;">%s <a href="/signin">Sign in</a></h1>`, "Verified")
 		}
 		fmt.Fprintln(w, message)

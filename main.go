@@ -152,6 +152,11 @@ func init() {
 	// }
 	// hexCode := row["verification_code"].(string) //
 	// fmt.Println(hexCode)
+	//_, err = database.DB.Exec("UPDATE ? SET status=1 WHERE id=?", tableToBucket("account"), "cpcaq4i2r9emrfgpk940") //not work
+	// sql := fmt.Sprintf("UPDATE %s SET status=1 WHERE id=%q", tableToBucket("account"), "cpcaq4i2r9emrfgpk940")
+	// fmt.Println(sql)
+	// err = lxql.RawSQL(sql, database.DB)
+	// fmt.Println(err)
 	// os.Exit(1)
 }
 

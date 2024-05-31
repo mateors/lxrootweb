@@ -182,10 +182,6 @@ func tableToBucket(table string) string {
 	return fmt.Sprintf(`%s.%s.%s`, BUCKET, SCOPE, table)
 }
 
-func nextSerial(tableName string, db *sql.DB) int {
-	return CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
-}
-
 func upsertQueryBuilder(bucketName, docID, bytesTxt string) (nqlStatement string) {
 
 	qs := `UPSERT INTO %s (KEY, VALUE)
@@ -193,6 +189,30 @@ func upsertQueryBuilder(bucketName, docID, bytesTxt string) (nqlStatement string
 	RETURNING *`
 	nqlStatement = fmt.Sprintf(qs, bucketName, docID, bytesTxt)
 	return
+}
+
+func RawSQL(sql string, db *sql.DB) error {
+
+	stmt, err := db.Prepare(sql)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	r, err := stmt.Exec()
+	if err != nil {
+		return err
+	}
+
+	n, err := r.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if n > 0 {
+		return nil
+	}
+	return err
 }
 
 func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
@@ -281,12 +301,6 @@ func colsToRowMap(cols []string, orow map[string]interface{}) map[string]interfa
 
 	} else if len(cols) == 1 {
 
-		//var row = make(map[string]map[string]interface{})
-		// col := cols[0]
-		// json.Unmarshal(orow[col].([]uint8), &row)
-		// for key := range row {
-		// 	orow = row[key]
-		// }
 		colname := cols[0]
 		if colname == "*" {
 			var row = make(map[string]map[string]interface{})

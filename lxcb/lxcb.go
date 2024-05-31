@@ -444,6 +444,7 @@ func (conn *n1qlConn) performExec(query string, requestValues *url.Values) (driv
 
 // Replace the conditional pqrams in the query and return the list of left-over args
 func preparePositionalArgs(query string, argCount int, args []driver.Value) (string, []driver.Value) {
+
 	subList := make([]string, 0)
 	newArgs := make([]driver.Value, 0)
 
@@ -452,7 +453,8 @@ func preparePositionalArgs(query string, argCount int, args []driver.Value) (str
 			var a string
 			switch arg := arg.(type) {
 			case string:
-				a = fmt.Sprintf("\"%v\"", arg)
+				//a = fmt.Sprintf("\"%v\"", arg)
+				a = fmt.Sprintf("%q", arg)
 			case []byte:
 				a = string(arg)
 			default:
@@ -477,6 +479,7 @@ func (conn *n1qlConn) Exec(query string, args []driver.Value) (driver.Result, er
 			return nil, fmt.Errorf("argument count mismatch %d != %d", argCount, len(args))
 		}
 		query, _ = preparePositionalArgs(query, argCount, args)
+		fmt.Println(">>", query)
 	}
 	return conn.performExec(query, nil)
 }
