@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -330,46 +331,142 @@ func getColsFromSql(sql string) (cols []string) {
 	commaSeparatedFields := csql[si+7 : fi]
 	slc := strings.Split(commaSeparatedFields, ",")
 	for _, col := range slc {
-		cols = append(cols, strings.TrimSpace(col))
+		colname := sqlColumnPattern(strings.TrimSpace(col))
+		cols = append(cols, colname)
 	}
 	return
 }
 
-func SingleRow(sql string, db *sql.DB) (map[string]interface{}, error) {
+func regExFindMatch(pattern, data string) (match []string) {
 
-	var orow = make(map[string]interface{})
-
-	sql = strings.ToLower(sql)
-	cols := getColsFromSql(sql) //GetColumnNamesFromQuery(sql)
-	row := make([][]byte, len(cols))
-	rowPtr := make([]any, len(cols))
-
-	for i := range row {
-		rowPtr[i] = &row[i]
-	}
-
-	srow := db.QueryRow(sql)
-	err := srow.Scan(rowPtr...)
-	if err != nil {
-		return nil, err
-	}
-
-	for i, rowp := range rowPtr {
-
-		switch val := rowp.(type) {
-
-		case *[]uint8:
-			orow[cols[i]] = *val
-
-		default:
-			log.Println("SingleRow() Type is unknown!")
-		}
-	}
-	orow = colsToRowMap(cols, orow)
-	return orow, nil
+	var myExp = regexp.MustCompile(pattern)
+	match = myExp.FindStringSubmatch(data)
+	return
 }
 
-// GetAllRowsByQuery Get all table rows using raw sql query
+func sqlColumnPattern(colname string) string {
+
+	var fcolname string
+	patterns := []string{`(.*)\s+as\s+([a-z_]*)`, `(.*)\.\s+([a-z_]*)`, `(.*)\.([a-z_]*)`}
+
+	for _, pattern := range patterns {
+		slc := regExFindMatch(pattern, colname)
+		if len(slc) == 3 {
+			fcolname = slc[2]
+			break
+		}
+	}
+	if len(fcolname) == 0 {
+		fcolname = colname
+	}
+	return fcolname
+}
+
+// func SingleRow(sql string, db *sql.DB) (map[string]interface{}, error) {
+
+// 	var orow = make(map[string]interface{})
+
+// 	cols := getColsFromSql(sql) //GetColumnNamesFromQuery(sql)
+// 	count := len(cols)
+// 	values := make([]interface{}, count)
+// 	valuePtrs := make([]interface{}, count)
+
+// 	fmt.Println(cols)
+
+// 	var isStarFound bool
+// 	var colCount int
+
+// 	for i := range cols {
+// 		valuePtrs[i] = &values[i]
+// 	}
+
+// 	srow := db.QueryRow(sql)
+// 	srow.Scan(valuePtrs...)
+
+// 	//var orow = make(map[string]interface{})
+// 	for i, col := range cols {
+// 		colCount++
+// 		if col == "*" {
+// 			isStarFound = true
+// 		}
+// 		//val := values[i]
+// 		orow[col] = values[i]
+// 		fmt.Printf("%d %s %v %T\n", i, col, bytesToStr(values[i].([]byte)), values[i])
+// 	}
+
+// 	if isStarFound {
+
+// 		for _, col := range cols {
+// 			//fmt.Printf("%v = %v %T\n", col, bytesToStr(row[col].([]uint8)), row[col])
+// 			var vmap = make(map[string]interface{})
+// 			json.Unmarshal(orow[col].([]uint8), &vmap)
+// 			for key := range vmap {
+// 				vrow, isOk := vmap[key].(map[string]interface{})
+// 				if isOk {
+// 					//nrows = append(nrows, vrow)
+// 					orow = vrow
+// 				} else {
+// 					fmt.Printf("%v %T\n", vmap[key], vmap[key])
+// 				}
+// 			}
+// 		}
+
+// 	} else if colCount == 1 {
+
+// 		for _, val := range orow {
+// 			json.Unmarshal(val.([]uint8), &orow)
+// 		}
+
+// 	} else if colCount > 1 {
+
+// 		for _, col := range cols {
+
+// 			val, isOk := orow[col].([]uint8)
+// 			if isOk {
+// 				orow[col] = bytesToStr(val)
+// 			}
+// 			//fmt.Println(">", col, orow[col])
+// 		}
+
+// 	}
+// 	//orow = colsToRowMap(cols, orow)
+// 	return orow, nil
+// }
+
+// func SingleRow(sql string, db *sql.DB) (map[string]interface{}, error) {
+
+// 	var orow = make(map[string]interface{})
+
+// 	cols := getColsFromSql(sql) //GetColumnNamesFromQuery(sql)
+// 	row := make([][]byte, len(cols))
+// 	rowPtr := make([]any, len(cols))
+
+// 	for i := range row {
+// 		rowPtr[i] = &row[i]
+// 	}
+
+// 	srow := db.QueryRow(sql)
+// 	err := srow.Scan(rowPtr...)
+// 	if err != nil {
+// 		log.Println(">>", err)
+// 		return nil, err
+// 	}
+
+// 	for i, rowp := range rowPtr {
+
+// 		switch val := rowp.(type) {
+
+// 		case *[]uint8:
+// 			orow[cols[i]] = *val
+
+// 		default:
+// 			log.Println("SingleRow() Type is unknown!")
+// 		}
+// 	}
+// 	orow = colsToRowMap(cols, orow)
+// 	return orow, nil
+// }
+
 func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 
 	rows, err := db.Query(sql)
@@ -377,41 +474,128 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 		return nil, err
 	}
 
-	cols, err := rows.Columns()
+	defer rows.Close()
+	columns, err := rows.Columns()
 	if err != nil {
 		return nil, err
 	}
-	row := make([][]byte, len(cols))
-	rowPtr := make([]any, len(cols))
 
-	for i := range row {
-		rowPtr[i] = &row[i]
-	}
-	defer rows.Close()
-	tableData := make([]map[string]interface{}, 0)
+	count := len(columns)
+	values := make([]interface{}, count)
+	valuePtrs := make([]interface{}, count)
+
+	var isStarFound bool
+	var colCount int
+
+	var orows = make([]map[string]interface{}, 0)
 
 	for rows.Next() {
 
-		if err := rows.Scan(rowPtr...); err != nil {
-			return nil, err
+		for i := range columns {
+			valuePtrs[i] = &values[i]
 		}
+		rows.Scan(valuePtrs...)
 		var orow = make(map[string]interface{})
+		for i, col := range columns {
+			colCount++
+			if col == "*" {
+				isStarFound = true
+			}
+			val := values[i]
+			orow[col] = val
+		}
+		orows = append(orows, orow)
+	} //
 
-		for i, rowp := range rowPtr {
+	//process
+	var nrows = make([]map[string]interface{}, 0)
 
-			switch val := rowp.(type) {
+	if isStarFound {
 
-			case *[]uint8:
-				orow[cols[i]] = *val
+		for _, row := range orows {
 
-			default:
-				fmt.Println("GetRows() Type is unknown!")
+			for _, col := range columns {
+				var vmap = make(map[string]interface{})
+				json.Unmarshal(row[col].([]uint8), &vmap)
+				for key := range vmap {
+					vrow, isOk := vmap[key].(map[string]interface{})
+					if isOk {
+						nrows = append(nrows, vrow)
+					} else {
+						fmt.Printf("%v %T\n", vmap[key], vmap[key])
+					}
+				}
 			}
 		}
-		tableData = append(tableData, colsToRowMap(cols, orow))
+
+	} else if colCount == 1 {
+
+		for _, row := range orows {
+			for _, val := range row {
+				json.Unmarshal(val.([]uint8), &row)
+			}
+			nrows = append(nrows, row)
+		}
+
+	} else if colCount > 1 {
+
+		for _, row := range orows {
+			var srow = make(map[string]interface{})
+			for key, val := range row {
+				srow[key] = bytesToStr(val.([]uint8))
+			}
+			nrows = append(nrows, srow)
+		}
+
+	} else {
+		fmt.Println("else:>", orows, len(orows))
 	}
-	return tableData, nil
+	return nrows, nil
 }
+
+// GetAllRowsByQuery Get all table rows using raw sql query
+// func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
+
+// 	rows, err := db.Query(sql)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	cols, err := rows.Columns()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	row := make([][]byte, len(cols))
+// 	rowPtr := make([]any, len(cols))
+
+// 	for i := range row {
+// 		rowPtr[i] = &row[i]
+// 	}
+// 	defer rows.Close()
+// 	tableData := make([]map[string]interface{}, 0)
+
+// 	for rows.Next() {
+
+// 		if err := rows.Scan(rowPtr...); err != nil {
+// 			return nil, err
+// 		}
+// 		var orow = make(map[string]interface{})
+
+// 		for i, rowp := range rowPtr {
+
+// 			switch val := rowp.(type) {
+
+// 			case *[]uint8:
+// 				orow[cols[i]] = *val
+
+// 			default:
+// 				fmt.Println("GetRows() Type is unknown!")
+// 			}
+// 		}
+// 		tableData = append(tableData, colsToRowMap(cols, orow))
+// 	}
+// 	return tableData, nil
+// }
 
 // FieldByValue Get one field_value using where clause
 func FieldByValue(table, fieldName, where string, db *sql.DB) string {

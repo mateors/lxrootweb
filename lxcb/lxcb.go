@@ -196,7 +196,7 @@ func (conn *n1qlConn) performQuery(query string, requestValues *url.Values) (dri
 	// fmt.Println(resultMap, len(resultMap), N1QL_PASSTHROUGH_MODE)
 	// fmt.Printf("metrics: %c\n", resultMap["metrics"])
 	// fmt.Printf("requestID: %c\n", resultMap["requestID"])
-	// fmt.Printf("results: %c\n", resultMap["results"])
+	//fmt.Printf("results: %c\n", resultMap["results"])
 	// fmt.Printf("signature: %c\n", resultMap["signature"])
 	// fmt.Printf("status: %c\n", resultMap["status"])
 
@@ -453,8 +453,8 @@ func preparePositionalArgs(query string, argCount int, args []driver.Value) (str
 			var a string
 			switch arg := arg.(type) {
 			case string:
-				//a = fmt.Sprintf("\"%v\"", arg)
-				a = fmt.Sprintf("%q", arg)
+				a = fmt.Sprintf("\"%v\"", arg)
+				//a = fmt.Sprintf("%q", arg)
 			case []byte:
 				a = string(arg)
 			default:
@@ -479,7 +479,6 @@ func (conn *n1qlConn) Exec(query string, args []driver.Value) (driver.Result, er
 			return nil, fmt.Errorf("argument count mismatch %d != %d", argCount, len(args))
 		}
 		query, _ = preparePositionalArgs(query, argCount, args)
-		fmt.Println(">>", query)
 	}
 	return conn.performExec(query, nil)
 }

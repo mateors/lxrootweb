@@ -10,6 +10,7 @@ import (
 	"text/template"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/mateors/mtool"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -921,19 +922,39 @@ func verify(w http.ResponseWriter, r *http.Request) {
 
 		email := r.FormValue("email")
 		token := r.FormValue("token")
-		//fmt.Println("email > token:", email, token)
+		ainfo, err := usernameToAccounInfo(email)
+		if err != nil {
+			logError("usernameToAccounInfo", err)
+			return
+		}
 
 		var message string
-		err := verifySignup(email, token)
+		err = verifySignup(email, token)
 		if err != nil {
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:red;font-size:64px;">%s</h1>`, err.Error())
 
 		} else {
 
-			
-			sql := fmt.Sprintf("UPDATE %s SET status=0 WHERE id=%q", tableToBucket("account"), "cpcaq4i2r9emrfgpk940")
-			database.DB.Exec(sql) //
+			fmt.Println(ainfo, len(ainfo))
+			accountId, isOk := ainfo["account_id"].(string)
+			if !isOk {
+				log.Println("unable to parse ainfo")
+				return
+			}
 
+			sql := fmt.Sprintf("UPDATE %s SET status=1,update_date=%q,remarks='verified' WHERE id=%q;", tableToBucket("account"), mtool.TimeNow(), accountId)
+			database.DB.Exec(sql)
+
+			loginId := ainfo["login_id"].(string)
+			sql = fmt.Sprintf("UPDATE %s SET status=1 WHERE id=%q;", tableToBucket("login"), loginId)
+			database.DB.Exec(sql)
+
+			sql = fmt.Sprintf("UPDATE %s SET status=1,update_date=%q WHERE id=%q;", tableToBucket("verification"), mtool.TimeNow(), loginId)
+			database.DB.Exec(sql)
+
+			ipAddress := cleanIp(mtool.ReadUserIP(r))
+			logDetails := fmt.Sprintf("username %s verified", email)
+			addActiviyLog(loginId, "UPDATE", "account", "", logDetails, ipAddress)
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:green;font-size:64px;">%s <a href="/signin">Sign in</a></h1>`, "Verified")
 		}
 		fmt.Fprintln(w, message)

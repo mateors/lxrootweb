@@ -158,8 +158,22 @@ func init() {
 	// fmt.Println(sql)
 	// err = lxql.RawSQL(sql, database.DB)
 	//fmt.Println(err)
-	//row, err := usernameToAccounInfo("bill.rassel@gmail.com")
+	//row, err := usernameToAccounInfo("billahmdmostain@gmail.com")
 	//fmt.Println(err, row)
+	//aid := accessIdByName("client")
+	//fmt.Println(aid)
+
+	//sql := "SELECT a.cid,a.account_type,a.id as account_id FROM lxroot._default.login l LEFT JOIN lxroot._default.account a ON a.id=l.account_id WHERE l.username='billahmdmostain@gmail.com'"
+	//sql := "SELECT a.cid FROM lxroot._default.login l LEFT JOIN lxroot._default.account a ON a.id=l.account_id WHERE l.username='billahmdmostain@gmail.com'"
+	//sql := "SELECT * FROM lxroot._default.access;"
+	//sql := "SELECT a.id as account_id, l.id as login_id FROM lxroot._default.login l LEFT JOIN lxroot._default.account a ON a.id=l.account_id WHERE l.username='billahmdmostain@gmail.com';"
+	// rows, err := lxql.GetRows(sql, database.DB)
+	// if err != nil {
+	// 	return
+	// }
+	// for i, row := range rows {
+	// 	fmt.Println(i, row)
+	// }
 	//os.Exit(1)
 }
 

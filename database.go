@@ -9,6 +9,7 @@ import (
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/url"
+	"strings"
 
 	"github.com/mateors/mtool"
 	"github.com/rs/xid"
@@ -328,10 +329,32 @@ func addVerification(username, purpose, code, messageId string) (id string, err 
 	return id, err
 }
 
+func addActiviyLog(loginId, activityType, ownerTable, parameter, logDetails, ipAddress string) (id string, err error) {
+
+	modelName := structName(ActivityLog{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["activity_type"] = activityType //UPDATE|INSERT|DELETE|CREATE
+	form["table_name"] = ownerTable
+	form["parameter"] = parameter
+	form["log_details"] = logDetails
+	form["ip_address"] = ipAddress
+	form["login_id"] = loginId
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
 func accessIdByName(accessName string) string {
 
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)
-	row, err := lxql.SingleRow(sql, database.DB)
+	row, err := singleRow(sql)
 	if err != nil {
 		log.Println("accessIdByName:", err, sql)
 		return ""
@@ -342,7 +365,7 @@ func accessIdByName(accessName string) string {
 func verifySignup(email, token string) error {
 
 	sql := fmt.Sprintf("SELECT verification_code FROM %s WHERE username='%s' AND verification_purpose='signup';", tableToBucket("verification"), email)
-	row, err := lxql.SingleRow(sql, database.DB)
+	row, err := singleRow(sql)
 	if err != nil {
 		return err
 	}
@@ -354,14 +377,151 @@ func verifySignup(email, token string) error {
 	return errors.New("invalid token")
 }
 
+func singleRow(sql string) (map[string]interface{}, error) {
+
+	rows, err := lxql.GetRows(sql, database.DB)
+	if err != nil {
+		return nil, err
+	}
+	for _, row := range rows {
+		return row, nil
+	}
+	return nil, errors.New("no record found")
+}
+
+func cleanText(input string) string {
+	return strings.Join(strings.Fields(input), " ")
+}
+
 func usernameToAccounInfo(username string) (map[string]interface{}, error) {
 
-	sql := fmt.Sprintf(`SELECT a.cid,a.account_type,
-	a.first_name,a.last_name,a.code,a.customid,a.phone,
-	a.email,a.photo,a.referral_url,a.status,l.access_name,
-	l.last_login,l.passw,l.tfa_medium,l.tfa_setupkey,l.tfa_status 
+	sql := fmt.Sprintf(`SELECT 
+	a.cid,
+	a.account_type,
+	a.id as account_id,
+	l.id as login_id,
+	a.first_name,
+	a.last_name,
+	a.code,
+	a.customid,
+	a.phone,
+	a.email,
+	a.photo,
+	a.referral_url,
+	a.status,
+	l.access_name,
+	l.last_login,
+	l.passw,
+	l.tfa_medium,
+	l.tfa_setupkey,
+	l.tfa_status 
 	FROM lxroot._default.login l 
 	LEFT JOIN lxroot._default.account a ON a.id=l.account_id
-	WHERE l.username="%s"`, username)
-	return lxql.SingleRow(sql, database.DB)
+	WHERE l.username="%s";`, username)
+	sql = cleanText(sql)
+	return singleRow(sql)
 }
+
+// func bytesToStr(slc []uint8) string {
+
+// 	var str string
+// 	for _, c := range slc {
+// 		if c != 34 { //remove "
+// 			str += fmt.Sprintf("%c", c)
+// 		}
+// 	}
+// 	return str
+// }
+
+// func getRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
+
+// 	rows, err := db.Query(sql)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	defer rows.Close()
+// 	columns, err := rows.Columns()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	count := len(columns)
+// 	values := make([]interface{}, count)
+// 	valuePtrs := make([]interface{}, count)
+// 	//fmt.Println(columns, len(columns))
+// 	var isStarFound bool
+// 	var colCount int
+
+// 	var orows = make([]map[string]interface{}, 0)
+
+// 	for rows.Next() {
+
+// 		for i := range columns {
+// 			valuePtrs[i] = &values[i]
+// 		}
+
+// 		rows.Scan(valuePtrs...)
+// 		var orow = make(map[string]interface{})
+// 		for i, col := range columns {
+// 			colCount++
+// 			if col == "*" {
+// 				isStarFound = true
+// 			}
+// 			val := values[i]
+// 			orow[col] = val
+// 		}
+// 		orows = append(orows, orow)
+
+// 	} //
+
+// 	//process
+// 	var nrows = make([]map[string]interface{}, 0)
+
+// 	if isStarFound {
+
+// 		//fmt.Println("* found...")
+// 		for _, row := range orows {
+
+// 			//fmt.Println(row["*"])
+// 			for _, col := range columns {
+// 				//fmt.Printf("%v = %v %T\n", col, bytesToStr(row[col].([]uint8)), row[col])
+// 				var vmap = make(map[string]interface{})
+// 				json.Unmarshal(row[col].([]uint8), &vmap)
+// 				for key := range vmap {
+// 					vrow, isOk := vmap[key].(map[string]interface{})
+// 					if isOk {
+// 						nrows = append(nrows, vrow)
+// 					} else {
+// 						fmt.Printf("%v %T\n", vmap[key], vmap[key])
+// 					}
+// 				}
+// 			}
+// 		}
+
+// 	} else if colCount == 1 {
+
+// 		//fmt.Println("1 col count...", columns, len(columns), columns[0])
+// 		for _, row := range orows {
+// 			for _, val := range row {
+// 				json.Unmarshal(val.([]uint8), &row)
+// 			}
+// 			nrows = append(nrows, row)
+// 		}
+
+// 	} else if colCount > 1 {
+
+// 		for _, row := range orows {
+// 			var srow = make(map[string]interface{})
+// 			for key, val := range row {
+// 				srow[key] = bytesToStr(val.([]uint8))
+// 				//fmt.Printf("%v => %v %T\n", key, val, val)
+// 			}
+// 			nrows = append(nrows, srow)
+// 		}
+
+// 	} else {
+// 		fmt.Println("else:>", orows, len(orows))
+// 	}
+// 	return nrows, nil
+// }
