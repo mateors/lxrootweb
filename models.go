@@ -204,10 +204,12 @@ type Verification struct {
 	ID                  string `json:"id"`
 	Type                string `json:"type"`
 	CompanyID           string `json:"cid"`                  //foreign key
-	MessageID           string `json:"message_id"`           //foreign key
-	VerificationPurpose string `json:"verification_purpose"` //TFA/VERIFY_EMAIL/VERIFIFY_CELL
+	MessageID           string `json:"message_id,omitempty"` //foreign key
+	Username            string `json:"username"`
+	VerificationPurpose string `json:"verification_purpose"` //TFA/SIGNUP
 	VerificationCOde    string `json:"verification_code"`
 	CreateDate          string `json:"create_date"`
+	UpdateDate          string `json:"update_date"`
 	Status              int    `json:"status"`
 }
 

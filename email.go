@@ -15,14 +15,14 @@ var auth smtp.Auth
 func send(toEmail, subject, body string) error {
 
 	from := "info@lxroot.com" //youthictbd@gmail.com
-	pass := "test321"         //gmfwwdjyfqtusprj
+	pass := "test4321"        //gmfwwdjyfqtusprj
 	toEmails := []string{toEmail}
 	toHeader := strings.Join(toEmails, ",")
 	msg := "From: " + from + "\n" +
 		"To: " + toHeader + "\n" +
 		"Subject: " + subject + "\n\n" + body
 
-	return smtp.SendMail("mx.lxroot.com:587", smtp.PlainAuth("", from, pass, "mx.lxroot.com"), from, toEmails, []byte(msg))
+	return smtp.SendMail("mail.lxroot.com:587", smtp.PlainAuth("", from, pass, "mail.lxroot.com"), from, toEmails, []byte(msg))
 }
 
 func SendEmail(toEmails []string, subject, body string) error {
@@ -81,40 +81,24 @@ func signupEmailTemplateParser(name, location, verifyUrl string) (string, error)
 
 func signupEmail(email, name, location, verifyUrl string) error {
 
-	// base := ""
-	// name := "MOSTAIN BILLAH"
-	// regno := "300001"
-	// courseName := "Golang Programming"
-	// courseMode := "Online"
-	// session := "January 2023"
-	// username := "mateors"
-	//password := generatePassword(12, true, true)
 	markup, err := signupEmailTemplateParser(name, location, verifyUrl)
 	if err != nil {
 		return err
 	}
-	//toEmails := []string{"billahmdmostain@gmail.com"}
-	err = htmlEmailer([]string{email}, markup)
+	subject := "🎉 Welcome to LxRoot - action required"
+	err = htmlEmailer([]string{email}, subject, markup)
 	return err
 }
 
 // EMAIL CONFIG
-func htmlEmailer(toEmails []string, body string) error {
+func htmlEmailer(toEmails []string, subject, body string) error {
 
-	//toEmails := []string{"billahmdmostain@gmail.com"} //"nasarulhasan@gmail.com"
-	toHeader := strings.Join(toEmails, ";")
-	//ccEmail := []string{"admin@mateors.com"}
-	//ccHeader := strings.Join(ccEmail, ";")
-	//bccEmail := []string{"bill.rassel@gmail.com"}
-	//bccHeader := strings.Join(bccEmail, ";")
-	subject := "REGISTRATION EMAIL"
-	from := "youthictbd@gmail.com"
+	toHeader := strings.Join(toEmails, ",") //;
+	from := utility.EMAILUSER
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	//body := "<html><body><h1>Hello Mostain! can you read my image?</h1><img src='https://test.youthict.org/data/file_store/content/32.png'></body></html>"
 	msg := "FROM: " + from + "\n" +
 		"TO: " + toHeader + "\n" +
-		//"CC: " + ccHeader + "\n" +
-		//"BCC: " + bccHeader + "\n" +
 		"SUBJECT: " + subject + "\n" +
 		mime + body
 	//auth = smtp.PlainAuth("", "youthictbd@gmail.com", "gmfwwdjyfqtusprj", "smtp.gmail.com")

@@ -2,9 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"lxrootweb/lxql"
+	"lxrootweb/utility"
 	"net/url"
 
 	"github.com/mateors/mtool"
@@ -264,6 +266,26 @@ func addLogin(accountId, accessId, accessName, username, plainPassword string) (
 	return id, err
 }
 
+func addVerification(username, purpose, code, messageId string) (id string, err error) {
+
+	modelName := structName(Verification{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["username"] = username
+	form["verification_purpose"] = purpose                               //signup
+	form["verification_code"] = mtool.EncodeStr(code, utility.JWTSECRET) //
+	form["message_id"] = messageId
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 0 //inactive by default
+	err = lxql.InsertUpdateMap(form, db)
+	return id, err
+}
+
 func accessIdByName(accessName string) string {
 
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)
@@ -273,4 +295,21 @@ func accessIdByName(accessName string) string {
 		return ""
 	}
 	return row["id"].(string)
+}
+
+func verifySignup(email, token string) error {
+
+	sql := fmt.Sprintf("SELECT verification_code FROM %s WHERE username='%s' AND verification_purpose='signup';", tableToBucket("verification"), email)
+	//fmt.Println(sql)
+	row, err := singleRow(sql)
+	if err != nil {
+		return err
+	}
+	hexCode := row["verification_code"].(string) //encoded with jwtsecret
+	plainTxt := mtool.DecodeStr(hexCode, utility.JWTSECRET)
+	fmt.Println(plainTxt, token, "**", hexCode)
+	if token == plainTxt {
+		return nil
+	}
+	return errors.New("invalid token")
 }

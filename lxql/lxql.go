@@ -281,11 +281,24 @@ func colsToRowMap(cols []string, orow map[string]interface{}) map[string]interfa
 
 	} else if len(cols) == 1 {
 
-		var row = make(map[string]map[string]interface{})
-		col := cols[0]
-		json.Unmarshal(orow[col].([]uint8), &row)
-		for key := range row {
-			orow = row[key]
+		//var row = make(map[string]map[string]interface{})
+		// col := cols[0]
+		// json.Unmarshal(orow[col].([]uint8), &row)
+		// for key := range row {
+		// 	orow = row[key]
+		// }
+		colname := cols[0]
+		if colname == "*" {
+			var row = make(map[string]map[string]interface{})
+			json.Unmarshal(orow[colname].([]uint8), &row)
+			for key := range row {
+				orow = row[key]
+			}
+
+		} else {
+			var row = make(map[string]interface{})
+			json.Unmarshal(orow[colname].([]uint8), &row)
+			orow = row
 		}
 	}
 	return orow

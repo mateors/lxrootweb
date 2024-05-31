@@ -51,6 +51,7 @@ func init() {
 		lxql.RegisterModel(Account{})
 		lxql.RegisterModel(Address{})
 		lxql.RegisterModel(Login{})
+		lxql.RegisterModel(Verification{})
 		lxql.RegisterModel(ActivityLog{})
 	}
 
@@ -141,8 +142,19 @@ func init() {
 	// count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), db)
 	// fmt.Println(count)
 	// var name, location, verifyUrl string = "SANZIDA YASMIN", "Rangpur, Bangladesh", "https://lxroot.com/verify?email=bill.rassel@gmail.com&token=112121212"
-	// markup, err := signupEmailTemplateParser(name, location, verifyUrl)
-	// fmt.Println(err, markup)
+	// err = signupEmail("mostain@lxroot.com", name, location, verifyUrl)
+	// fmt.Println(err)
+	//code := uuid.NewV4().String()
+	//fmt.Println(code)
+
+	// email := "bill.rassel@gmail.com"
+	// sql := fmt.Sprintf("SELECT verification_code FROM %s WHERE username='%s' AND verification_purpose='signup';", tableToBucket("verification"), email)
+	// row, err := singleRow(sql)
+	// if err != nil {
+	// 	return
+	// }
+	// hexCode := row["verification_code"].(string) //
+	// fmt.Println(hexCode)
 	// os.Exit(1)
 }
 
@@ -174,6 +186,7 @@ func main() {
 	r.HandleFunc("/contact", contact)            //contact us
 	r.HandleFunc("/join-waitlist", joinWaitlist) //WaitList
 	r.HandleFunc("/signup", signup)              //signup + checkout
+	r.HandleFunc("/verify", verify)              //signup + checkout
 	r.HandleFunc("/signin", signin)              //signup + checkout
 
 	//r.HandleFunc("/webhook", webhookHandler)

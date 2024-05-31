@@ -9,6 +9,7 @@ import (
 	"text/template"
 
 	"github.com/go-chi/chi/v5"
+	uuid "github.com/satori/go.uuid"
 )
 
 func GetBaseURL(r *http.Request) string {
@@ -879,10 +880,18 @@ func signup(w http.ResponseWriter, r *http.Request) {
 				errMsg = err.Error()
 			}
 			if err == nil {
-				_, err = addAddress(accountId, "billing", "", "", "", "", "", "")
-				logError("addAddress", err)
-				_, err = addLogin(accountId, accessId, accessName, username, passwd)
-				logError("addLogin", err)
+
+				addAddress(accountId, "billing", "", "", "", "", "", "")
+				addLogin(accountId, accessId, accessName, username, passwd)
+				code := uuid.NewV4().String()
+				_, err = addVerification(username, "signup", code, "")
+				logError("addVerification", err)
+
+				location := "Dhaka, Bangladesh"
+				verfyUrl := fmt.Sprintf("https://lxroot.com/verify?email=%s&token=%s", email, code)
+				err = signupEmail(email, accountName, location, verfyUrl)
+				logError("signupEmail", err)
+
 				errNo = 0
 				errMsg = "Congratulations! You have successfully registered with LxRoot. 🎉"
 			}
@@ -902,6 +911,27 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(bs))
+	}
+}
+
+func verify(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		email := r.FormValue("email")
+		token := r.FormValue("token")
+		//fmt.Println("email > token:", email, token)
+
+		var message string
+		err := verifySignup(email, token)
+		fmt.Println(err)
+		if err != nil {
+			message = fmt.Sprintf(`<h1 style="text-align:center;color:red;font-size:64px;">%s</h1>`, err.Error())
+
+		} else if err == nil {
+			message = fmt.Sprintf(`<h1 style="text-align:center;color:green;font-size:64px;">%s <a href="/signin">Sign in</a></h1>`, "Verified")
+		}
+		fmt.Fprintln(w, message)
 	}
 }
 
