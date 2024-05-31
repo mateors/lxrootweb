@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/url"
@@ -108,7 +109,7 @@ func basicForm() {
 	form["lang"] = []string{"golang", "rust"}
 	form["table"] = "Company"
 
-	err = lxql.InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, database.DB)
 	fmt.Println(err)
 }
 
@@ -126,7 +127,7 @@ func addCompany(companyName string) error {
 	form["table"] = COMPANY_TABLE //model
 	form["type"] = table
 	form["status"] = 1
-	err = lxql.InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, database.DB)
 	return err
 }
 
@@ -141,7 +142,7 @@ func modelUpsert(modelName string, form url.Values) error {
 	for key := range form {
 		mForm[key] = form.Get(key)
 	}
-	err = lxql.InsertUpdateMap(mForm, db)
+	err = lxql.InsertUpdateMap(mForm, database.DB)
 	return err
 }
 
@@ -159,11 +160,11 @@ func addSettings(fieldName, fieldValue, purpose string) error {
 	form["field_value"] = fieldValue
 	form["purpose"] = purpose
 	form["status"] = 1
-	return lxql.InsertUpdateMap(form, db)
+	return lxql.InsertUpdateMap(form, database.DB)
 }
 
 func settingsValue(fieldName string) string {
-	return lxql.FieldByValue(tableToBucket("settings"), "field_value", fmt.Sprintf("field_name='%s'", fieldName), db)
+	return lxql.FieldByValue(tableToBucket("settings"), "field_value", fmt.Sprintf("field_name='%s'", fieldName), database.DB)
 }
 
 func addCountry(name, isoCode, countryCode string) error {
@@ -180,7 +181,7 @@ func addCountry(name, isoCode, countryCode string) error {
 	form["iso_code"] = isoCode
 	form["country_code"] = countryCode
 	form["status"] = 1
-	return lxql.InsertUpdateMap(form, db)
+	return lxql.InsertUpdateMap(form, database.DB)
 }
 
 func addAccess(accessName string) error {
@@ -195,7 +196,7 @@ func addAccess(accessName string) error {
 	form["table"] = modelName
 	form["access_name"] = accessName
 	form["status"] = 1
-	return lxql.InsertUpdateMap(form, db)
+	return lxql.InsertUpdateMap(form, database.DB)
 }
 
 func addAccount(parentId, accountType, email, accountName, firstName, lastName string) (id string, err error) {
@@ -217,7 +218,7 @@ func addAccount(parentId, accountType, email, accountName, firstName, lastName s
 	form["email"] = email
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 0 //in active by default
-	err = lxql.InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err
 }
 
@@ -240,7 +241,7 @@ func addAddress(accountId, addressType, country, state, city, address1, address2
 	form["address2"] = address2
 	form["zip"] = zip
 	form["status"] = 1
-	err = lxql.InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err
 }
 
@@ -262,7 +263,7 @@ func addLogin(accountId, accessId, accessName, username, plainPassword string) (
 	form["tfa_status"] = 0
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 0 //inactive by default
-	err = lxql.InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err
 }
 
@@ -282,7 +283,7 @@ func addVerification(username, purpose, code, messageId string) (id string, err 
 	form["message_id"] = messageId
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 0 //inactive by default
-	err = lxql.InsertUpdateMap(form, db)
+	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err
 }
 

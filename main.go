@@ -4,20 +4,17 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"lxrootweb/database"
 	_ "lxrootweb/lxcb"
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
 	"path/filepath"
-	"reflect"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
-
-var workingDirectory string
-var typeRegistry = make(map[string]reflect.Type)
 
 const (
 	SERVERIP    = "172.93.55.179" //
@@ -30,15 +27,14 @@ const (
 	ENCDECPASS  = "MosT$sLxRoot"
 )
 
-var db *sql.DB
+var workingDirectory string
 var err error
 var COMPANY_ID string
 
 func init() {
 
 	workingDirectory, _ = os.Getwd()
-	//couchbaseConnTest()
-	//lxqlCon()
+
 	if DRIVER_NAME == "n1ql" {
 
 		lxql.BUCKET = BUCKET_NAME
@@ -56,11 +52,12 @@ func init() {
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
-	db, err = sql.Open(DRIVER_NAME, dataSourceName)
+
+	database.DB, err = sql.Open(DRIVER_NAME, dataSourceName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = db.Ping()
+	err = database.DB.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}

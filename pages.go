@@ -924,11 +924,11 @@ func verify(w http.ResponseWriter, r *http.Request) {
 
 		var message string
 		err := verifySignup(email, token)
-		fmt.Println(err)
 		if err != nil {
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:red;font-size:64px;">%s</h1>`, err.Error())
 
-		} else if err == nil {
+		} else {
+			
 			message = fmt.Sprintf(`<h1 style="text-align:center;color:green;font-size:64px;">%s <a href="/signin">Sign in</a></h1>`, "Verified")
 		}
 		fmt.Fprintln(w, message)

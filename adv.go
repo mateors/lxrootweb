@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"net/http"
 	"net/url"
@@ -220,7 +221,7 @@ func validEmail(args map[string]interface{}) string {
 		return "ERROR email missing"
 	}
 	email = strings.ToLower(email)
-	count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), db)
+	count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, email), database.DB)
 	if count > 0 {
 		return "ERROR email already exist"
 	}
@@ -278,7 +279,7 @@ func tokenPullNSet(r *http.Request) error {
 func companyId(website string) string {
 
 	sql := fmt.Sprintf("SELECT id FROM %s WHERE website='%s';", tableToBucket("company"), website)
-	prow := db.QueryRow(sql)
+	prow := database.DB.QueryRow(sql)
 	var cmap = make(map[string]interface{}, 0)
 	var jsonBytes []uint8
 	err := prow.Scan(&jsonBytes)
@@ -398,7 +399,7 @@ func singleRow(sql string) (map[string]interface{}, error) {
 		rowPtr[i] = &row[i]
 	}
 
-	srow := db.QueryRow(sql)
+	srow := database.DB.QueryRow(sql)
 	err := srow.Scan(rowPtr...)
 	if err != nil {
 		return nil, err
