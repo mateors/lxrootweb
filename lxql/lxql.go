@@ -318,6 +318,57 @@ func colsToRowMap(cols []string, orow map[string]interface{}) map[string]interfa
 	return orow
 }
 
+func cleanText(input string) string {
+	return strings.Join(strings.Fields(input), " ")
+}
+
+func getColsFromSql(sql string) (cols []string) {
+
+	csql := strings.ToLower(cleanText(sql))
+	si := strings.Index(csql, "select")
+	fi := strings.Index(csql, "from")
+	commaSeparatedFields := csql[si+7 : fi]
+	slc := strings.Split(commaSeparatedFields, ",")
+	for _, col := range slc {
+		cols = append(cols, strings.TrimSpace(col))
+	}
+	return
+}
+
+func SingleRow(sql string, db *sql.DB) (map[string]interface{}, error) {
+
+	var orow = make(map[string]interface{})
+
+	sql = strings.ToLower(sql)
+	cols := getColsFromSql(sql) //GetColumnNamesFromQuery(sql)
+	row := make([][]byte, len(cols))
+	rowPtr := make([]any, len(cols))
+
+	for i := range row {
+		rowPtr[i] = &row[i]
+	}
+
+	srow := db.QueryRow(sql)
+	err := srow.Scan(rowPtr...)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, rowp := range rowPtr {
+
+		switch val := rowp.(type) {
+
+		case *[]uint8:
+			orow[cols[i]] = *val
+
+		default:
+			log.Println("SingleRow() Type is unknown!")
+		}
+	}
+	orow = colsToRowMap(cols, orow)
+	return orow, nil
+}
+
 // GetAllRowsByQuery Get all table rows using raw sql query
 func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 

@@ -9,7 +9,6 @@ import (
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/url"
-	"strings"
 
 	"github.com/mateors/mtool"
 	"github.com/rs/xid"
@@ -101,6 +100,51 @@ func createCollection(collectionName string, db *sql.DB) error {
 // 	return nil
 // }
 
+// func nextSerial(tableName string) int {
+// 	return lxql.CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
+// }
+
+// func GetColumnNamesFromQuery(query string) []string {
+
+// 	query = strings.ToLower(query)
+// 	// Remove leading/trailing whitespaces and semicolon (if any)
+// 	query = strings.TrimSpace(query)
+// 	if strings.HasSuffix(query, ";") {
+// 		query = query[:len(query)-1]
+// 	}
+
+// 	// Split the query by spaces
+// 	parts := strings.Fields(query)
+
+// 	// Find the index of "SELECT" and "FROM" keywords
+// 	selectIndex := -1
+// 	fromIndex := -1
+// 	for i, part := range parts {
+// 		if strings.EqualFold(part, "select") {
+// 			selectIndex = i
+// 		} else if strings.EqualFold(part, "from") {
+// 			fromIndex = i
+// 			break
+// 		}
+// 	}
+
+// 	// Extract column names between "SELECT" and "FROM"
+// 	if selectIndex != -1 && fromIndex != -1 && fromIndex > selectIndex+1 {
+
+//			columns := parts[selectIndex+1 : fromIndex]
+//			// Remove commas from column names
+//			for i, col := range columns {
+//				columns[i] = strings.TrimSuffix(col, ",")
+//			}
+//			var rcols []string
+//			for _, col := range columns {
+//				slc := strings.Split(col, ",")
+//				rcols = slc
+//			}
+//			return rcols
+//		}
+//		return nil
+//	}
 func basicForm() {
 
 	var form = make(map[string]interface{})
@@ -113,10 +157,6 @@ func basicForm() {
 	err = lxql.InsertUpdateMap(form, database.DB)
 	fmt.Println(err)
 }
-
-// func nextSerial(tableName string) int {
-// 	return lxql.CheckCount(tableName, fmt.Sprintf("type='%s'", tableName), db) + 1
-// }
 
 func addCompany(companyName string) error {
 
@@ -291,7 +331,7 @@ func addVerification(username, purpose, code, messageId string) (id string, err 
 func accessIdByName(accessName string) string {
 
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)
-	row, err := singleRow(sql)
+	row, err := lxql.SingleRow(sql, database.DB)
 	if err != nil {
 		log.Println("accessIdByName:", err, sql)
 		return ""
@@ -302,38 +342,17 @@ func accessIdByName(accessName string) string {
 func verifySignup(email, token string) error {
 
 	sql := fmt.Sprintf("SELECT verification_code FROM %s WHERE username='%s' AND verification_purpose='signup';", tableToBucket("verification"), email)
-	//fmt.Println(sql)
-	row, err := singleRow(sql)
+	row, err := lxql.SingleRow(sql, database.DB)
 	if err != nil {
 		return err
 	}
 	hexCode := row["verification_code"].(string) //encoded with jwtsecret
 	plainTxt := mtool.DecodeStr(hexCode, utility.JWTSECRET)
-	fmt.Println(plainTxt, token, "**", hexCode)
 	if token == plainTxt {
 		return nil
 	}
 	return errors.New("invalid token")
 }
-
-func cleanText(input string) string {
-	return strings.Join(strings.Fields(input), " ")
-}
-
-func getColsFromSql(sql string) (cols []string) {
-
-	csql := strings.ToLower(cleanText(sql))
-	si := strings.Index(csql, "select")
-	fi := strings.Index(csql, "from")
-	commaSeparatedFields := csql[si+7 : fi]
-	slc := strings.Split(commaSeparatedFields, ",")
-	for _, col := range slc {
-		cols = append(cols, strings.TrimSpace(col))
-	}
-	return
-}
-
-
 
 func usernameToAccounInfo(username string) (map[string]interface{}, error) {
 
@@ -344,5 +363,5 @@ func usernameToAccounInfo(username string) (map[string]interface{}, error) {
 	FROM lxroot._default.login l 
 	LEFT JOIN lxroot._default.account a ON a.id=l.account_id
 	WHERE l.username="%s"`, username)
-	return singleRow(sql)
+	return lxql.SingleRow(sql, database.DB)
 }
