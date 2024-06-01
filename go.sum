@@ -20,6 +20,8 @@ github.com/mateors/money v0.0.0-20200823090156-43894c563246 h1:iQt1CuKUUO3cSs5yJ
 github.com/mateors/money v0.0.0-20200823090156-43894c563246/go.mod h1:CSGzDsfDsD5vwmFBCm57fTzRvzKAQRth4fqH8NvorP0=
 github.com/mateors/mtool v0.0.0-20231012123045-6c5b47ebeb4d h1:6hT7bnlU7AVl3admGtdSVD64QrInCHwSptYqbWPqt00=
 github.com/mateors/mtool v0.0.0-20231012123045-6c5b47ebeb4d/go.mod h1:G79ep6qPqI2DBI/jOmgRNRbh8f5A+DRSWFd0A0pBoIA=
+github.com/mileusna/useragent v1.3.4 h1:MiuRRuvGjEie1+yZHO88UBYg8YBC/ddF6T7F56i3PCk=
+github.com/mileusna/useragent v1.3.4/go.mod h1:3d8TOmwL/5I8pJjyVDteHtgDGcefrFUX4ccGOMKNYYc=
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 h1:RWengNIwukTxcDr9M+97sNutRR1RKhG96O6jWumTTnw=
 github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826/go.mod h1:TaXosZuwdSHYgviHp1DAtfrULt5eUgsSMsZf+YrPgl8=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

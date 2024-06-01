@@ -351,6 +351,30 @@ func addActiviyLog(loginId, activityType, ownerTable, parameter, logDetails, ipA
 	return id, err
 }
 
+func addLoginSession(loginId, visitorSessionID, ipAddress, city, country, userAgent string) (id string, err error) {
+
+	loginTime := mtool.TimeNow()
+	modelName := structName(LoginSession{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["session_code"] = visitorSessionID
+	form["login_id"] = loginId
+	form["ip_address"] = ipAddress
+	form["city"] = city
+	form["country"] = country
+	form["user_agent"] = userAgent
+	form["login_time"] = loginTime
+	form["create_date"] = loginTime
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
 func accessIdByName(accessName string) string {
 
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)

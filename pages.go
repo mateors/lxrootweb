@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
+	"lxrootweb/lxql"
+	"lxrootweb/utility"
 	"net/http"
 	"strings"
 	"text/template"
@@ -754,7 +756,7 @@ func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 		r.Form.Set("ctoken", ctoken)
 
 		funcsMap := map[string]interface{}{
-			"validPermission": validCSRF,
+			"validCSRF": validCSRF,
 		}
 		rmap := make(map[string]interface{})
 		for key := range r.Form {
@@ -844,7 +846,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		commonDataSet(r)
 
 		funcsMap := map[string]interface{}{
-			"validPermission":  validCSRF,
+			"validCSRF":        validCSRF,
 			"validSignupField": validSignupField,
 			"validEmail":       validEmail,
 		}
@@ -973,6 +975,19 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
+		smap, err := getSessionInfo(r)
+		if err == nil {
+			if access, isOk := smap["access_name"].(string); isOk {
+				vacc := []string{"superadmin", "admin", "client"}
+				if mtool.ArrayValueExist(vacc, access) {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+			}
+		}
+
+		sessionCode := visitorInfo(r, w) //
+		fmt.Println(sessionCode)
+
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header2.gohtml",
@@ -984,22 +999,160 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			CsrfToken    string
 		}{
 			Title:        "Signin | LxRoot",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			CsrfToken:    ctoken,
 		}
 
 		err = tmplt.Execute(w, data)
 		if err != nil {
 			log.Println(err)
 		}
+
+	} else if r.Method == http.MethodPost {
+
+		r.ParseForm()
+		var errNo int = 1
+		var errMsg string
+		commonDataSet(r)
+
+		funcsMap := map[string]interface{}{
+			"validCSRF":  validCSRF,
+			"validEmail": validEmail,
+		}
+		rmap := make(map[string]interface{})
+		for key := range r.Form {
+			rmap[key] = r.FormValue(key)
+		}
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
+
+		if response == "OKAY" {
+
+			username := r.FormValue("email")
+			txtpass := r.FormValue("passw")
+			ipAddress := cleanIp(mtool.ReadUserIP(r))
+			userAgent := r.UserAgent()
+
+			//geolocation := r.FormValue("geolocation")
+			location := getLocationWithinSec(ipAddress)
+			fmt.Println(username, txtpass, ipAddress, location)
+
+			visitorSessionID := visitorInfo(r, w)
+			if visitorSessionID == "" {
+				log.Println("visitorSession must required")
+				return
+			}
+
+			sql := fmt.Sprintf("SELECT id,cid,account_id,access_name,username,passw,label,tfa_status,tfa_medium,tfa_setupkey FROM %s WHERE username='%s' AND status IN[1,6];", tableToBucket("login"), username)
+			rows, err := lxql.GetRows(sql, database.DB)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			if len(rows) > 0 {
+
+				hashpass := rows[0]["passwd"].(string)
+				if mtool.HashCompare(txtpass, hashpass) {
+
+					loginId := rows[0]["id"].(string)
+					accessName := rows[0]["access_name"].(string)
+					accountId := rows[0]["access_name"].(string)
+					token, err := vAuthToken(loginId, accountId, username, accessName)
+					if err == nil {
+						//insert into api table
+					}
+
+					row := rows[0]
+					tfaStatus := row["tfa_status"].(string)
+					tfaMedium := row["tfa_medium"].(string)
+
+					//TODO
+					if tfaMedium == "email" {
+						//generate code and send via email
+						fmt.Println("email code")
+					}
+					if tfaStatus == "1" {
+						row["error"] = 0
+						row["url"] = "/tfauth"
+						row["message"] = "Redirecting to tfa"
+						setCookie("tfa", username, 300, w)
+
+					} else {
+						delete(row, "passwd") //tfa_status,tfa_medium,tfa_setupkey
+						delete(row, "tfa_status")
+						delete(row, "tfa_medium")
+						delete(row, "tfa_setupkey")
+						row["session_code"] = visitorSessionID
+
+						arow, _ := loginToAccountRow(loginId)
+						for key, val := range arow {
+							row[key] = val
+						}
+						row["ip"] = ipAddress
+						jwtstr, err := utility.JWTEncode(row, utility.JWTSECRET)
+						if err != nil {
+							log.Println(err)
+							return
+						}
+						setCookie("login_session", jwtstr, 86400*30, w)
+						setCookie("token", token, 86400*30, w) //30 days
+						row = make(map[string]interface{})
+						row["error"] = 0
+						row["message"] = "login success"
+						row["url"] = "/dashboard"
+
+						sql := fmt.Sprintf("UPDATE %s SET last_login='%s' WHERE id='%s';", tableToBucket("login"), mtool.TimeNow(), loginId)
+						err = lxql.RawSQL(sql, database.DB)
+						logError("updateLastLogin", err)
+
+						var city, country string
+						slc := strings.Split(location, ",")
+						if len(slc) == 2 {
+							city = slc[0]
+							country = slc[1]
+						}
+						_, err = addLoginSession(loginId, visitorSessionID, ipAddress, city, country, userAgent)
+						logError("addLoginSession", err)
+					}
+
+				} else {
+					errNo = 1
+					errMsg = "ERROR invalid username or password1"
+				}
+			}
+			if len(rows) == 0 {
+				errNo = 2
+				errMsg = "ERROR invalid username or password2."
+			}
+
+		} else {
+			errNo = 9
+			errMsg = "Unknown error! please report"
+		}
+
+		var row = make(map[string]interface{})
+		row["error"] = errNo
+		row["message"] = errMsg
+		bs, err := json.Marshal(row)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, string(bs))
 	}
 }

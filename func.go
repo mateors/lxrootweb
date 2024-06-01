@@ -1,18 +1,20 @@
 package main
 
 import (
-	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
-	"log"
+	"lxrootweb/database"
+	"lxrootweb/lxql"
+	"lxrootweb/utility"
 	"math"
-	"net"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/mateors/mtool"
+	"github.com/mileusna/useragent"
+	"github.com/rs/xid"
 )
 
 func featureBySlug(slugName string, rows []map[string]interface{}) map[string]interface{} {
@@ -334,134 +336,155 @@ func lxqlCon() {
 	//os.Exit(1)
 }
 
-func IsIPv4(str string) bool {
-	ip := net.ParseIP(str)
-	return ip != nil && ip.To4() != nil
+func vAuthToken(loginId, accountId, username, role string) (string, error) {
+
+	var row = make(map[string]interface{})
+	row["cid"] = 1
+	row["login_id"] = loginId
+	row["parent_acc"] = accountId //
+	row["email"] = username
+	row["role"] = role
+	row["session_code"] = xid.New().String()
+	row["exp"] = time.Now().Add(time.Hour * 24 * 30).Unix() //30 days long
+	token, err := utility.JWTEncode(row, utility.JWTSECRET)
+	return token, err
 }
 
-func IsIPv6(str string) bool {
-	ip := net.ParseIP(str)
-	return ip != nil && ip.To4() == nil
-}
+func getSessionInfo(r *http.Request) (map[string]interface{}, error) {
 
-func getCountryRegionFromIp(ipAddress string) (map[string]string, error) {
-
-	var row = make(map[string]string)
-	rurl := fmt.Sprintf("http://ip-api.com/json/%s?fields=country,regionName", ipAddress)
-	resp, err := http.Get(rurl)
+	tokenStr, err := getCookie("login_session", r)
 	if err != nil {
 		return nil, err
 	}
-
-	remaining := resp.Header.Get("X-Rl")
-	ttl := resp.Header.Get("X-Ttl")
-	err = json.NewDecoder(resp.Body).Decode(&row)
-	if err != nil {
-		return nil, err
-	}
-	row["remaining"] = remaining //
-	row["ttl"] = ttl             // check if it is 0
-	row["status"] = resp.Status  // check if 429
-	//fmt.Println(row)
-	return row, nil
+	return utility.JWTDecode(tokenStr, utility.JWTSECRET)
 }
 
-func getIpToCountry(ipv4Address string) (string, error) {
+func userAgntDetails(uagentStr string) (device, osVersion, browserVersion string) {
 
-	if !IsIPv4(ipv4Address) {
-		return "", errors.New("ipv4 allowed only")
+	//uagentStr := r.UserAgent()
+	//var device, osVersion, browserVersion string
+	ua := useragent.Parse(uagentStr)
+	if ua.Desktop {
+		device = "Desktop"
+	} else if ua.Mobile {
+		device = "Mobile"
+		if ua.IsAndroid() {
+			device = "Android_Mobile"
+		} else if ua.IsIOS() {
+			device = "IOS_Mobile"
+		}
+
+	} else if ua.Tablet {
+		device = "Tablet"
+	} else if ua.Bot {
+		device = "Bot"
+		if ua.IsFacebookbot() {
+			device = "FacebookBot"
+		}
+		if ua.IsGooglebot() {
+			device = "GooglBot"
+		}
+		if ua.IsTwitterbot() {
+			device = "TwitterBot"
+		}
+	} else {
+		device = "Unknown"
 	}
-	url := fmt.Sprintf("http://ip2c.org/?ip=%s", ipv4Address)
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", err
+
+	if ua.IsLinux() {
+		osVersion = "Linux-" + ua.OSVersion
+	} else if ua.IsWindows() {
+		osVersion = "Windows-" + ua.OSVersion
+	} else if ua.IsMacOS() {
+		osVersion = "MacOS-" + ua.OSVersion
+	} else if ua.IsChromeOS() {
+		osVersion = "ChromeOS-" + ua.OSVersion
+	} else {
+		osVersion = ua.OS + "*" + ua.OSVersion
 	}
-	bs, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
+
+	if ua.IsChrome() {
+		browserVersion = "chrome-" + ua.Version
+	} else if ua.IsEdge() {
+		browserVersion = "edge-" + ua.Version
+	} else if ua.IsOpera() {
+		browserVersion = "opera-" + ua.Version
+	} else if ua.IsFirefox() {
+		browserVersion = "firefox-" + ua.Version
+	} else if ua.IsSafari() {
+		browserVersion = "safari-" + ua.Version
+	} else if ua.IsInternetExplorer() {
+		browserVersion = "internetExplorer-" + ua.Version
+	} else {
+		browserVersion = "Unknown-0"
 	}
-	text := string(bs)
-	//slc := strings.Split(text, ";")
-	//fmt.Println(slc, len(slc))
-	return text, nil
+	return
 }
 
-func getLocation(ipAddress string) (string, error) {
+func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 
-	var country, region string
-	row, err := getCountryRegionFromIp(ipAddress)
-	if err != nil {
-		return "", err
+	ip := cleanIp(mtool.ReadUserIP(r))
+	charger := r.FormValue("charger") //
+	screen := r.FormValue("screen")
+	uagentStr := r.UserAgent()
+
+	if ip == "" {
+		ip = mtool.ReadUserIP(r)
 	}
-	country = row["country"]
-	region = row["regionName"]
-	status := row["status"]
-	region = strings.TrimSpace(strings.Replace(region, "Division", "", -1))
-	//fmt.Println(row["ttl"], row["remaining"])
+	var todo, device, osVersion, browserVersion string
+	device, osVersion, browserVersion = userAgntDetails(uagentStr)
+	if charger == "Yes" {
+		device = "Laptop"
+	}
+	var row = make(map[string]interface{})
+	vcook, err := r.Cookie("visitor_session")
+	if err == nil {
+		sessionCode = vcook.Value
+		todo = "update"
+	} else {
+		todo = "insert"
+		sessionCode = xid.New().String()
+	}
 
-	if strings.Contains(status, "429") {
-		if IsIPv4(ipAddress) {
-			txt, err := getIpToCountry(ipAddress)
-			logError("", err)
-			slc := strings.Split(txt, ";")
-			if len(slc) == 4 {
-				country = slc[3]
-			}
-		} else {
-			region = "IP"
-			country = ipAddress
-			log.Println(status, ipAddress, "ipv6 address has no provider yet")
+	if todo == "insert" {
+
+		row["cid"] = 1
+		row["session_code"] = sessionCode
+		row["device"] = device
+		row["screen_size"] = screen
+		row["browser_version"] = browserVersion
+		row["os_version"] = osVersion
+		row["ip_address"] = ip
+		row["vcount"] = 0
+		row["create_date"] = mtool.TimeNow()
+		row["status"] = 1
+		row["table"] = structName(VisitorSession{})
+		row["todo"] = todo
+		//row["pkfield"] = "id"
+		err = lxql.InsertUpdateMap(row, database.DB)
+		logError("visitor_session", err)
+		setCookie("visitor_session", sessionCode, 86400*365, w)
+
+	} else if todo == "update" {
+
+		sql := fmt.Sprintf("UPDATE %s SET ip_address='%s',vcount=vcount+1, update_date='%s' WHERE session_code ='%s';", tableToBucket("visitor_session"), ip, mtool.TimeNow(), sessionCode)
+		lxql.RawSQL(sql, database.DB)
+		if screen != "" {
+			sql := fmt.Sprintf("UPDATE %s SET screen_size='%s' WHERE session_code ='%s';", tableToBucket("visitor_session"), screen, sessionCode)
+			lxql.RawSQL(sql, database.DB)
+		}
+		if ip != "" {
+			sql := fmt.Sprintf("UPDATE %s SET ip_address='%s' WHERE session_code ='%s';", tableToBucket("visitor_session"), ip, sessionCode)
+			lxql.RawSQL(sql, database.DB)
 		}
 	}
-	//time.Sleep(time.Second * 1)
-	return fmt.Sprintf("%s,%s", region, country), nil
+	return
 }
 
-func getLocationWithinSec(ipAddress string) string {
-
-	var location string
-	// type output struct {
-	// 	out string
-	// 	err error
-	// }
-	ch := make(chan string)
-	go func() {
-		res, err := getLocation(ipAddress)
-		logError("getLocation", err)
-		ch <- res
-	}()
-
-	select {
-
-	case <-time.After(1 * time.Second):
-		location = "" //"timed out"
-		log.Println("getLocation() time out")
-
-	case x := <-ch:
-		location = x
-	}
-	return location
+func loginToAccountRow(loginID string) (map[string]interface{}, error) {
+	sql := fmt.Sprintf("SELECT l.account_id,a.parent_id,a.account_type,a.account_name FROM %s a LEFT JOIN %s l ON l.account_id=a.id WHERE l.id='%s';", tableToBucket("account"), tableToBucket("login"), loginID)
+	return singleRow(sql)
 }
-
-func performTask(ctx context.Context, output chan<- string) {
-
-	time.Sleep(time.Second * 3)
-	output <- "mostain"
-}
-
-func ctxReq() {
-
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
-
-	ch := make(chan string)
-	go performTask(ctx, ch)
-
-	select {
-	case <-ctx.Done():
-		fmt.Println("Task timed out")
-
-	case x := <-ch:
-		fmt.Println(x)
-	}
+func usernameToLoginId(username string) string {
+	return lxql.FieldByValue("login", "id", fmt.Sprintf("username='%s'", username), database.DB)
 }

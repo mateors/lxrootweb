@@ -142,6 +142,27 @@ type ActivityLog struct {
 	Status       int    `json:"status"`
 }
 
+//VisitorSession info
+type VisitorSession struct {
+	//Platform       string `json:"platform"`
+	ID             string `json:"id"`
+	Type           string `json:"type"`
+	CompanyID      string `json:"cid"` //foreign key
+	SessionCode    string `json:"session_code"`
+	Device         string `json:"device"`
+	ScreenSize     string `json:"screen_size"`
+	BrowserVersion string `json:"browser_version"`
+	OsVersion      string `json:"os_version"`
+	IPAddress      string `json:"ip_address"`
+	GeoLocation    string `json:"geo_location"` //
+	City           string `json:"city"`
+	Country        string `json:"country"`
+	VisitorCount   int    `json:"vcount"`
+	CreateDate     string `json:"create_date"`
+	UpdateDate     string `json:"update_date"`
+	Status         int    `json:"status"`
+}
+
 //DeviceLog tracks user device info (where they login to the system)
 type DeviceLog struct {
 	ID          string `json:"id"`
@@ -160,15 +181,16 @@ type DeviceLog struct {
 
 //LoginSession keeps user login session for 24 hours or more
 type LoginSession struct {
+	//DeviceInfo  string `json:"device_log"` //foreign key device_log::1
 	ID          string `json:"id"`
 	Type        string `json:"type"`
-	CompanyID   string `json:"cid"`        //foreign key
-	DeviceInfo  string `json:"device_log"` //foreign key device_log::1
+	CompanyID   string `json:"cid"` //foreign key
 	SessionCode string `json:"session_code"`
 	LoginID     string `json:"login_id"` //foreign key
 	IPAddress   string `json:"ip_address"`
 	IPCity      string `json:"city"`
 	IPCountry   string `json:"country"`
+	UserAgent   string `json:"user_agent"`
 	LoginTime   string `json:"login_time"`  //
 	LogoutTime  string `json:"logout_time"` //
 	CreateDate  string `json:"create_date"`
@@ -212,27 +234,6 @@ type Verification struct {
 	CreateDate          string `json:"create_date"`
 	UpdateDate          string `json:"update_date"`
 	Status              int    `json:"status"`
-}
-
-//VisitorSession info
-type VisitorSession struct {
-	ID             string `json:"id"`
-	Type           string `json:"type"`
-	CompanyID      string `json:"cid"` //foreign key
-	SessionCode    string `json:"session_code"`
-	Device         string `json:"device"`
-	Platform       string `json:"platform"`
-	ScreenSize     string `json:"screen_size"`
-	BrowserVersion string `json:"browser_version"`
-	OsVersion      string `json:"os_version"`
-	IPAddress      string `json:"ip_address"`
-	GeoLocation    string `json:"geo_location"`
-	City           string `json:"city"`
-	Country        string `json:"country"`
-	VisitorCount   int    `json:"vcount"`
-	CreateDate     string `json:"create_date"`
-	UpdateDate     string `json:"update_date"`
-	Status         int    `json:"status"`
 }
 
 //AccountHead+AccountGroup merged into achead Achead

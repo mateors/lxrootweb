@@ -48,6 +48,8 @@ func init() {
 		lxql.RegisterModel(Address{})
 		lxql.RegisterModel(Login{})
 		lxql.RegisterModel(Verification{})
+		lxql.RegisterModel(VisitorSession{})
+		lxql.RegisterModel(LoginSession{})
 		lxql.RegisterModel(ActivityLog{})
 	}
 

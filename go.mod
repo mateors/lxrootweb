@@ -14,6 +14,7 @@ require (
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/mateors/money v0.0.0-20200823090156-43894c563246 // indirect
 	github.com/mateors/mtool v0.0.0-20231012123045-6c5b47ebeb4d // indirect
+	github.com/mileusna/useragent v1.3.4 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
