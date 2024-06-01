@@ -174,6 +174,13 @@ func init() {
 	// for i, row := range rows {
 	// 	fmt.Println(i, row)
 	// }
+	//getLocationWithin(ipAddress string)
+	//txt := getLocationWithinSec("103.124.226.98")
+	//fmt.Println(txt)
+	//txt, err = getLocation("2602:ff16:4:0:1:127:0:1")
+	//fmt.Println(err, txt)
+	//fmt.Println(IsIPv4("103.124.226.98"), IsIPv6("103.124.226.98"))
+	//fmt.Println(IsIPv4("2602:ff16:4:0:1:127:0:1"), IsIPv6("2602:ff16:4:0:1:127:0:1"))
 	//os.Exit(1)
 }
 
@@ -205,8 +212,8 @@ func main() {
 	r.HandleFunc("/contact", contact)            //contact us
 	r.HandleFunc("/join-waitlist", joinWaitlist) //WaitList
 	r.HandleFunc("/signup", signup)              //signup + checkout
-	r.HandleFunc("/verify", verify)              //signup + checkout
-	r.HandleFunc("/signin", signin)              //signup + checkout
+	r.HandleFunc("/verify", verify)              //verify
+	r.HandleFunc("/signin", signin)              //login
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

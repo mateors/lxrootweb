@@ -1,11 +1,18 @@
 package main
 
 import (
+	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"log"
 	"math"
+	"net"
+	"net/http"
 	"strings"
+	"time"
 )
 
 func featureBySlug(slugName string, rows []map[string]interface{}) map[string]interface{} {
@@ -325,4 +332,136 @@ func lxqlCon() {
 	//fmt.Println("delete:", res, err)
 
 	//os.Exit(1)
+}
+
+func IsIPv4(str string) bool {
+	ip := net.ParseIP(str)
+	return ip != nil && ip.To4() != nil
+}
+
+func IsIPv6(str string) bool {
+	ip := net.ParseIP(str)
+	return ip != nil && ip.To4() == nil
+}
+
+func getCountryRegionFromIp(ipAddress string) (map[string]string, error) {
+
+	var row = make(map[string]string)
+	rurl := fmt.Sprintf("http://ip-api.com/json/%s?fields=country,regionName", ipAddress)
+	resp, err := http.Get(rurl)
+	if err != nil {
+		return nil, err
+	}
+
+	remaining := resp.Header.Get("X-Rl")
+	ttl := resp.Header.Get("X-Ttl")
+	err = json.NewDecoder(resp.Body).Decode(&row)
+	if err != nil {
+		return nil, err
+	}
+	row["remaining"] = remaining //
+	row["ttl"] = ttl             // check if it is 0
+	row["status"] = resp.Status  // check if 429
+	//fmt.Println(row)
+	return row, nil
+}
+
+func getIpToCountry(ipv4Address string) (string, error) {
+
+	if !IsIPv4(ipv4Address) {
+		return "", errors.New("ipv4 allowed only")
+	}
+	url := fmt.Sprintf("http://ip2c.org/?ip=%s", ipv4Address)
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	bs, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	text := string(bs)
+	//slc := strings.Split(text, ";")
+	//fmt.Println(slc, len(slc))
+	return text, nil
+}
+
+func getLocation(ipAddress string) (string, error) {
+
+	var country, region string
+	row, err := getCountryRegionFromIp(ipAddress)
+	if err != nil {
+		return "", err
+	}
+	country = row["country"]
+	region = row["regionName"]
+	status := row["status"]
+	region = strings.TrimSpace(strings.Replace(region, "Division", "", -1))
+	//fmt.Println(row["ttl"], row["remaining"])
+
+	if strings.Contains(status, "429") {
+		if IsIPv4(ipAddress) {
+			txt, err := getIpToCountry(ipAddress)
+			logError("", err)
+			slc := strings.Split(txt, ";")
+			if len(slc) == 4 {
+				country = slc[3]
+			}
+		} else {
+			region = "IP"
+			country = ipAddress
+			log.Println(status, ipAddress, "ipv6 address has no provider yet")
+		}
+	}
+	//time.Sleep(time.Second * 1)
+	return fmt.Sprintf("%s,%s", region, country), nil
+}
+
+func getLocationWithinSec(ipAddress string) string {
+
+	var location string
+	// type output struct {
+	// 	out string
+	// 	err error
+	// }
+	ch := make(chan string)
+	go func() {
+		res, err := getLocation(ipAddress)
+		logError("getLocation", err)
+		ch <- res
+	}()
+
+	select {
+
+	case <-time.After(1 * time.Second):
+		location = "" //"timed out"
+		log.Println("getLocation() time out")
+
+	case x := <-ch:
+		location = x
+	}
+	return location
+}
+
+func performTask(ctx context.Context, output chan<- string) {
+
+	time.Sleep(time.Second * 3)
+	output <- "mostain"
+}
+
+func ctxReq() {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	ch := make(chan string)
+	go performTask(ctx, ch)
+
+	select {
+	case <-ctx.Done():
+		fmt.Println("Task timed out")
+
+	case x := <-ch:
+		fmt.Println(x)
+	}
 }

@@ -868,6 +868,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			firstName := r.FormValue("first_name")
 			lastName := r.FormValue("last_name")
 			passwd := r.FormValue("passwd")
+			ipAddress := cleanIp(mtool.ReadUserIP(r))
 
 			accessName := "client"
 			accessId := accessIdByName(accessName)
@@ -884,15 +885,22 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 
 				addAddress(accountId, "billing", "", "", "", "", "", "")
-				addLogin(accountId, accessId, accessName, username, passwd)
+				loginId, _ := addLogin(accountId, accessId, accessName, username, passwd)
 				code := uuid.NewV4().String()
 				_, err = addVerification(username, "signup", code, "")
 				logError("addVerification", err)
 
-				location := "Dhaka, Bangladesh"
+				//get the location usin thirdparty api
+				location := getLocationWithinSec(ipAddress)
+				if location == "" {
+					location = fmt.Sprintf("IP: %s", ipAddress)
+				}
 				verfyUrl := fmt.Sprintf("https://lxroot.com/verify?email=%s&token=%s", email, code)
 				err = signupEmail(email, accountName, location, verfyUrl)
 				logError("signupEmail", err)
+
+				logDetails := fmt.Sprintf("username %s signup", email)
+				addActiviyLog(loginId, "INSERT", "account", "", logDetails, ipAddress)
 
 				errNo = 0
 				errMsg = "Congratulations! You have successfully registered with LxRoot. 🎉"
@@ -935,7 +943,7 @@ func verify(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 
-			fmt.Println(ainfo, len(ainfo))
+			//fmt.Println(ainfo, len(ainfo))
 			accountId, isOk := ainfo["account_id"].(string)
 			if !isOk {
 				log.Println("unable to parse ainfo")
