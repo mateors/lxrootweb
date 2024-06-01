@@ -51,6 +51,7 @@ func init() {
 		lxql.RegisterModel(VisitorSession{})
 		lxql.RegisterModel(LoginSession{})
 		lxql.RegisterModel(ActivityLog{})
+		lxql.RegisterModel(Authc{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -169,6 +170,7 @@ func init() {
 	//sql := "SELECT a.cid FROM lxroot._default.login l LEFT JOIN lxroot._default.account a ON a.id=l.account_id WHERE l.username='billahmdmostain@gmail.com'"
 	//sql := "SELECT * FROM lxroot._default.access;"
 	//sql := "SELECT a.id as account_id, l.id as login_id FROM lxroot._default.login l LEFT JOIN lxroot._default.account a ON a.id=l.account_id WHERE l.username='billahmdmostain@gmail.com';"
+	// sql := "SELECT id,cid,account_id,access_name,username,passw,label,tfa_status,tfa_medium,tfa_setupkey FROM lxroot._default.login WHERE username='billahmdmostain@gmail.com' AND status IN[1,6];"
 	// rows, err := lxql.GetRows(sql, database.DB)
 	// if err != nil {
 	// 	return
@@ -183,6 +185,11 @@ func init() {
 	//fmt.Println(err, txt)
 	//fmt.Println(IsIPv4("103.124.226.98"), IsIPv6("103.124.226.98"))
 	//fmt.Println(IsIPv4("2602:ff16:4:0:1:127:0:1"), IsIPv6("2602:ff16:4:0:1:127:0:1"))
+
+	//fmt.Println(mtool.HashBcrypt("test321")) //$2a$14$LlXWMQxVBhW91WuJqjbCbuO5craaprMyM9tNYiOZeGjJ0mCy4Uiz2
+
+	//err = addSettings("login_email", "-", "template")
+	//fmt.Println(err)
 	//os.Exit(1)
 }
 

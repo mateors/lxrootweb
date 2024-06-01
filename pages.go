@@ -975,15 +975,15 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		smap, err := getSessionInfo(r)
-		if err == nil {
-			if access, isOk := smap["access_name"].(string); isOk {
-				vacc := []string{"superadmin", "admin", "client"}
-				if mtool.ArrayValueExist(vacc, access) {
-					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-				}
-			}
-		}
+		// smap, err := getSessionInfo(r)
+		// if err == nil {
+		// 	if access, isOk := smap["access_name"].(string); isOk {
+		// 		vacc := []string{"superadmin", "admin", "client"}
+		// 		if mtool.ArrayValueExist(vacc, access) {
+		// 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		// 		}
+		// 	}
+		// }
 
 		sessionCode := visitorInfo(r, w) //
 		fmt.Println(sessionCode)
@@ -1027,12 +1027,13 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 		r.ParseForm()
 		var errNo int = 1
-		var errMsg string
+		var errMsg, rurl string
 		commonDataSet(r)
+		//fmt.Println("post", r.Form)
 
 		funcsMap := map[string]interface{}{
-			"validCSRF":  validCSRF,
-			"validEmail": validEmail,
+			"validCSRF":    validCSRF,
+			"validUsernme": validUsernme,
 		}
 		rmap := make(map[string]interface{})
 		for key := range r.Form {
@@ -1043,13 +1044,13 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		if response == "OKAY" {
 
 			username := r.FormValue("email")
-			txtpass := r.FormValue("passw")
+			txtpass := r.FormValue("passwd")
 			ipAddress := cleanIp(mtool.ReadUserIP(r))
 			userAgent := r.UserAgent()
 
 			//geolocation := r.FormValue("geolocation")
 			location := getLocationWithinSec(ipAddress)
-			fmt.Println(username, txtpass, ipAddress, location)
+			//fmt.Println(username, txtpass, ipAddress, location)
 
 			visitorSessionID := visitorInfo(r, w)
 			if visitorSessionID == "" {
@@ -1057,7 +1058,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			sql := fmt.Sprintf("SELECT id,cid,account_id,access_name,username,passw,label,tfa_status,tfa_medium,tfa_setupkey FROM %s WHERE username='%s' AND status IN[1,6];", tableToBucket("login"), username)
+			sql := fmt.Sprintf("SELECT id,cid,account_id,access_name,username,passw,tfa_status,tfa_medium,tfa_setupkey FROM %s WHERE username='%s' AND status IN[1,6];", tableToBucket("login"), username)
 			rows, err := lxql.GetRows(sql, database.DB)
 			if err != nil {
 				log.Println(err)
@@ -1065,16 +1066,15 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			}
 			if len(rows) > 0 {
 
-				hashpass := rows[0]["passwd"].(string)
+				hashpass := rows[0]["passw"].(string) //
 				if mtool.HashCompare(txtpass, hashpass) {
 
+					//fmt.Println("password validation pass....")
 					loginId := rows[0]["id"].(string)
 					accessName := rows[0]["access_name"].(string)
 					accountId := rows[0]["access_name"].(string)
-					token, err := vAuthToken(loginId, accountId, username, accessName)
-					if err == nil {
-						//insert into api table
-					}
+					token, err := vAuthToken(loginId, accountId, username, accessName, ipAddress)
+					logError("vAuthToken", err)
 
 					row := rows[0]
 					tfaStatus := row["tfa_status"].(string)
@@ -1086,16 +1086,18 @@ func signin(w http.ResponseWriter, r *http.Request) {
 						fmt.Println("email code")
 					}
 					if tfaStatus == "1" {
-						row["error"] = 0
-						row["url"] = "/tfauth"
-						row["message"] = "Redirecting to tfa"
+
+						errNo = 0
+						rurl = "/tfauth"
+						errMsg = "redirecting to TFA"
 						setCookie("tfa", username, 300, w)
 
 					} else {
-						delete(row, "passwd") //tfa_status,tfa_medium,tfa_setupkey
+						delete(row, "passw") //tfa_status,tfa_medium,tfa_setupkey
 						delete(row, "tfa_status")
 						delete(row, "tfa_medium")
 						delete(row, "tfa_setupkey")
+						//fmt.Println("2:row>", row)
 						row["session_code"] = visitorSessionID
 
 						arow, _ := loginToAccountRow(loginId)
@@ -1110,10 +1112,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 						}
 						setCookie("login_session", jwtstr, 86400*30, w)
 						setCookie("token", token, 86400*30, w) //30 days
-						row = make(map[string]interface{})
-						row["error"] = 0
-						row["message"] = "login success"
-						row["url"] = "/dashboard"
+						//fmt.Println("jwtstr:", jwtstr)
 
 						sql := fmt.Sprintf("UPDATE %s SET last_login='%s' WHERE id='%s';", tableToBucket("login"), mtool.TimeNow(), loginId)
 						err = lxql.RawSQL(sql, database.DB)
@@ -1127,26 +1126,38 @@ func signin(w http.ResponseWriter, r *http.Request) {
 						}
 						_, err = addLoginSession(loginId, visitorSessionID, ipAddress, city, country, userAgent)
 						logError("addLoginSession", err)
+						errNo = 0
+						errMsg = "login successful"
+						rurl = "/dashboard"
+
+						//send email alert for login
+						_, _, browser := userAgntDetails(userAgent)
+						loginNotificationEmail(username, ipAddress, browser)
 					}
 
 				} else {
 					errNo = 1
 					errMsg = "ERROR invalid username or password1"
+					rurl = "/signin"
 				}
 			}
 			if len(rows) == 0 {
 				errNo = 2
 				errMsg = "ERROR invalid username or password2."
+				rurl = "/signin"
 			}
 
 		} else {
 			errNo = 9
-			errMsg = "Unknown error! please report"
+			errMsg = "Validation error!"
+			rurl = "/signin"
+			log.Println(response)
 		}
 
 		var row = make(map[string]interface{})
 		row["error"] = errNo
 		row["message"] = errMsg
+		row["url"] = rurl
 		bs, err := json.Marshal(row)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

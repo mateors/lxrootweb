@@ -542,7 +542,14 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 		for _, row := range orows {
 			var srow = make(map[string]interface{})
 			for key, val := range row {
-				srow[key] = bytesToStr(val.([]uint8))
+
+				vbs, isOk := val.([]uint8)
+				if isOk {
+					srow[key] = bytesToStr(vbs) //?
+				} else {
+					srow[key] = val
+				}
+				//fmt.Printf("%v => %v | %T\n", key, val, val)
 			}
 			nrows = append(nrows, srow)
 		}

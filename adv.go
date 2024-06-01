@@ -232,6 +232,19 @@ func validEmail(args map[string]interface{}) string {
 	return "valid"
 }
 
+func validUsernme(args map[string]interface{}) string {
+
+	username, isOk := args["email"].(string)
+	if !isOk {
+		return "ERROR username missing"
+	}
+	count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, username), database.DB)
+	if count == 1 {
+		return "valid"
+	}
+	return "ERROR invalid username or password"
+}
+
 func logError(prefix string, err error) {
 	if err != nil {
 		log.Printf("ERR_%s: %s", prefix, err.Error())

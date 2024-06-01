@@ -375,6 +375,35 @@ func addLoginSession(loginId, visitorSessionID, ipAddress, city, country, userAg
 	return id, err
 }
 
+// crow, err := TokenToClaim(token)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	loginId := crow["login_id"].(string)
+// 	exp := crow["exp"].(float64)
+// 	expireDate := dateFormat("", exp)
+
+func addAuthc(loginId, token, ipAddress, expireDate string) (id string, err error) {
+
+	modelName := structName(Authc{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["login_id"] = loginId
+	form["token"] = token
+	form["ip_address"] = ipAddress
+	form["create_date"] = mtool.TimeNow()
+	form["expire_date"] = expireDate
+	form["update_date"] = ""
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
 func accessIdByName(accessName string) string {
 
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)

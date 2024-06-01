@@ -197,6 +197,19 @@ type LoginSession struct {
 	Status      int    `json:"status"`
 }
 
+type Authc struct {
+	ID         string `json:"id"`
+	Type       string `json:"type"`
+	CompanyID  string `json:"cid"`      //foreign key
+	LoginID    string `json:"login_id"` //foreign key
+	Token      string `json:"token"`
+	IpAddress  string `json:"ip_address"`
+	CreateDate string `json:"create_date"`
+	ExpireDate string `json:"expire_date"`
+	UpdateDate string `json:"update_date"`
+	Status     int    `json:"status"`
+}
+
 //Setting table keep only one file
 type Settings struct {
 	ID         string `json:"id"`

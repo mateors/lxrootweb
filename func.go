@@ -336,8 +336,18 @@ func lxqlCon() {
 	//os.Exit(1)
 }
 
-func vAuthToken(loginId, accountId, username, role string) (string, error) {
+func dateFormat(layout string, intTime int64) string {
+	//intTime := int64(d)
+	t := time.Unix(intTime, 0)
+	if layout == "" {
+		layout = "2006-01-02 15:04:05"
+	}
+	return t.Format(layout)
+}
 
+func vAuthToken(loginId, accountId, username, role, ipAddress string) (string, error) {
+
+	expireDuration := time.Now().Add(time.Hour * 24 * 30).Unix() //30 days long
 	var row = make(map[string]interface{})
 	row["cid"] = 1
 	row["login_id"] = loginId
@@ -345,8 +355,14 @@ func vAuthToken(loginId, accountId, username, role string) (string, error) {
 	row["email"] = username
 	row["role"] = role
 	row["session_code"] = xid.New().String()
-	row["exp"] = time.Now().Add(time.Hour * 24 * 30).Unix() //30 days long
+	row["exp"] = expireDuration
 	token, err := utility.JWTEncode(row, utility.JWTSECRET)
+	if err == nil {
+		sql := fmt.Sprintf("UPDATE %s SET update_date='%s',status=0 WHERE login_id='%s' AND status=1;", tableToBucket("authc"), mtool.TimeNow(), loginId)
+		database.DB.Exec(sql)
+		expireDate := dateFormat("", expireDuration)
+		addAuthc(loginId, token, ipAddress, expireDate)
+	}
 	return token, err
 }
 
@@ -446,9 +462,11 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 		sessionCode = xid.New().String()
 	}
 
+	//fmt.Println("todo:", todo)
 	if todo == "insert" {
 
-		row["cid"] = 1
+		row["id"] = xid.New().String()
+		row["cid"] = COMPANY_ID
 		row["session_code"] = sessionCode
 		row["device"] = device
 		row["screen_size"] = screen
@@ -462,6 +480,7 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 		row["todo"] = todo
 		//row["pkfield"] = "id"
 		err = lxql.InsertUpdateMap(row, database.DB)
+		//fmt.Println(err, row)
 		logError("visitor_session", err)
 		setCookie("visitor_session", sessionCode, 86400*365, w)
 
@@ -487,4 +506,19 @@ func loginToAccountRow(loginID string) (map[string]interface{}, error) {
 }
 func usernameToLoginId(username string) string {
 	return lxql.FieldByValue("login", "id", fmt.Sprintf("username='%s'", username), database.DB)
+}
+
+func loginNotificationEmail(email, ipAddress, browser string) {
+
+	subject := "LxRoot | Login Notification"
+	emailTemplate := settingsValue("login_email")
+
+	dmap := make(map[string]interface{})
+	dmap["username"] = email
+	dmap["ip"] = ipAddress
+	dmap["browser"] = strings.ToUpper(browser)
+	dmap["time"] = time.Now().Format("Mon, 02 Jan 2006 15:04:05 MST")
+	emailBody, _ := templatePrepare(emailTemplate, dmap)
+	err = SendEmail([]string{email}, subject, emailBody)
+	logError("loginNotificationEmail", err)
 }
