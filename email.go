@@ -18,7 +18,7 @@ func send(toEmail, subject, body string) error {
 	pass := "test4321"        //gmfwwdjyfqtusprj
 	toEmails := []string{toEmail}
 	toHeader := strings.Join(toEmails, ",")
-	msg := "From: " + from + "\n" +
+	msg := "From: " + "LxRoot<info@lxroot.com>" + "\n" +
 		"To: " + toHeader + "\n" +
 		"Subject: " + subject + "\n\n" + body
 
@@ -35,7 +35,7 @@ func SendEmail(toEmails []string, subject, body string) error {
 	pass := emailpass
 	toHeader := strings.Join(toEmails, ",")
 
-	msg := "From: " + from + "\n" +
+	msg := "From: LxRoot<" + from + ">\n" +
 		"To: " + toHeader + "\n" +
 		"Subject: " + subject + "\n\n" + body
 

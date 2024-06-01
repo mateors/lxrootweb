@@ -4,17 +4,20 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"math"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/mateors/mtool"
 	"github.com/mileusna/useragent"
 	"github.com/rs/xid"
+	uuid "github.com/satori/go.uuid"
 )
 
 func featureBySlug(slugName string, rows []map[string]interface{}) map[string]interface{} {
@@ -521,4 +524,58 @@ func loginNotificationEmail(email, ipAddress, browser string) {
 	emailBody, _ := templatePrepare(emailTemplate, dmap)
 	err = SendEmail([]string{email}, subject, emailBody)
 	logError("loginNotificationEmail", err)
+}
+
+func vcode() string {
+	return uuid.NewV4().String()
+}
+
+func resetPassNotificationEmail(email, ipAddress, browser string) error {
+
+	subject := "Reset your LxRoot password"
+	emailTemplate := settingsValue("resetpass_email")
+
+	code := utility.GeneratePassword(6, true, false)
+	id, err := addVerification(email, "RESET-PASS", code, "")
+	if err != nil {
+		return err
+	}
+
+	var row = make(map[string]interface{})
+	row["email"] = email
+	row["id"] = id
+	row["code"] = code
+	row["exp"] = time.Now().Add(time.Minute * 30).Unix() //***
+	token, err := utility.JWTEncode(row, utility.JWTSECRET)
+	if err != nil {
+		return err
+	}
+
+	dmap := make(map[string]interface{})
+	dmap["username"] = email
+	dmap["ip"] = ipAddress
+	dmap["browser"] = strings.ToUpper(browser)
+	dmap["reset_link"] = fmt.Sprintf("https://lxroot.com/reset-pass-form?token=%s", token)
+	emailBody, _ := templatePrepare(emailTemplate, dmap)
+	err = SendEmail([]string{email}, subject, emailBody)
+	logError("resetPassNotificationEmail", err)
+	return err
+}
+
+// true = not expire, false = expired
+func checkUnExpired(expStr string) bool {
+
+	expUnix, err := strconv.ParseInt(expStr, 10, 64)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	// Convert Unix timestamp to time.Time
+	expTime := time.Unix(expUnix, 0)
+
+	if expTime.After(time.Now()) {
+		return true
+	}
+	// Check if the expiration time is in the future
+	return false
 }

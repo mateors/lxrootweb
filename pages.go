@@ -1167,3 +1167,114 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, string(bs))
 	}
 }
+
+func resetpass(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		// smap, err := getSessionInfo(r)
+		// if err == nil {
+		// 	if access, isOk := smap["access_name"].(string); isOk {
+		// 		vacc := []string{"superadmin", "admin", "client"}
+		// 		if mtool.ArrayValueExist(vacc, access) {
+		// 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		// 		}
+		// 	}
+		// }
+
+		//sessionCode := visitorInfo(r, w) //
+		//fmt.Println(sessionCode)
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/resetpass.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+			CsrfToken    string
+		}{
+			Title:        "LxRoot | Reset password",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			CsrfToken:    ctoken,
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
+	} else if r.Method == http.MethodPost {
+
+		r.ParseForm()
+		var errNo int = 1
+		var errMsg string
+		commonDataSet(r)
+		//fmt.Println("post", r.Form)
+
+		funcsMap := map[string]interface{}{
+			"validCSRF": validCSRF,
+		}
+		rmap := make(map[string]interface{})
+		for key := range r.Form {
+			rmap[key] = r.FormValue(key)
+		}
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
+
+		if response == "OKAY" {
+
+			username := r.FormValue("email")
+			ipAddress := cleanIp(mtool.ReadUserIP(r))
+			userAgent := r.UserAgent()
+
+			//location := getLocationWithinSec(ipAddress)
+			//fmt.Println(username, ipAddress, location)
+			count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, username), database.DB)
+			if count == 1 {
+
+				//generate a reset password email
+				errNo = 0
+				errMsg = "OK"
+				_, _, browser := userAgntDetails(userAgent)
+				resetPassNotificationEmail(username, ipAddress, browser)
+
+			} else if count == 0 {
+
+				errNo = 0
+				fmt.Println("DO NOTHING - INVALID REQUEST")
+			}
+
+		} else {
+			errNo = 0
+			errMsg = "Validation error!"
+			log.Println(response)
+		}
+
+		var row = make(map[string]interface{})
+		row["error"] = errNo
+		row["message"] = errMsg
+		bs, err := json.Marshal(row)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, string(bs))
+	}
+}

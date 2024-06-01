@@ -189,6 +189,8 @@ func init() {
 	//fmt.Println(mtool.HashBcrypt("test321")) //$2a$14$LlXWMQxVBhW91WuJqjbCbuO5craaprMyM9tNYiOZeGjJ0mCy4Uiz2
 
 	//err = addSettings("login_email", "-", "template")
+	//err = addSettings("resetpass_email", "-", "template")
+	//err = send("bill.rassel@gmail.com", "hello", "hi there")
 	//fmt.Println(err)
 	//os.Exit(1)
 }
@@ -223,6 +225,7 @@ func main() {
 	r.HandleFunc("/signup", signup)              //signup + checkout
 	r.HandleFunc("/verify", verify)              //verify
 	r.HandleFunc("/signin", signin)              //login
+	r.HandleFunc("/resetpass", resetpass)        //login
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

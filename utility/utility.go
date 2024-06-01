@@ -3,12 +3,18 @@ package utility
 import (
 	"errors"
 	"log"
+	"math/rand"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
 )
+
+const voc string = "abcdfghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const numbers string = "0123456789"
+const symbols string = "!^*+_-=$#"
 
 var WPORT string
 var JWTSECRET, LOGENABLE, EMAILUSER, EMAILPASS, EMAILSERVER, EMAILPORT string
@@ -26,6 +32,8 @@ func envFilePath() string {
 
 func init() {
 
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	err := godotenv.Load(envFilePath())
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
@@ -39,6 +47,24 @@ func init() {
 	EMAILSERVER = os.Getenv("EMAILSERVER")
 	EMAILPORT = os.Getenv("EMAILPORT")
 
+}
+
+func GeneratePassword(length int, hasNumbers bool, hasSymbols bool) string {
+	chars := voc
+	if hasNumbers {
+		chars = chars + numbers
+	}
+	if hasSymbols {
+		chars = chars + symbols
+	}
+	return generatePassword(length, chars)
+}
+func generatePassword(length int, chars string) string {
+	password := ""
+	for i := 0; i < length; i++ {
+		password += string([]rune(chars)[rand.Intn(len(chars))])
+	}
+	return password
 }
 
 func JWTEncode(payload map[string]interface{}, signKey string) (string, error) {
