@@ -201,6 +201,20 @@ func validCSRF(args map[string]interface{}) string {
 	return "ERROR invalid ctoken"
 }
 
+func resetPassValidation(args map[string]interface{}) string {
+
+	pass1, _ := args["pass1"].(string)
+	pass2, _ := args["pass2"].(string)
+
+	if pass1 != pass2 {
+		return "ERROR both passwords must match"
+	}
+	if len(pass1) < 8 && len(pass2) < 8 {
+		return "ERROR a minimum 8-character password is required"
+	}
+	return "valid"
+}
+
 func validSignupField(args map[string]interface{}) string {
 
 	firstName := args["first_name"].(string)

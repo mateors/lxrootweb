@@ -1320,6 +1320,10 @@ func resetPassForm(w http.ResponseWriter, r *http.Request) {
 		setCookie("ctoken", hashStr, 1800, w)
 		invalidMsg := "Sorry, your token has expired!" //This reset link is invalid.
 
+		if isValid {
+			setCookie("vid", fmt.Sprint(row["id"]), 1800, w)
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -1352,50 +1356,58 @@ func resetPassForm(w http.ResponseWriter, r *http.Request) {
 		var errNo int = 1
 		var errMsg string
 		commonDataSet(r)
-		//fmt.Println("post", r.Form)
+		fmt.Println("post", r.Form)
+		id, _ := getCookie("vid", r)
+		r.Form.Set("vid", id)
 
 		funcsMap := map[string]interface{}{
-			"validCSRF": validCSRF,
+			"validCSRF":           validCSRF,
+			"resetPassValidation": resetPassValidation,
 		}
 		rmap := make(map[string]interface{})
 		for key := range r.Form {
 			rmap[key] = r.FormValue(key)
 		}
 		response := CheckMultipleConditionTrue(rmap, funcsMap)
+		fmt.Println("response:", response)
 
 		if response == "OKAY" {
 
-			username := r.FormValue("email")
-			ipAddress := cleanIp(mtool.ReadUserIP(r))
-			userAgent := r.UserAgent()
+			id, _ := getCookie("vid", r)
+			username := lxql.FieldByValue(tableToBucket("verification"), "username", fmt.Sprintf("id=%q", id), database.DB)
+			//pass1 := r.FormValue("pass1")
+			//pass2 := r.FormValue("pass2")
+			//ipAddress := cleanIp(mtool.ReadUserIP(r))
+			//userAgent := r.UserAgent()
 
 			//location := getLocationWithinSec(ipAddress)
-			//fmt.Println(username, ipAddress, location)
-			count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, username), database.DB)
+			//fmt.Println(username, ipAddress, pass1, pass2)
+			count := lxql.CheckCount("login", fmt.Sprintf(`username="%s" AND access_name='client'`, username), database.DB)
 			if count == 1 {
 
 				//generate a reset password email
 				errNo = 0
 				errMsg = "OK"
-				_, _, browser := userAgntDetails(userAgent)
-				resetPassNotificationEmail(username, ipAddress, browser)
+				//_, _, browser := userAgntDetails(userAgent)
+				//resetPassNotificationEmail(username, ipAddress, browser)
+				delCookie("vid", r, w)
+				fmt.Println("now update login table with pass1")
 
 			} else if count == 0 {
-
-				errNo = 0
-				fmt.Println("DO NOTHING - INVALID REQUEST")
+				errNo = 4
+				errMsg = "Sorry, unauthorized user"
 			}
 
 		} else {
-			errNo = 0
-			errMsg = "Validation error!"
-			log.Println(response)
+			errNo = 1
+			errMsg = response
 		}
 
 		var row = make(map[string]interface{})
 		row["error"] = errNo
 		row["message"] = errMsg
 		bs, err := json.Marshal(row)
+		fmt.Println(row)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
