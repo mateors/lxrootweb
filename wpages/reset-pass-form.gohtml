@@ -8,30 +8,39 @@
 
                     <p class="head-3 text-secondary my-5">Reset Your Password</p>
 
-                    <p class="hidden text-body1 text-slate-700">You will receive a password reset email soon.</p>
-                    <p class="hidden mt-2 text-body1 text-slate-700">Follow the link in the email to reset your password.</p>
-
-                    <div class="">
+                    {{if .ValidToken}}
+                    <div class="Wrapper">
                         <div class="w-full flex gap-3 flex-col md:flex-row items-center mb-10 px-5 py-4 bg-slate-100 justify-between rounded-md border-l-4 border-primary">
                             <div class="flex gap-3">
-                                <p class="text-body1 text-slate-600">Enter your email address and we’ll send you a password reset link.</p>
+                                <p class="text-body1 text-slate-600">Password reset request for <strong>{{.Username}}</strong></p>
                             </div>
                         </div>
 
-                        <form id="mForm" action="/resetpass" class="w-full">
+                        <form id="mForm" action="/reset-pass-form" class="w-full">
                             <input type="hidden" name="ftoken" value="{{$ftoken}}" />
+
                             <div class="field flex flex-col mb-4">
-                                <label for="email-field">Email Address <span class="required-spot">*</span></label>
+                                <label for="pass-field">New Password<span class="required-spot">*</span></label>
                                 <div class="relative w-full">
-                                    <input type="email" id="email-field" class="w-full" name="email" placeholder="Enter email here"  onblur="validateField('email-field')" required />
-                                    <svg id="email-field-error-icon" class="hidden error-icon absolute right-3 bottom-1/2 translate-y-1/2 w-5 h-5 pointer-events-none" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_176_54)">
-                                            <path class="fill-red-600" d="M12 0C5.4 0 0 5.4 0 12C0 18.6 5.4 24 12 24C18.6 24 24 18.6 24 12C24 5.4 18.6 0 12 0ZM13.5 19.5H10.5V16.5H13.5V19.5ZM13.5 15H10.5V4.5H13.5V15Z" fill="#ef1d1d"/>
-                                        </g>
-                                        <defs><clipPath id="clip0_176_54"><rect width="24" height="24" fill="white"/></clipPath></defs>
-                                    </svg>
+                                    <input type="password" id="pass1" class="w-full"  name="passwd" placeholder="Enter password here" onblur="validator('#pass1','')" required />
+                                    <button type="button" class="showpass pass-icon absolute right-3 bottom-1/2 translate-y-1/2 z-20">
+                                        <span class="material-iconp absolute right-8 bottom-1/2 translate-y-1/2">visibility</span>
+                                    </button>
+                                    <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
                                 </div>
-                                <div id="email-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter a valid email address.</div>
+                                <p id="pass-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter a pssword.</p>
+                            </div>
+
+                            <div class="field flex flex-col mb-4">
+                                <label for="pass-field">Confirm New Password<span class="required-spot">*</span></label>
+                                <div class="relative w-full">
+                                    <input type="password" id="pass2" class="w-full"  name="passwd" placeholder="Enter the same password again" onblur="validator('#pass2','')" required />
+                                    <button type="button" class="showpass pass-icon absolute right-3 bottom-1/2 translate-y-1/2 z-20">
+                                        <span class="material-iconp absolute right-8 bottom-1/2 translate-y-1/2">visibility</span>
+                                    </button>
+                                    <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
+                                </div>
+                                <p id="pass-field-error" class="text-[14px] text-red-500 mt-1 hidden">Please enter confirm pssword.</p>
                             </div>
                             
 
@@ -46,6 +55,15 @@
                             </div>
                         </form>
                     </div>
+                    {{else}}
+
+                    <p class="text-body1 text-slate-700">{{.ErroMsg}}</p>
+
+                    <div class="w-full flex gap-3 flex-col md:flex-row justify-between mt-10">
+                        <a href="/resetpass" class="w-full filled-button !justify-between gap-2 !bg-primary text-white">Request Another Reset</a>
+                    </div>
+
+                    {{end}}
 
                 </div>
             </section>
@@ -63,47 +81,6 @@
 {{define "script"}}
 
   <script>
-    function validateField(fieldName) {
-      const fieldValue = document.getElementById(fieldName).value;
-      const fieldInput = document.getElementById(fieldName);
-      const errorElement = document.getElementById(fieldName + "-error");
-      const errorIcon = document.getElementById(fieldName + "-error-icon");
-      console.log(fieldName, fieldValue);
-      if (fieldValue.trim() === "") {
-        errorElement.classList.remove("hidden");
-        errorIcon.classList.remove('hidden');
-        fieldInput.classList.add('error');
-      } else {
-        errorElement.classList.add("hidden");
-        errorIcon.classList.add('hidden');
-        fieldInput.classList.remove('error');
-      }
-      const passIcon = document.getElementById(fieldName + "-pass-icon");
-      if (fieldValue.trim() === "") {
-        //passIcon.classList.add("right-8");
-      } else {
-        //passIcon.classList.remove("right-8");
-      }
-    }
-    const passIconBtn = document.getElementById('pass-field-pass-icon');
-    if (passIconBtn) {
-        passIconBtn.addEventListener('click', function() {
-            const passField = document.getElementById('pass-field');
-            const passIconCheck = passIconBtn.querySelector('.check');
-            const passIconUncheck = passIconBtn.querySelector('.uncheck');
-            console.log(passIconCheck);
-            // Toggle the password visibility
-            if (passField.type === 'password') {
-                passField.type = 'text';
-                passIconUncheck.classList.add('hidden');
-                passIconCheck.classList.remove('hidden');
-            } else {
-                passField.type = 'password';
-                passIconUncheck.classList.remove('hidden');
-                passIconCheck.classList.add('hidden');
-            }
-        });
-    }
 
     $('#mForm').submit( (e) => {
     

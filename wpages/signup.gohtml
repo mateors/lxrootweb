@@ -121,8 +121,8 @@
                 <label for="pass-field">Password<span class="required-spot">*</span></label>
 
                 <div class="relative w-full">
-                  <input type="password" id="pass" class="w-full"  name="passwd" placeholder="Enter password here" onblur="validator('#pass','')" required />
-                  <button type="button" id="showpass" class="pass-icon absolute right-3 bottom-1/2 translate-y-1/2 z-20">
+                  <input type="password" id="pass" class="w-full" name="passwd" placeholder="Enter password here" onblur="validator('#pass','')" required />
+                  <button type="button" class="showpass pass-icon absolute right-3 bottom-1/2 translate-y-1/2 z-20">
                     <span class="material-iconp absolute right-8 bottom-1/2 translate-y-1/2">visibility</span>
                   </button>
                   <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
@@ -166,21 +166,6 @@
   <script>
 
     //validator('#email',"Hello password....");
-
-    $('#showpass').on('click', (e) => {
-    
-      let icon=$(this).closest("button").find('span').text();
-      if(icon=='visibility'){ 
-        $(this).closest("button").prev().prop("type","text");
-        $(this).closest("button").find('span').text('visibility_off'); 
-      }
-      if(icon=='visibility_off'){ 
-        $(this).closest("button").prev().prop("type","password");
-        $(this).closest("button").find('span').text('visibility'); 
-      }
-    
-    });
-
     $('#mForm').submit( (e) => {
     
         e.preventDefault();

@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
@@ -562,20 +561,57 @@ func resetPassNotificationEmail(email, ipAddress, browser string) error {
 	return err
 }
 
+func strToTime(expStr string) time.Time {
+
+	expUnix, _ := strconv.ParseInt(expStr, 10, 64)
+	expTime := time.Unix(expUnix, 0)
+	return expTime
+}
+
+func float64totime(val float64) time.Time {
+	intTimestamp := int64(val)
+	return time.Unix(intTimestamp, 0)
+}
+
 // true = not expire, false = expired
 func checkUnExpired(expStr string) bool {
 
-	expUnix, err := strconv.ParseInt(expStr, 10, 64)
-	if err != nil {
-		log.Println(err)
-		return false
-	}
 	// Convert Unix timestamp to time.Time
-	expTime := time.Unix(expUnix, 0)
+	expTime := strToTime(expStr)
 
 	if expTime.After(time.Now()) {
 		return true
 	}
 	// Check if the expiration time is in the future
+	return false
+}
+
+// true = not expire, false = expired
+func checkUnExpired2(expStr float64) bool {
+
+	// Convert float64 to time.Time
+	expTime := float64totime(expStr)
+
+	if expTime.After(time.Now()) {
+		return true
+	}
+	// Check if the expiration time is in the future
+	return false
+}
+
+func tokenInfo(token string) (map[string]interface{}, error) {
+	return utility.JWTDecode(token, utility.JWTSECRET)
+}
+
+func checkTokenCodeValid(row map[string]interface{}) bool {
+
+	expStr, isOk := row["exp"].(float64)
+	if isOk {
+		//intTimestamp := int64(expStr)
+		//tm := time.Unix(intTimestamp, 0)
+		//fmt.Println(tm.Format("2006-01-02 15:04:05"))
+		//fmt.Println("isValid:", isValid)
+		return checkUnExpired2(expStr)
+	}
 	return false
 }

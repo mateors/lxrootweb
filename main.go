@@ -215,17 +215,18 @@ func main() {
 	r.HandleFunc("/pricing", pricing)
 	r.HandleFunc("/terms", terms)
 	r.HandleFunc("/privacy", privacy)
-	r.HandleFunc("/shop", shop)                  //store page
-	r.HandleFunc("/product", product)            //product_details
-	r.HandleFunc("/checkout", checkout)          //checkout + signup
-	r.HandleFunc("/faqs", faqs)                  //
-	r.HandleFunc("/about", about)                //
-	r.HandleFunc("/contact", contact)            //contact us
-	r.HandleFunc("/join-waitlist", joinWaitlist) //WaitList
-	r.HandleFunc("/signup", signup)              //signup + checkout
-	r.HandleFunc("/verify", verify)              //verify
-	r.HandleFunc("/signin", signin)              //login
-	r.HandleFunc("/resetpass", resetpass)        //login
+	r.HandleFunc("/shop", shop)                     //store page
+	r.HandleFunc("/product", product)               //product_details
+	r.HandleFunc("/checkout", checkout)             //checkout + signup
+	r.HandleFunc("/faqs", faqs)                     //
+	r.HandleFunc("/about", about)                   //
+	r.HandleFunc("/contact", contact)               //contact us
+	r.HandleFunc("/join-waitlist", joinWaitlist)    //WaitList
+	r.HandleFunc("/signup", signup)                 //signup + checkout
+	r.HandleFunc("/verify", verify)                 //verify
+	r.HandleFunc("/signin", signin)                 //login
+	r.HandleFunc("/resetpass", resetpass)           //reset
+	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

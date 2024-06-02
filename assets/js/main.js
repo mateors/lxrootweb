@@ -468,3 +468,17 @@ let validator = (selector, msg) => {
   }
   $(selector).parent().next().text(msg);
 }
+
+$('#mForm').find('button.showpass').on('click', (e) => {
+    
+    let icon=$(this).closest("button").find('span').text();
+    if(icon=='visibility'){ 
+      $(this).closest("button").prev().prop("type","text");
+      $(this).closest("button").find('span').text('visibility_off'); 
+    }
+    if(icon=='visibility_off'){ 
+      $(this).closest("button").prev().prop("type","password");
+      $(this).closest("button").find('span').text('visibility'); 
+    }
+  
+});
