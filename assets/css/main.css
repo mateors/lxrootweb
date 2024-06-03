@@ -653,6 +653,7 @@ html {
   --clr-ghostWhite: #f8f9ff;
   --clr-white: #ffffff;
   --color-text-base: #4b5563;
+  --clr-error:#B91C1C;
 }
 
 *, ::before, ::after {
@@ -5706,7 +5707,7 @@ body.modal-open {
   font-size: 36px !important;
 }
 .text-red-700{
-color: rgb(185 28 28);
+  color: var(--clr-error);
 }
 
 
@@ -5742,4 +5743,12 @@ color: rgb(185 28 28);
 }
 .error-icon{
   color:#ef1d1d;
+}
+.border-error{
+  border-color: var(--clr-error);
+}
+
+.bg-error{
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 238 238 / var(--tw-bg-opacity)); /*FCEEEE*/
 }

@@ -984,14 +984,11 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		// 		}
 		// 	}
 		// }
-
 		sessionCode, err := getCookie("visitor_session", r)
 		if err != nil {
-			log.Println(err)
-			sessionCode = visitorInfo(r, w)
+			visitorInfo(r, w)
+			log.Println("Visitor sessionCode generated", sessionCode)
 		}
-		//sessionCode := visitorInfo(r, w) //NEED TO MAKE IT FASTER
-		fmt.Println(sessionCode)
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -1007,6 +1004,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
+		errMessage := r.FormValue("error")
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1015,12 +1013,14 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			ErrorMessage string
 		}{
 			Title:        "Signin | LxRoot",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
 			CsrfToken:    ctoken,
+			ErrorMessage: errMessage,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1153,36 +1153,25 @@ func signin(w http.ResponseWriter, r *http.Request) {
 				} else {
 					//errNo = 1
 					//errMsg = "ERROR invalid username or password1"
-					rurl = "/signin?error=invalid username or password1"
+					rurl = "/signin?error=Invalid username or password"
 				}
 			}
 			if len(rows) == 0 {
 				//errNo = 2
 				//errMsg = "ERROR invalid username or password2."
-				rurl = "/signin?error=invalid username or password2"
+				rurl = "/signin?error=invalid username or password"
 			}
 
 		} else {
 			//errNo = 9
 			//errMsg = "Validation error!"
-			rurl = "/signin?error=invalid username or password3"
+			rurl = "/signin?error=invalid username or password."
 			log.Println(response)
 		}
 
 		//fmt.Println(errMsg, errNo)
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
 		return
-		// var row = make(map[string]interface{})
-		// row["error"] = errNo
-		// row["message"] = errMsg
-		// row["url"] = rurl
-		// bs, err := json.Marshal(row)
-		// if err != nil {
-		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-		// 	return
-		// }
-		// w.Header().Set("Content-Type", "application/json")
-		// fmt.Fprintln(w, string(bs))
 	}
 }
 
