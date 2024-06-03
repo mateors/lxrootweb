@@ -464,7 +464,7 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 		sessionCode = xid.New().String()
 	}
 
-	//fmt.Println("todo:", todo)
+	fmt.Println("todo:", todo)
 	if todo == "insert" {
 
 		row["id"] = xid.New().String()
@@ -482,9 +482,8 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 		row["todo"] = todo
 		//row["pkfield"] = "id"
 		err = lxql.InsertUpdateMap(row, database.DB)
-		//fmt.Println(err, row)
 		logError("visitor_session", err)
-		setCookie("visitor_session", sessionCode, 86400*365, w)
+		setCookie("visitor_session", sessionCode, 86400*365, w) //1 year
 
 	} else if todo == "update" {
 
@@ -614,4 +613,65 @@ func checkTokenCodeValid(row map[string]interface{}) bool {
 		return checkUnExpired2(expStr)
 	}
 	return false
+}
+
+func deleteAccount(accountId string) error {
+
+	//loginId := lxql.FieldByValue(tableToBucket("login"), "id", fmt.Sprintf("account_id='%s'", accountId), database.DB)
+	//fmt.Println(loginId)
+	sql := fmt.Sprintf(`SELECT l.id as loginId,l.username, i.id as addressId FROM %s a
+	LEFT JOIN %s l ON l.account_id=a.id
+	LEFT JOIN %s i ON i.account_id=a.id
+	WHERE a.id="%s";`, tableToBucket("account"), tableToBucket("login"), tableToBucket("address"), accountId)
+	row, err := singleRow(sql)
+	if err != nil {
+		return err
+	}
+	loginId := row["loginId"].(string)
+	addressId := row["addressId"].(string)
+	username := row["username"].(string)
+	fmt.Println(loginId, addressId)
+
+	sql = fmt.Sprintf("DELETE FROM %s WHERE id=%q;", tableToBucket("address"), addressId)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("address", err)
+
+	sql = fmt.Sprintf("DELETE FROM %s WHERE login_id=%q;", tableToBucket("activity_log"), loginId)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("activity_log", err)
+
+	sql = fmt.Sprintf("DELETE FROM %s WHERE login_id=%q;", tableToBucket("login_session"), loginId)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("login_session", err)
+
+	sql = fmt.Sprintf("DELETE FROM %s WHERE login_id=%q;", tableToBucket("authc"), loginId)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("authc", err)
+
+	//indirect relation tables -> verification[username], message[sender|receiver]
+	sql = fmt.Sprintf("DELETE FROM %s WHERE username=%q;", tableToBucket("verification"), username)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("verification", err)
+
+	// sql = fmt.Sprintf("DELETE FROM %s WHERE login_id=%q;", tableToBucket("device_log"), loginId)
+	// err = lxql.RawSQL(sql, database.DB)
+	// logError("device_log", err)
+
+	// sql = fmt.Sprintf("DELETE FROM %s WHERE login_id=%q;", tableToBucket("doc_keeper"), loginId)
+	// err = lxql.RawSQL(sql, database.DB)
+	// logError("doc_keeper", err)
+
+	//sql = fmt.Sprintf("DELETE FROM %s WHERE sender=%q OR receiver=%q;", tableToBucket("message"), username, username)
+	//fmt.Println(sql)
+	//lxql.RawSQL(sql, database.DB)
+
+	sql = fmt.Sprintf("DELETE FROM %s WHERE id=%q;", tableToBucket("account"), accountId)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("account", err)
+
+	sql = fmt.Sprintf("DELETE FROM %s WHERE id=%q;", tableToBucket("login"), loginId)
+	err = lxql.RawSQL(sql, database.DB)
+	logError("login", err)
+
+	return nil
 }

@@ -985,7 +985,12 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		// 	}
 		// }
 
-		sessionCode := visitorInfo(r, w) //
+		sessionCode, err := getCookie("visitor_session", r)
+		if err != nil {
+			log.Println(err)
+			sessionCode = visitorInfo(r, w)
+		}
+		//sessionCode := visitorInfo(r, w) //NEED TO MAKE IT FASTER
 		fmt.Println(sessionCode)
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
@@ -1025,11 +1030,12 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 	} else if r.Method == http.MethodPost {
 
+		//sTime := time.Now()
 		r.ParseForm()
-		var errNo int = 1
-		var errMsg, rurl string
+		//var errNo int = 1
+		//var errMsg string
+		var rurl string
 		commonDataSet(r)
-		//fmt.Println("post", r.Form)
 
 		funcsMap := map[string]interface{}{
 			"validCSRF":    validCSRF,
@@ -1040,41 +1046,46 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			rmap[key] = r.FormValue(key)
 		}
 		response := CheckMultipleConditionTrue(rmap, funcsMap)
+		//fmt.Println("checkMultipleConditionTakes:", time.Since(sTime).Seconds(), "sec") //0.379260886 sec
 
 		if response == "OKAY" {
 
+			//sTime = time.Now()
 			username := r.FormValue("email")
 			txtpass := r.FormValue("passwd")
 			ipAddress := cleanIp(mtool.ReadUserIP(r))
 			userAgent := r.UserAgent()
-
-			//geolocation := r.FormValue("geolocation")
 			location := getLocationWithinSec(ipAddress)
-			//fmt.Println(username, txtpass, ipAddress, location)
 
-			visitorSessionID := visitorInfo(r, w)
-			if visitorSessionID == "" {
-				log.Println("visitorSession must required")
-				return
+			visitorSessionID, err := getCookie("visitor_session", r)
+			if err != nil {
+				visitorSessionID = visitorInfo(r, w)
+				log.Println("visitorSession must required", err, visitorSessionID)
 			}
+			//fmt.Println("getLocationTakes:", time.Since(sTime).Seconds(), "sec") //0.405114986 sec
 
+			//sTime = time.Now()
 			sql := fmt.Sprintf("SELECT id,cid,account_id,access_name,username,passw,tfa_status,tfa_medium,tfa_setupkey FROM %s WHERE username='%s' AND status IN[1,6];", tableToBucket("login"), username)
 			rows, err := lxql.GetRows(sql, database.DB)
 			if err != nil {
 				log.Println(err)
 				return
 			}
+			//fmt.Println("loginQueryTakes:", time.Since(sTime).Seconds(), "sec") //0.365913886 sec
 			if len(rows) > 0 {
 
+				//sTime = time.Now()
 				hashpass := rows[0]["passw"].(string) //
 				if mtool.HashCompare(txtpass, hashpass) {
 
-					//fmt.Println("password validation pass....")
+					//fmt.Println("hashCompareTakes:", time.Since(sTime).Seconds(), "sec") //1.601463995 sec
+					//sTime = time.Now()
 					loginId := rows[0]["id"].(string)
 					accessName := rows[0]["access_name"].(string)
 					accountId := rows[0]["access_name"].(string)
-					token, err := vAuthToken(loginId, accountId, username, accessName, ipAddress)
+					token, err := vAuthToken(loginId, accountId, username, accessName, ipAddress) //takes 0.8 seconds to process
 					logError("vAuthToken", err)
+					//fmt.Println("vAuthTokenTakes:", time.Since(sTime).Seconds(), "sec")
 
 					row := rows[0]
 					tfaStatus := row["tfa_status"].(string)
@@ -1087,32 +1098,33 @@ func signin(w http.ResponseWriter, r *http.Request) {
 					}
 					if tfaStatus == "1" {
 
-						errNo = 0
+						//errNo = 0
 						rurl = "/tfauth"
-						errMsg = "redirecting to TFA"
+						//errMsg = "redirecting to TFA"
 						setCookie("tfa", username, 300, w)
 
 					} else {
+						//sTime = time.Now()
 						delete(row, "passw") //tfa_status,tfa_medium,tfa_setupkey
 						delete(row, "tfa_status")
 						delete(row, "tfa_medium")
 						delete(row, "tfa_setupkey")
-						//fmt.Println("2:row>", row)
+						delete(row, "account_type")
 						row["session_code"] = visitorSessionID
-
 						arow, _ := loginToAccountRow(loginId)
 						for key, val := range arow {
 							row[key] = val
 						}
 						row["ip"] = ipAddress
-						jwtstr, err := utility.JWTEncode(row, utility.JWTSECRET)
+						jwtstr, err := utility.JWTEncode(row, utility.JWTSECRET) //takes 3 seconds to process
 						if err != nil {
 							log.Println(err)
 							return
 						}
+						//fmt.Println("JWTEncodeTokenTakes:", time.Since(sTime).Seconds(), "sec")
+						//sTime = time.Now()
 						setCookie("login_session", jwtstr, 86400*30, w)
 						setCookie("token", token, 86400*30, w) //30 days
-						//fmt.Println("jwtstr:", jwtstr)
 
 						sql := fmt.Sprintf("UPDATE %s SET last_login='%s' WHERE id='%s';", tableToBucket("login"), mtool.TimeNow(), loginId)
 						err = lxql.RawSQL(sql, database.DB)
@@ -1126,45 +1138,51 @@ func signin(w http.ResponseWriter, r *http.Request) {
 						}
 						_, err = addLoginSession(loginId, visitorSessionID, ipAddress, city, country, userAgent)
 						logError("addLoginSession", err)
-						errNo = 0
-						errMsg = "login successful"
+						//errNo = 0
+						//errMsg = "login successful"
 						rurl = "/dashboard"
+						//fmt.Println("addUpdateLoginSessionTakes:", time.Since(sTime).Seconds(), "sec")
 
 						//send email alert for login
-						_, _, browser := userAgntDetails(userAgent)
-						loginNotificationEmail(username, ipAddress, browser)
+						//sTime = time.Now()
+						//_, _, browser := userAgntDetails(userAgent)
+						//loginNotificationEmail(username, ipAddress, browser) //takes 6 seconds to process
+						//fmt.Println("loginEmailTakes:", time.Since(sTime).Seconds(), "sec")
 					}
 
 				} else {
-					errNo = 1
-					errMsg = "ERROR invalid username or password1"
-					rurl = "/signin"
+					//errNo = 1
+					//errMsg = "ERROR invalid username or password1"
+					rurl = "/signin?error=invalid username or password1"
 				}
 			}
 			if len(rows) == 0 {
-				errNo = 2
-				errMsg = "ERROR invalid username or password2."
-				rurl = "/signin"
+				//errNo = 2
+				//errMsg = "ERROR invalid username or password2."
+				rurl = "/signin?error=invalid username or password2"
 			}
 
 		} else {
-			errNo = 9
-			errMsg = "Validation error!"
-			rurl = "/signin"
+			//errNo = 9
+			//errMsg = "Validation error!"
+			rurl = "/signin?error=invalid username or password3"
 			log.Println(response)
 		}
 
-		var row = make(map[string]interface{})
-		row["error"] = errNo
-		row["message"] = errMsg
-		row["url"] = rurl
-		bs, err := json.Marshal(row)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(bs))
+		//fmt.Println(errMsg, errNo)
+		http.Redirect(w, r, rurl, http.StatusSeeOther)
+		return
+		// var row = make(map[string]interface{})
+		// row["error"] = errNo
+		// row["message"] = errMsg
+		// row["url"] = rurl
+		// bs, err := json.Marshal(row)
+		// if err != nil {
+		// 	http.Error(w, err.Error(), http.StatusInternalServerError)
+		// 	return
+		// }
+		// w.Header().Set("Content-Type", "application/json")
+		// fmt.Fprintln(w, string(bs))
 	}
 }
 
@@ -1414,5 +1432,86 @@ func resetPassForm(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(bs))
+	}
+}
+
+func dashboard(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		smap, err := getSessionInfo(r)
+		if err != nil {
+			http.Redirect(w, r, "/logout", http.StatusSeeOther)
+			return
+		}
+
+		fmt.Println("smap:", smap)
+		//sessionCode := visitorInfo(r, w) //
+		//fmt.Println(sessionCode)
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/dashboard.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		//ctoken := csrfToken()
+		//hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		//setCookie("ctoken", hashStr, 1800, w)
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+			//CsrfToken    string
+		}{
+			Title:        "LxRoot Dashboard",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			//CsrfToken:    ctoken,
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		log.Println("UNABLE_TO_LOGOUT::", err)
+		http.Redirect(w, r, "/signin", http.StatusSeeOther)
+		return
+	}
+	//fmt.Println("logout:", smap)
+	//sessionCode := smap["session_code"].(string)
+	loginID := smap["id"].(string)
+	qs := `UPDATE %s SET status=0,logout_time="%s" WHERE login_id="%s" AND status=1;`
+	sql := fmt.Sprintf(qs, tableToBucket("login_session"), mtool.TimeNow(), loginID)
+	_, err = database.DB.Exec(sql)
+	logError("logout", err)
+	if err == nil {
+		//remove browser cookie
+		token, err := getCookie("token", r)
+		logError("logoutToken", err)
+
+		sql = fmt.Sprintf("UPDATE %s SET status=0 WHERE token='%s';", tableToBucket("authc"), token)
+		database.DB.Exec(sql)
+		delCookie("token", r, w)
+		delCookie("login_session", r, w)
+		http.Redirect(w, r, "/signin", http.StatusSeeOther) //***
+		return
 	}
 }

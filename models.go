@@ -227,8 +227,8 @@ type Message struct {
 	Type        string `json:"type"`
 	CompanyID   string `json:"cid"`          //foreign key
 	MessageType string `json:"message_type"` //contactus,inapp,email,sms,verify
-	Sender      string `json:"sender"`       //sender login_id or email
-	Receiver    string `json:"receiver"`     //receiver login_id
+	Sender      string `json:"sender"`       //sender = login.username
+	Receiver    string `json:"receiver"`     //receiver = login.username
 	Subject     string `json:"subject"`
 	MessageBody string `json:"message_body"`
 	CreateDate  string `json:"create_date"`
@@ -241,8 +241,8 @@ type Verification struct {
 	Type                string `json:"type"`
 	CompanyID           string `json:"cid"`                  //foreign key
 	MessageID           string `json:"message_id,omitempty"` //foreign key
-	Username            string `json:"username"`
-	VerificationPurpose string `json:"verification_purpose"` //TFA/SIGNUP
+	Username            string `json:"username"`             //login.username
+	VerificationPurpose string `json:"verification_purpose"` //TFA|SIGNUP
 	VerificationCOde    string `json:"verification_code"`
 	CreateDate          string `json:"create_date"`
 	UpdateDate          string `json:"update_date"`

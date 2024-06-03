@@ -192,6 +192,7 @@ func init() {
 	//err = addSettings("resetpass_email", "-", "template")
 	//err = send("bill.rassel@gmail.com", "hello", "hi there")
 	//fmt.Println(err)
+	//deleteAccount("cpduu0i2r9et3r3pcgqg")
 	//os.Exit(1)
 }
 
@@ -224,9 +225,11 @@ func main() {
 	r.HandleFunc("/join-waitlist", joinWaitlist)    //WaitList
 	r.HandleFunc("/signup", signup)                 //signup + checkout
 	r.HandleFunc("/verify", verify)                 //verify
-	r.HandleFunc("/signin", signin)                 //login
+	r.HandleFunc("/signin", signin)                 //login ***
 	r.HandleFunc("/resetpass", resetpass)           //reset
 	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
+	r.HandleFunc("/dashboard", dashboard)           //dashboard
+	r.HandleFunc("/logout", logout)                 //dashboard
 
 	//r.HandleFunc("/webhook", webhookHandler)
 
