@@ -930,44 +930,69 @@ func verify(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
+		var message, errMsg string
 		email := r.FormValue("email")
 		token := r.FormValue("token")
-		ainfo, err := usernameToAccounInfo(email)
+
+		err = verifySignup(email, token)
 		if err != nil {
-			logError("usernameToAccounInfo", err)
+			errMsg = err.Error()
+		}
+
+		if err == nil {
+
+			//fmt.Println(ainfo, len(ainfo))
+			ainfo, err := usernameToAccounInfo(email)
+			if err == nil {
+
+				accountId := ainfo["account_id"].(string)
+				sql := fmt.Sprintf("UPDATE %s SET status=1,update_date=%q,remarks='verified' WHERE id=%q;", tableToBucket("account"), mtool.TimeNow(), accountId)
+				database.DB.Exec(sql)
+
+				loginId := ainfo["login_id"].(string)
+				sql = fmt.Sprintf("UPDATE %s SET status=1 WHERE id=%q;", tableToBucket("login"), loginId)
+				database.DB.Exec(sql)
+
+				ipAddress := cleanIp(mtool.ReadUserIP(r))
+				logDetails := fmt.Sprintf("username %s verified", email)
+				addActiviyLog(loginId, "UPDATE", "account", "", logDetails, ipAddress)
+				message = "You have been verified."
+			}
+		}
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/verify_signup.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
 			return
 		}
 
-		var message string
-		err = verifySignup(email, token)
-		if err != nil {
-			message = fmt.Sprintf(`<h1 style="text-align:center;color:red;font-size:64px;">%s</h1>`, err.Error())
-
-		} else {
-
-			//fmt.Println(ainfo, len(ainfo))
-			accountId, isOk := ainfo["account_id"].(string)
-			if !isOk {
-				log.Println("unable to parse ainfo")
-				return
-			}
-
-			sql := fmt.Sprintf("UPDATE %s SET status=1,update_date=%q,remarks='verified' WHERE id=%q;", tableToBucket("account"), mtool.TimeNow(), accountId)
-			database.DB.Exec(sql)
-
-			loginId := ainfo["login_id"].(string)
-			sql = fmt.Sprintf("UPDATE %s SET status=1 WHERE id=%q;", tableToBucket("login"), loginId)
-			database.DB.Exec(sql)
-
-			sql = fmt.Sprintf("UPDATE %s SET status=1,update_date=%q WHERE id=%q;", tableToBucket("verification"), mtool.TimeNow(), loginId)
-			database.DB.Exec(sql)
-
-			ipAddress := cleanIp(mtool.ReadUserIP(r))
-			logDetails := fmt.Sprintf("username %s verified", email)
-			addActiviyLog(loginId, "UPDATE", "account", "", logDetails, ipAddress)
-			message = fmt.Sprintf(`<h1 style="text-align:center;color:green;font-size:64px;">%s <a href="/signin">Sign in</a></h1>`, "Verified")
+		base := GetBaseURL(r)
+		data := struct {
+			Title          string
+			Base           string
+			BodyClass      string
+			MainDivClass   string
+			ErrorMessage   string
+			SuccessMessage string
+		}{
+			Title:          "LxRoot | Reset password",
+			Base:           base,
+			BodyClass:      "",
+			MainDivClass:   "main min-h-[calc(100vh-52px)]",
+			ErrorMessage:   errMsg,
+			SuccessMessage: message,
 		}
-		fmt.Fprintln(w, message)
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
 	}
 }
 
@@ -975,15 +1000,16 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		// smap, err := getSessionInfo(r)
-		// if err == nil {
-		// 	if access, isOk := smap["access_name"].(string); isOk {
-		// 		vacc := []string{"superadmin", "admin", "client"}
-		// 		if mtool.ArrayValueExist(vacc, access) {
-		// 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		// 		}
-		// 	}
-		// }
+		smap, err := getSessionInfo(r)
+		if err == nil {
+			if access, isOk := smap["access_name"].(string); isOk {
+				vacc := []string{"superadmin", "admin", "client"}
+				if mtool.ArrayValueExist(vacc, access) {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+			}
+		}
+
 		sessionCode, err := getCookie("visitor_session", r)
 		if err != nil {
 			visitorInfo(r, w)

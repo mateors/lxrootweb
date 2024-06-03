@@ -1,0 +1,45 @@
+{{define "content"}}
+
+
+        <div class="content h-full">
+            <section class="container !max-w-[620px] mx-auto">
+                <div class="px-5 py-10 z-20 flex flex-col items-center justify-center">
+                    
+                    {{if ne .SuccessMessage ""}}
+                    <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-slate-100 justify-between rounded-md border-l-4 border-primary">
+                        <div class="flex gap-3">
+                            <span class="material-icons text-primary">check_circle</span>
+                            <h4 class="head-4 text-slate-700">{{.SuccessMessage}}</h4>
+                        </div>
+                    </div>
+                    {{end}}
+
+                    {{if ne .ErrorMessage ""}}
+                    <div class="flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-error justify-between rounded-md border-l-4 border-error">
+                        <div class="flex gap-3">
+                            <span class="material-icons text-red-700">error</span>
+                            <h4 class="head-4 text-red-700">{{.ErrorMessage}}</h4>
+                        </div>
+                    </div>
+                    {{end}}
+
+                </div>
+            </section>
+        </div>
+
+{{end}}
+
+
+{{define "scriptsrc"}}
+  <script src="resources/js/nlib.js"></script>
+  <script src="resources/js/main.js"></script>
+{{end}}
+
+
+{{define "script"}}
+
+  <script>
+
+  </script>
+
+{{end}}

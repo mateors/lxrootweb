@@ -417,14 +417,16 @@ func accessIdByName(accessName string) string {
 
 func verifySignup(email, token string) error {
 
-	sql := fmt.Sprintf("SELECT verification_code FROM %s WHERE username='%s' AND verification_purpose='signup';", tableToBucket("verification"), email)
+	sql := fmt.Sprintf("SELECT id,verification_code FROM %s WHERE username='%s' AND verification_purpose='signup' AND status=0;", tableToBucket("verification"), email)
 	row, err := singleRow(sql)
 	if err != nil {
-		return err
+		return errors.New("invalid link") //The provided link appears to be invalid.
 	}
 	hexCode := row["verification_code"].(string) //encoded with jwtsecret
 	plainTxt := mtool.DecodeStr(hexCode, utility.JWTSECRET)
 	if token == plainTxt {
+		id := row["id"].(string)
+		lxql.RawSQL(fmt.Sprintf("UPDATE %s SET status=1,update_date=%q WHERE id=%q;", tableToBucket("verification"), mtool.TimeNow(), id), database.DB)
 		return nil
 	}
 	return errors.New("invalid token")
