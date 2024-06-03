@@ -528,7 +528,7 @@ func vcode() string {
 	return uuid.NewV4().String()
 }
 
-func   resetPassNotificationEmail(email, ipAddress, browser string) error {
+func resetPassNotificationEmail(email, ipAddress, browser string) error {
 
 	subject := "Reset your LxRoot password"
 	emailTemplate := settingsValue("resetpass_email")
@@ -615,18 +615,19 @@ func checkTokenCodeValid(row map[string]interface{}) bool {
 	return false
 }
 
-func deleteAccount(accountId string) error {
+func deleteAccount(email string) error {
 
 	//loginId := lxql.FieldByValue(tableToBucket("login"), "id", fmt.Sprintf("account_id='%s'", accountId), database.DB)
 	//fmt.Println(loginId)
-	sql := fmt.Sprintf(`SELECT l.id as loginId,l.username, i.id as addressId FROM %s a
+	sql := fmt.Sprintf(`SELECT a.id as accountId, l.id as loginId,l.username, i.id as addressId FROM %s a
 	LEFT JOIN %s l ON l.account_id=a.id
 	LEFT JOIN %s i ON i.account_id=a.id
-	WHERE a.id="%s";`, tableToBucket("account"), tableToBucket("login"), tableToBucket("address"), accountId)
+	WHERE a.email="%s";`, tableToBucket("account"), tableToBucket("login"), tableToBucket("address"), email)
 	row, err := singleRow(sql)
 	if err != nil {
 		return err
 	}
+	accountId := row["accountId"].(string)
 	loginId := row["loginId"].(string)
 	addressId := row["addressId"].(string)
 	username := row["username"].(string)

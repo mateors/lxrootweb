@@ -818,19 +818,25 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		//setCookie("signup_success", "You have successfully registered with LxRoot.", 300, w)
+		successMsg, _ := getCookie("signup_success", r)
+		//fmt.Println(">>", err, successMsg)
+
 		base := GetBaseURL(r)
 		data := struct {
-			Title        string
-			Base         string
-			BodyClass    string
-			MainDivClass string
-			CsrfToken    string
+			Title          string
+			Base           string
+			BodyClass      string
+			MainDivClass   string
+			CsrfToken      string
+			SuccessMessage string
 		}{
-			Title:        "Signup | LxRoot",
-			Base:         base,
-			BodyClass:    "",
-			MainDivClass: "main min-h-[calc(100vh-52px)]",
-			CsrfToken:    ctoken,
+			Title:          "Signup | LxRoot",
+			Base:           base,
+			BodyClass:      "",
+			MainDivClass:   "main min-h-[calc(100vh-52px)]",
+			CsrfToken:      ctoken,
+			SuccessMessage: successMsg,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -906,11 +912,13 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 				errNo = 0
 				errMsg = "Congratulations! You have successfully registered with LxRoot. 🎉"
+				setCookie("signup_success", "You have successfully registered with LxRoot.", 30, w)
 			}
 
 		} else {
 			errNo = 9
 			errMsg = "Unknown error! please report"
+			log.Println(response)
 		}
 
 		var row = make(map[string]interface{})

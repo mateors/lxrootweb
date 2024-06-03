@@ -192,7 +192,7 @@ func init() {
 	//err = addSettings("resetpass_email", "-", "template")
 	//err = send("bill.rassel@gmail.com", "hello", "hi there")
 	//fmt.Println(err)
-	//deleteAccount("cpduu0i2r9et3r3pcgqg")
+	//deleteAccount("billahmdmostain@gmail.com")
 	//loginId := usernameToLoginId("bill.rassel@gmail.com")
 	//fmt.Println(loginId)
 	//count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, "bill.rassel@gmail.com"), database.DB)
