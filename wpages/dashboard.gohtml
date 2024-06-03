@@ -1,14 +1,60 @@
 {{define "content"}}
 
-        <div class="content h-full">
-            <section class="container !max-w-[620px] mx-auto">
-                <div class="px-5 py-10 z-20 flex flex-col justify-center">
+        <div class="content h-full md:h-full bg-slate-200">
+            <section class="container !max-w-[620px]s mx-auto">
 
+                <!--<div class="bg-yellow-50 px-5 py-10 z-20 flex flex-col justify-center">
                     <p class="head-3 text-secondary my-5">Dashboard</p>
                     <p class="text-body1 text-red-700 mb-4">lxroot user info...</p>
+                </div>-->
 
+                <div class="borders rounded-lg mt-8 bg-whites border-slate-300">
+                  <div class="grid md:grid-cols-4 gap-4 p-6">
 
+                      <div class="bg-white relative flex flex-col py-4 px-6 border border-slate-300 hover:border-primary rounded-lg ">
+                          <span class="text-slate-500 font-semibold">Total orders</span>
+                          <span class="text-slate-400">All time</span>
+                          <span class="text-slate-800 fs28px">1</span>
+                      </div>
+
+                      <div class="bg-white relative flex flex-col py-4 px-6 border border-slate-300 hover:border-primary rounded-lg ">
+                          <span class="text-slate-500 font-semibold">Total invoices</span>
+                          <span class="text-slate-400">All time</span>
+                          <span class="text-slate-800 fs28px">2</span>
+                      </div>
+
+                      <div class="bg-white relative flex flex-col py-4 px-6 border border-slate-300 hover:border-primary rounded-lg ">
+                          <span class="text-slate-500 font-semibold">Unpaid invoices</span>
+                          <span class="text-slate-400">All time</span>
+                          <span class="text-slate-800 fs28px">3</span>
+                      </div>
+
+                      <div class="bg-white relative flex flex-col py-4 px-6 border border-slate-300 hover:border-primary rounded-lg ">
+                          <span class="text-slate-500 font-semibold">Active tickets</span>
+                          <span class="text-slate-400">All time</span>
+                          <span class="text-slate-800 fs28px">4</span>
+                      </div>
+                      
+                  </div>
                 </div>
+
+                <div class="borders border-slate-300 mt-6 p-6">
+                    <div class="bg-white rounded-lg flex items-center justify-center">
+
+                        <div class="p-12 flex flex-col md:flex-row justify-center items-center">
+                          <img src="/resources/icon/invoice4.svg" width="128" />
+                          <div class="flex flex-col">
+                              <div class="px-4 max-w-480px mt-2">
+                                <h3 class="head-3 text-slate-700 mb-1 !font-light text-center md:text-left">No products or services</h3>
+                                <p class="body-text1 !letter-spacing-0 text-center md:text-left">Products and services will appear here once you've successfully completed your first order.</p>
+                                <button type="button" class="mx-auto md:mx-0 mt-6 w-full filled-button !justify-betweens gap-2s !bg-primary text-white !height-2.5rem !font-light">Place new order</button>
+                              </div>
+                          </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </section>
         </div>
 

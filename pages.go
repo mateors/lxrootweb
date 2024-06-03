@@ -1503,7 +1503,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			Title:        "LxRoot Dashboard",
 			Base:         base,
 			BodyClass:    "",
-			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			//CsrfToken:    ctoken,
 		}
 
