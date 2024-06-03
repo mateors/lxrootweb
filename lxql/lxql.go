@@ -607,7 +607,7 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 // FieldByValue Get one field_value using where clause
 func FieldByValue(table, fieldName, where string, db *sql.DB) string {
 
-	sql := fmt.Sprintf("SELECT %s FROM %s WHERE %s;", fieldName, table, where)
+	sql := fmt.Sprintf("SELECT %s FROM %s WHERE %s;", fieldName, tableToBucket(table), where)
 	rows := db.QueryRow(sql)
 	var vfield string
 	var jsonBytes []uint8

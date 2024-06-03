@@ -193,6 +193,10 @@ func init() {
 	//err = send("bill.rassel@gmail.com", "hello", "hi there")
 	//fmt.Println(err)
 	//deleteAccount("cpduu0i2r9et3r3pcgqg")
+	//loginId := usernameToLoginId("bill.rassel@gmail.com")
+	//fmt.Println(loginId)
+	//count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, "bill.rassel@gmail.com"), database.DB)
+	//fmt.Println(count)
 	//os.Exit(1)
 }
 

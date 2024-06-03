@@ -116,12 +116,14 @@
 
         }).then( (resp) => {
 
-            console.log(resp);
             if(resp.error==0){
                 $('#mForm').parent().addClass("hidden");
+                $('#mForm').parent().parent().childItem(0).text(resp.message);
+                $('#mForm').parent().parent().childItem(1).text("Redirecting to sign in page...");
                 $('#mForm').parent().parent().childItem(1).removeClass("hidden");
-            }else{
+                setTimeout(() => { location.href="/signin";}, 3000);
 
+            }else{
                 submitBtn.prop('disabled', false);
                 submitBtn.empty();
                 submitBtn.text(btnText);

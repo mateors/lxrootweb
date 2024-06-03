@@ -206,7 +206,7 @@ func addSettings(fieldName, fieldValue, purpose string) error {
 }
 
 func settingsValue(fieldName string) string {
-	return lxql.FieldByValue(tableToBucket("settings"), "field_value", fmt.Sprintf("field_name='%s'", fieldName), database.DB)
+	return lxql.FieldByValue("settings", "field_value", fmt.Sprintf("field_name='%s'", fieldName), database.DB)
 }
 
 func addCountry(name, isoCode, countryCode string) error {

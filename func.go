@@ -528,7 +528,7 @@ func vcode() string {
 	return uuid.NewV4().String()
 }
 
-func resetPassNotificationEmail(email, ipAddress, browser string) error {
+func   resetPassNotificationEmail(email, ipAddress, browser string) error {
 
 	subject := "Reset your LxRoot password"
 	emailTemplate := settingsValue("resetpass_email")

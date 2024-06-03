@@ -215,6 +215,19 @@ func resetPassValidation(args map[string]interface{}) string {
 	return "valid"
 }
 
+func vcodeIdValidation(args map[string]interface{}) string {
+
+	vid, isOk := args["vid"].(string)
+	if isOk {
+		count := lxql.CheckCount("verification", fmt.Sprintf("id=%q AND status=0", vid), database.DB)
+		if count == 1 {
+			return "valid"
+		}
+	}
+	return "ERROR invalid vsession"
+
+}
+
 func validSignupField(args map[string]interface{}) string {
 
 	firstName := args["first_name"].(string)
