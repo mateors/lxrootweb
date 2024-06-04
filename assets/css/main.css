@@ -2589,6 +2589,9 @@ html {
 .w-24 {
   width: 6rem;
 }
+.h-24{
+  height:6rem;
+}
 
 .w-48{
   width: 12rem;
@@ -5457,6 +5460,9 @@ body.modal-open {
     grid-template-columns: auto 1fr;
   }
 
+  .md\:grid-cols-\[1fr\2c 3fr\] {
+    grid-template-columns: 1fr 3fr;
+  }
   .md\:flex-row {
     flex-direction: row;
   }
@@ -5610,6 +5616,12 @@ body.modal-open {
   }
   .md\:order--1{
     order:-1;
+  }
+  .md\:w-33{
+    width: 25%;
+  }
+  .md\:w-67{
+    width:75%;
   }
 }
 
@@ -5787,4 +5799,21 @@ body.modal-open {
 
 .h-screen {
   height: 100vh;
+}
+.mh-7\.5rem{
+  min-height: 7.5rem;
+}
+
+dl{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    font-size: .875rem;
+    margin-top: 1rem;
+}
+
+.top\:60px{
+  top:60px;
+}
+.left\:20px{
+  left:20px;
 }
