@@ -1606,7 +1606,7 @@ html {
 .menu li > *:not(ul, .menu-title, details, .btn).active,
 .menu li > details > summary:active {
   --tw-bg-opacity: 1;
-  background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
+  background-color: transparent; /*var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));*/ /*lxroot*/
   --tw-text-opacity: 1;
   color: var(--fallback-nc,oklch(var(--nc)/var(--tw-text-opacity)));
 }
@@ -4547,7 +4547,7 @@ select + svg path {
   border-right-width: 1px;
   --tw-border-opacity: 1;
   border-color: rgb(226 232 240 / var(--tw-border-opacity));
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
 }
 
 .dropdown .dropdown-content > .container > *:nth-child(3),
