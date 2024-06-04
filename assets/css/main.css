@@ -5267,6 +5267,10 @@ body.modal-open {
 .hover\:text-primary:hover {
   color: var(--clr-neonBlue);
 }
+.hover\:text-primary2:hover {
+  color: var(--clr-neonBlue);
+  font-weight: 500;
+}
 
 .hover\:text-primaryMiddle:hover {
   color: var(--clr-savoyBlue);
