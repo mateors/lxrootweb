@@ -236,6 +236,7 @@ func main() {
 	r.HandleFunc("/profile", profile)               //profile
 	r.HandleFunc("/security", security)             //security
 	r.HandleFunc("/ticket", ticket)                 //ticket
+	r.HandleFunc("/ticket/{tid}", ticketDetails)    //ticket/details
 	r.HandleFunc("/logout", logout)                 //logout
 
 	//r.HandleFunc("/webhook", webhookHandler)

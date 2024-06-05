@@ -1,0 +1,149 @@
+{{define "content"}}
+
+  <div class="content h-full md:h-full bg-slate-200 mb-10">
+      <section class="container max-w-[960px] mx-auto">
+
+        <div class="p-6s mt-8">    
+            <div class="flex bg-slate-200 overflow-hidden flex-wrap">
+
+                <!---left--->
+                <div class="w-full md:w-33 bg-slate-200 text-slate-700 p-4 gap-4 ">
+
+                    
+                    <!---menu--->
+                    <div class="mt-0">
+
+                        <div class="bg-white border border-slate-300 rounded-lg">
+
+    
+                            <div class="p-4">
+                                <p class="px-4 mt-8 bg-slate-200 rounded p-2">Ticket details</p>
+                            </div>
+
+                            <div class="p-6">
+
+                                <dl class="text-slate-500 !text-[15px]">
+                                    <dt class="border-b py-2">Status </dt>  <dd class="border-b py-2"><span class="md:ml-8 "><label class="px-2 py-2 rounded-lg bg-label-muted text-white label-text">Closed</label></span></dd> 
+                                    <dt class="border-b py-2">Department</dt>  <dd class="border-b py-2"><span class="md:ml-8">Billing</span></dd>
+
+                                    <dt class="border-b py-2">Reference</dt>  <dd class="border-b py-2"><span class="md:ml-8">ABCD-2323-4</span></dd> 
+                                    <dt class="py-2">Closed</dt>  <dd class="py-2"><span class="md:ml-8">Feb 16th, 2024</span></dd>
+                                </dl>
+
+                            </div>
+
+                            <div class="flex justify-center p-6"><button class="w-full p-2 border hover:!border-slate-400">Re-open ticket</button></div>
+                           
+                           
+                        </div>
+
+                    </div>
+                    
+
+                </div>
+
+                <!---right--->
+                <div class="w-full md:w-67 form-contents bg-slate-200 p-4 pb-10s md:p-10s">
+
+                    <!---ticket--->
+                    <div class="p-6 bg-white rounded-lg">
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">Ticket subject goes here</h3>
+                            <a href="/ticketnew" class="border rounded-full px-4 py-2 text-slate-700 hover:!border-slate-400">< My Tickets</a>
+                        </div>
+
+                        <div class="mt-4 border-b">
+                            <div class="wrapper flex gap-6 justify-end">
+                                <!--<div class="text-slate-700 p-2 border-b-2 !border-b-secondary"><a href="#">All</a></div>
+                                <div class="text-slate-700 p-2"><a href="#">Attachments</a></div>-->
+                                <p class="px-1 text-slate-500 !font-light">Created on June 30, 2024</p>
+                            </div>
+                        </div>
+
+                        <!----ticket response goes here----->
+
+                        <div class="mt-6 mb-6 w-full">
+
+                            <!---list responses--->
+
+                            <div class="wrapper">
+
+                                <div class="flex justify-start">
+                                    <div class=""><span class="material-iconp">sync</span></div>
+                                    <div class="w-full"><p class="text-slate-500 !font-light">Status set to closed</p></div>
+                                </div>
+
+                                <div class="flex justify-start mt-6 relative">
+
+                                    <div class="ticket-message-group-tracks"><span class="material-iconp !fs:38px">account_circle</span></div>
+
+                                    <div class="w-full px-4">
+                                        <p class="text-slate-700 mb-1">Adam</p>
+                                        <div class="w-full bg-gray p-4 rounded">
+                                            <p class="text-slate-700">Cancelled and refunded</p>
+                                            <p class="text-slate-500 caption-text">3 months ago</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex relative justify-start mt-6">
+
+                                    <div class=""><span class="material-iconp !fs:38px">account_circle</span></div>
+
+                                    <div class="w-full px-4">
+                                        <p class="text-slate-700 mb-1">MOSTAIN BILLAH</p>
+
+                                        <div class="w-full bg-lightsky p-4 rounded">
+                                            <p class="text-slate-700">Cancelled and refunded</p>
+                                            <p class="text-slate-500 caption-text">3 months ago</p>
+
+                                            <div class="flex justify-end items-center gap-4 text-slate-700">
+                                                <span class="material-iconp">attachments</span>
+                                                <a href="#" class="hover:underline hover:text-primary">file1.jpg</a>
+                                                <a href="#" class="hover:underline hover:text-primary">file2.jpg</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+     
+
+                            
+
+                            </div>
+                            
+
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+      </section>
+  </div>
+
+{{end}}
+
+
+{{define "scriptsrc"}}
+  <script src="resources/js/nlib.js"></script>
+  <script src="resources/js/main.js"></script>
+{{end}}
+
+
+{{define "script"}}
+
+  <script>
+
+
+
+  </script>
+
+{{end}}

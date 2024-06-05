@@ -5867,3 +5867,22 @@ button[disabled]{
 .ticket-text {
   font-size: 14px;
 }
+.\!fs\:38px{
+  font-size: 38px !important;
+}
+
+.bg-lightsky{
+  background-color:#e6f4ff;
+}
+
+.ticket-message-group-tracks:not(:last-child)::before {
+    content: "";
+    display: block;
+    position: absolute;
+    border-left: 1px dashed rgb(219, 219, 219);
+    top: 30px;
+    bottom: -25px;
+    left: 1.2rem;
+    z-index: 0;
+}
+
