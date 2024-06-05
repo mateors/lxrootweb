@@ -2966,6 +2966,10 @@ html {
   border-bottom-width: 2px !important;
 }
 
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
 .border-b {
   border-bottom-width: 1px;
 }
@@ -5849,4 +5853,17 @@ button[disabled]{
   cursor: not-allowed;
   border-color: transparent;
   opacity: 0.6;
+}
+.shadow-sm {
+  box-shadow: 0 2px 4px #0000001a;
+}
+
+.label-text {
+  font-size: 12px;
+}
+.bg-label-muted{
+  background-color: #7a7a7a;
+}
+.ticket-text {
+  font-size: 14px;
 }

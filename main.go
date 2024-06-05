@@ -235,7 +235,8 @@ func main() {
 	r.HandleFunc("/dashboard", dashboard)           //dashboard
 	r.HandleFunc("/profile", profile)               //profile
 	r.HandleFunc("/security", security)             //security
-	r.HandleFunc("/logout", logout)                 //dashboard
+	r.HandleFunc("/ticket", ticket)                 //ticket
+	r.HandleFunc("/logout", logout)                 //logout
 
 	//r.HandleFunc("/webhook", webhookHandler)
 
