@@ -187,6 +187,7 @@ table {
   border-color: inherit;
   /* 2 */
   border-collapse: collapse;
+  border-spacing: 0;
   /* 3 */
 }
 
@@ -5731,7 +5732,7 @@ body.modal-open {
   margin-right:1rem;
 }
 .bg-sky-500{
-  background-color:#0ea5e9;
+  background-color:#0ea5e9; 
 }
 .uppercase{
  text-transform: uppercase;
@@ -5886,3 +5887,9 @@ button[disabled]{
     z-index: 0;
 }
 
+.ta\:left{
+  text-align: left;
+}
+.ta\:right{
+  text-align: right;
+}

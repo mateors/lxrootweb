@@ -1752,3 +1752,55 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
+func orders(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		smap, err := getSessionInfo(r)
+		if err != nil {
+			http.Redirect(w, r, "/logout", http.StatusSeeOther)
+			return
+		}
+
+		fmt.Println("smap:", smap)
+		//sessionCode := visitorInfo(r, w) //
+		//fmt.Println(sessionCode)
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/orders.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+			CsrfToken    string
+		}{
+			Title:        "LxRoot Orders",
+			Base:         base,
+			BodyClass:    "bg-slate-200",
+			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
+			CsrfToken:    ctoken,
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
+}

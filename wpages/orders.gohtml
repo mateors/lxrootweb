@@ -1,0 +1,134 @@
+{{define "content"}}
+
+  <div class="content h-full md:h-full bg-slate-200 mb-10">
+      <section class="container max-w-[960px] mx-auto">
+
+        <div class="p-6s mt-8">    
+            <div class="flex bg-slate-200 overflow-hidden flex-wrap">
+
+                <!---left--->
+                <div class="w-full md:w-33 bg-slate-200 text-slate-700 p-4 gap-4 ">
+
+                    
+                    <!---menu--->
+                    <div class="mt-0">
+
+                        <div class="bg-white border border-slate-300 rounded-lg">
+                            <p class="px-5 mt-4 font-semibold shadow-sm">Menu</p>
+                           
+                            <ul class="p-6">
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/ticket">My orders</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/security">My invoices</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/activity">Payment methods</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    
+
+                </div>
+
+                <!---right--->
+                <div class="w-full md:w-67 form-contents bg-slate-200 p-4 pb-10s md:p-10s">
+
+                    <!---ticket--->
+                    <div class="p-6 bg-white border rounded-lg">
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">My orders</h3>
+                            <a href="/ticketnew" class="border rounded-full px-4 py-2 text-slate-700 hover:!border-slate-400">Place new order</a>
+                        </div>
+
+
+                        <div class="mt-8">
+
+                            <div class="field flex flex-col mb-4">
+                                <input type="text" id="sfield" name="sfield" placeholder="Quick search by reference, subject or message..."  />
+                            </div>
+
+                        </div>
+
+                        <div class="mt-6 mb-6 w-full">
+
+                            <!---list orders--->
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="uppercase bg-slate-200 text-slate-500">
+                                        <th class="py-2 px-3 ta:left">Status</th> 
+                                        <th class="ta:left">Order #</th> 
+                                        <th class="ta:right px-4">Total</th> 
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead> 
+                                <tbody>
+                                    <tr class="hover:shadow-md">
+                                        <td class="p-4">
+                                            <label class="px-2 py-1 rounded-lg bg-sky-500 text-white label-text">Refunded</label>
+                                        </td> 
+
+                                        <td class="ta:left">
+                                            <p class="text-slate-700"><strong>Order #LXR-0013938</strong></p> 
+                                            <p class="text-slate-500 !font-light">Licence Key</p>
+                                        </td> 
+                                
+                                        <td class="ta:right p-4">
+                                            <p class="text-slate-700"><strong>$20.00</strong></p> 
+                                            <p class="text-slate-500 !font-light">4 months ago</p>
+                                        </td> 
+                                
+                                        <td width="1"><span class="material-icons text-slate-700">navigate_next</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                         
+
+                        </div>
+
+                        <!--<form id="mForm" method="post">
+                            <input type="hidden" name="ftoken" value="" />
+                            <div class="field flex flex-col mb-4">
+                                <label for="fname">Username <span class="required-spot">*</span></label>
+                                <input type="text" id="fname" name="first_name" placeholder="First name here"  required />
+                            </div>
+                            <button type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Save</button>
+                        </form>-->
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+      </section>
+  </div>
+
+{{end}}
+
+
+{{define "scriptsrc"}}
+  <script src="resources/js/nlib.js"></script>
+  <script src="resources/js/main.js"></script>
+{{end}}
+
+
+{{define "script"}}
+
+  <script>
+
+    $('#changeEmail').on('click', (e) => {
+
+        $('#email').prop("disabled", false);
+        $('#changeEmail').addClass("hidden");
+        $('#changeEmail').prev().removeClass("hidden");
+    });
+
+    $('button[cancel]').on('click', (e) => {
+
+        $('#email').prop("disabled", true);
+        $(this).closest("button").parent().addClass("hidden");
+        $(this).closest("button").parent().next().removeClass("hidden");
+    })
+
+  </script>
+
+{{end}}
