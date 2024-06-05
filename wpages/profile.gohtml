@@ -1,6 +1,6 @@
 {{define "content"}}
 
-  <div class="content h-full md:h-full bg-slate-200">
+  <div class="content h-full md:h-full bg-slate-200 mb-10">
       <section class="container max-w-[960px] mx-auto">
 
         <div class="p-6s mt-8">    
@@ -33,9 +33,9 @@
 
                         <div class="bg-white border border-slate-300 rounded-lg">
                             <ul class="p-6">
-                                <li class="mb-2 border px-2 py-1 font-semibold rounded bg-primary"><a class="text-white" href="/profile">Profile</a></li>
-                                <li class="mb-2 px-2 py-1 font-semibold hover:bg-slate-100"><a class="text-slate-400 hover:text-primary" href="/security">Security</a></li>
-                                <li class="mb-2 px-2 py-1 font-semibold hover:bg-slate-100"><a class="text-slate-400 hover:text-primary" href="/activity">Activiy log</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/security">Profile</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/security">Security</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/activity">Activiy log</a></li>
                             </ul>
                         </div>
 
@@ -54,8 +54,8 @@
                             <input type="hidden" name="ftoken" value="" />
 
                             <div class="field flex flex-col mb-4">
-                                <label for="fname">First Name <span class="required-spot">*</span></label>
-                                <input type="text" id="fname" name="first_name" placeholder="First name here"  required />
+                                <label for="aname">Account Name <span class="required-spot">*</span></label>
+                                <input type="text" id="aname" name="account_name" placeholder="Account name here"  required />
                             </div>
 
                             <div class="md:grid grid-cols-2 gap-3">
@@ -74,8 +74,8 @@
                                 </div>
                             </div>
                             </div>
-
-                            <button type="submit" class="mt-2 filled-button !justify-between gap-2 text-white !letter-spacing-0">Save</button>
+                            
+                            <button type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Save</button>
                         </form>
                     </div>
 
@@ -113,7 +113,7 @@
                                     <p class="text-slate-600"><span class="material-iconp">place</span> <strong>1707 Place one lane</strong></p>
                                     <p class="text-slate-500 mt-1">1707 Place one lane, Garland, 75042, Texas, United States</p>
                                 </div>
-                                
+
                                 <div class="border rounded-lg hover:border-primary p-4">
                                     <p class="text-slate-600"><span class="material-iconp">place</span> <strong>1707 Place one lane</strong></p>
                                     <p class="text-slate-500 mt-1">1707 Place one lane, Garland, 75042, Texas, United States</p>

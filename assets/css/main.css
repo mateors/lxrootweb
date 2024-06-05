@@ -654,6 +654,7 @@ html {
   --clr-white: #ffffff;
   --color-text-base: #4b5563;
   --clr-error:#B91C1C;
+  --clr-warning: #f59e0b;
 }
 
 *, ::before, ::after {
@@ -3001,6 +3002,9 @@ html {
 .border-primary {
   border-color: var(--clr-savoyBlue);
 }
+.border-warning {
+  border-color: var(--clr-warning);
+}
 
 .border-\[\#808afd\] {
   --tw-border-opacity: 1;
@@ -3154,6 +3158,9 @@ html {
 .bg-slate-100 {
   --tw-bg-opacity: 0.4;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+}
+.bg-warning {
+  background-color: #fffbf5;
 }
 
 .bg-slate-200 {
@@ -5211,6 +5218,11 @@ body.modal-open {
   border-color: rgb(148 163 184 / var(--tw-border-opacity)) !important;
 }
 
+.border-slate-400{
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(148 163 184 / var(--tw-border-opacity)) !important;
+}
+
 .hover\:border-transparent:hover {
   border-color: transparent;
 }
@@ -5293,6 +5305,9 @@ body.modal-open {
 .hover\:text-slate-700:hover {
   --tw-text-opacity: 1;
   color: rgb(51 65 85 / var(--tw-text-opacity));
+}
+.hover\:text-white:hover {
+  color: #ffffff;
 }
 
 .hover\:underline:hover {
@@ -5828,4 +5843,10 @@ dl{
   --tw-shadow: 0 8px 15px rgba(0,0,0,.2);
   --tw-shadow-colored: 0 8px 15px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+button[disabled]{
+  cursor: not-allowed;
+  border-color: transparent;
+  opacity: 0.6;
 }

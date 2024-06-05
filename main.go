@@ -233,7 +233,8 @@ func main() {
 	r.HandleFunc("/resetpass", resetpass)           //reset
 	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
 	r.HandleFunc("/dashboard", dashboard)           //dashboard
-	r.HandleFunc("/profile", profile)             //profile
+	r.HandleFunc("/profile", profile)               //profile
+	r.HandleFunc("/security", security)             //security
 	r.HandleFunc("/logout", logout)                 //dashboard
 
 	//r.HandleFunc("/webhook", webhookHandler)
