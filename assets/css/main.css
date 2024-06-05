@@ -4015,7 +4015,7 @@ button {
   background-color: var(--clr-jet);
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  padding-top: 2px;
+  padding-top: 0px;
   font-size: 17px;
   font-weight: 700;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
@@ -5248,6 +5248,9 @@ body.modal-open {
 .hover\:bg-secondary:hover {
   background-color: var(--clr-jet);
 }
+.hover\:bg-secondary2:hover{
+  background-color: var(--clr-eerieBlack);
+}
 
 .hover\:bg-slate-100:hover {
   --tw-bg-opacity: 1;
@@ -5403,6 +5406,10 @@ body.modal-open {
 
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-A{
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
   }
 
   .md\:grid-cols-3 {
@@ -5816,4 +5823,9 @@ dl{
 }
 .left\:20px{
   left:20px;
+}
+.hover\:shadow:hover{
+  --tw-shadow: 0 8px 15px rgba(0,0,0,.2);
+  --tw-shadow-colored: 0 8px 15px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
