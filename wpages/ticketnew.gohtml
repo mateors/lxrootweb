@@ -1,0 +1,116 @@
+{{define "content"}}
+
+  <div class="content h-full md:h-full bg-slate-200 mb-10">
+      <section class="container max-w-[960px] mx-auto">
+
+        <div class="p-6s mt-8">    
+            <div class="flex bg-slate-200 overflow-hidden flex-wrap">
+
+                <!---left--->
+                <div class="w-full md:w-33 bg-slate-200 text-slate-700 p-4 gap-4 ">
+
+                    
+                    <!---menu--->
+                    <div class="mt-0">
+
+                        <div class="bg-white border border-slate-300 rounded-lg">
+                            <p class="px-5 mt-4 font-semibold shadow-sm">Menu</p>
+                            <ul class="p-6">
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/ticket">My tickets</a></li>
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/security">New Ticket</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    
+
+                </div>
+
+                <!---right--->
+                <div class="w-full md:w-67 form-contents bg-slate-200 p-4 pb-10s md:p-10s">
+
+                    <!---ticket--->
+                    <div class="p-6 bg-white border rounded-lg">
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">Ticket</h3>
+                        </div>
+
+                        <div class="mt-6">
+                            <form id="mForm" method="post">
+                                <input type="hidden" name="ftoken" value="" />
+
+
+                                <div class="field flex flex-col mb-4">
+                                    <label for="subject">Subject <span class="required-spot">*</span></label>
+                                    <div class="relative w-full">
+                                        <input type="text" id="subject" class="w-full" name="subject" placeholder="Enter email here" autocomplete="off" onblur="validator('#subject','')" required />
+                                        <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
+                                    </div>
+                                    <p class="text-[14px] text-red-500 mt-1 hidden">Please enter a valid subject</p>
+                                </div>
+
+                                <div class="fields flex flex-col mb-4">
+                                    <label for="subject">Subject <span class="required-spot">*</span></label>
+                                    <select class="select" id="modal-country-select" class="custom-select select-no-label">
+                                        <option value="" disabled selected>Select Domain :</option>
+                                        <option value="">Kaunia</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="United States">United States</option>
+                                        <option value="India">India</option>
+                                    </select>
+                                    <p class="text-[14px] text-red-500 mt-1 hidden">Please enter a valid subject</p>
+                                </div>
+
+                                <div class="field flex flex-col mb-4">
+                                    <label for="message">Message <span class="required-spot">*</span></label>
+                                    <div class="relative w-full">
+                                        <textarea id="message" class="w-full !h-auto mt-2 mh:3rem" placeholder="Message" name="message" onblur="validator('#message','')" required></textarea>
+                                        <span class="material-iconp error-icon absolute right-3 top-5 pointer-events-none hidden">error</span>
+                                    </div>
+                                    <p class="text-[14px] text-red-500 mt-1 hidden">Please enter your message</p>
+                                </div>
+
+                                <div class="flex justify-between items-center">
+                                   <label class="flex">
+                                    <span class="rounded hover:bg-slate-200 flex justify-center items-center py-2 px-2 gap-x-2 cursor-pointer">
+                                        <span class="material-icon text-slate-800">attachment</span> 
+                                        <span class="text-slate-800">Attach file(s)</span>
+                                    </span>
+                                    <input class="absolute top-0 left-0 opacity-0" type="file" multiple="multiple">
+                                   </label>
+                                   <div class="">2 files</div>
+                                </div>
+
+
+                                <button disabled type="submit" class="mt-4 py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Create ticket</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+      </section>
+  </div>
+
+{{end}}
+
+
+{{define "scriptsrc"}}
+  <script src="resources/js/nlib.js"></script>
+  <script src="resources/js/main.js"></script>
+{{end}}
+
+
+{{define "script"}}
+
+  <script>
+
+
+  </script>
+
+{{end}}
