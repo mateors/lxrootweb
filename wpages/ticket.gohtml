@@ -140,20 +140,6 @@
 
   <script>
 
-    $('#changeEmail').on('click', (e) => {
-
-        $('#email').prop("disabled", false);
-        $('#changeEmail').addClass("hidden");
-        $('#changeEmail').prev().removeClass("hidden");
-    });
-
-    $('button[cancel]').on('click', (e) => {
-
-        $('#email').prop("disabled", true);
-        $(this).closest("button").parent().addClass("hidden");
-        $(this).closest("button").parent().next().removeClass("hidden");
-    })
-
   </script>
 
 {{end}}

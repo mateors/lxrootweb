@@ -1479,7 +1479,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/dashboard.gohtml", //
 		)
@@ -1560,7 +1560,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/profile.gohtml", //
 		)
@@ -1612,7 +1612,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/security.gohtml", //
 		)
@@ -1664,7 +1664,7 @@ func ticket(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/ticket.gohtml", //
 		)
@@ -1717,7 +1717,7 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/ticket_details.gohtml", //
 		)
@@ -1769,7 +1769,7 @@ func orders(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/orders.gohtml", //
 		)
@@ -1821,7 +1821,7 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/order_details.gohtml", //
 		)
@@ -1873,7 +1873,7 @@ func invoices(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/invoices.gohtml", //
 		)
@@ -1926,7 +1926,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/licensekey.gohtml", //
 		)
@@ -1978,7 +1978,7 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
-			"templates/header2.gohtml",
+			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/ticketnew.gohtml", //
 		)

@@ -47,6 +47,7 @@ tabButtons.forEach(tabButton => {
 /* dropdown functionality */
 document.addEventListener("click", e => {
 
+    //console.log(e.target,e.target.closest("[data-dropdown]"));
     const isDropdownBtn = e.target.matches("[data-dropdown-btn]");
     if(!isDropdownBtn && e.target.closest("[data-dropdown]") != null){
         return;

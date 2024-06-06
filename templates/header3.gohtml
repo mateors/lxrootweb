@@ -4,7 +4,7 @@
         <div class="container mx-auto">
             <div class="navbar ">
                 <div class="flex-1">
-                    <a href="/" class="lxroot-logo">
+                    <a href="/dashboard" class="lxroot-logo">
                         <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9.11206 59V42.2H13.1921V55.4H20.6801V59H9.11206Z" fill="#5865F2"/>
                             <path d="M31.1771 59L28.4651 54.896L27.2171 53.144L22.1771 46.256H26.7851L29.4011 50.168L30.7691 52.04L35.7371 59H31.1771ZM22.0571 59L27.1931 51.848L29.2571 54.32L26.5931 59H22.0571ZM30.4811 53.456L28.4411 51.008L30.9611 46.256H35.4971L30.4811 53.456Z" fill="#5865F2"/>
@@ -19,8 +19,40 @@
                 <div class="flex-none text-primary">
                     <ul class="menu menu-horizontal px-1 items-center gap-0 text-slate-700">
                     
-                        <a href="/signin" class="filled-button !bg-primary text-white !h-12 !text-[15px] !pt-0 md:ml-8 md:mr-10">Sign In</a>
+                        <!--<a href="#" class="filled-button !bg-primary text-white !h-12 !text-[15px] !pt-0 md:ml-8 md:mr-10">Register</a>-->
 
+                        <li class=""><a class="hover:underline hover:text-primary" href="/license">Products & Services</a></li>
+                        <li class=""><a class="hover:underline hover:text-primary" href="/orders">Billing</a></li>
+                        <li class=""><a class="hover:underline hover:text-primary" href="/profile">My Account</a></li>
+                        <li class=""><a class="hover:underline hover:text-primary" href="/ticket">Support</a></li>
+
+                        <div class="dropdown h-full flex items-center !relative ml-4" data-dropdown>
+                            <li>
+                                <div data-dropdown-btn>
+                                    <div data-dropdown-btn class="flex gap-4 items-center justify-between">
+                                        <div><span data-dropdown-btn class="material-icons">person_outline</span></div>
+                                        <div data-dropdown-btn>billahmdmostain@gmail.com</div>
+                                    </div>
+                                    <button class="body-text1 !font-medium menu-btn flex items-center justify-center p-1 rounded-full bg-whites text-sm" data-dropdown-btn><span class="material-icons">expand_more</span></button>
+                                </div>
+                            </li>
+                            <div class="dropdown-content py-1 w-80 absolute top-16 -right-4 bg-white text-primary z-50">
+                                <div class="container mx-autos">
+                                    <div class="px-4 py-2 flex flex-col items-center border-b border-slate-200">
+                                        <!--<p class="body-text2 mb-1 text-slate-500">Currently Logged in as:</p>-->
+                                        <p class="body-text2 !font-medium">billahmdmostain@gmail.com</p>
+                                    </div>
+                                    <a href="/profile" class="px-4 py-2 flex gap-3 items-center justify-centers text-primary hover:bg-slate-100 hover:text-secondary transition border-bs border-slate-200">
+                                        <span class="material-icons">account_circle</span>
+                                        <span class="body-text2">Account</span>
+                                    </a>
+                                    <a href="/logout" class="px-4 py-2 flex gap-3 items-center justify-centers text-primary hover:bg-slate-100 hover:text-secondary transition">
+                                        <span class="material-icons">logout</span>
+                                        <span class="body-text2">Sign out</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </ul>
                 </div>
             </div>
