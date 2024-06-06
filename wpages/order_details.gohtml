@@ -1,0 +1,164 @@
+{{define "content"}}
+
+  <div class="content h-full md:h-full bg-slate-200 mb-10">
+      <section class="container max-w-[960px] mx-auto">
+
+        <div class="p-6s mt-8">    
+            <div class="flex bg-slate-200 overflow-hidden flex-wrap">
+
+                <!---left--->
+                <div class="w-full md:w-33 bg-slate-200 text-slate-700 p-4 gap-4 ">
+
+                    
+                    <!---menu--->
+                    <div class="mt-0">
+
+                        <div class="bg-white border border-slate-300 rounded-lg">
+                            <p class="px-5 mt-4 font-semibold shadow-sm">Menu</p>
+                           
+                            <ul class="p-6">
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/orders">My orders</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/invoices">My invoices</a></li>
+                                <li class="mb-2 px-2 py-1 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/paymethod">Payment methods</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    
+
+                </div>
+
+                <!---right--->
+                <div class="w-full md:w-67 form-contents bg-slate-200 p-4 pb-10s md:p-10s">
+
+                    <!---ticket--->
+                    <div class="p-6 bg-white border rounded-lg">
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">Order #LXR-0013938</h3>
+                        </div>
+
+                        <div class="border-b p-2"></div>
+
+                        <div class="mt-6 mb-6 w-full border rounded-lg p-4">
+                            <table class="w-full table">
+                                
+                                <tr>
+                                    <th width="100" class="ta:left text-slate-700 font-semibold">Order #</th>
+                                    <td class="text-slate-700 ta:left">
+                                        <p class="flex justify-between gap-2">
+                                            <span>
+                                                <span class="px-2">LXR-0013938</span>
+                                                <label class="px-2 py-1 rounded bg-sky-500 text-white label-text">Refunded</label>
+                                            </span>
+                                            <a href="#" class="px-4 underline">View invoice</a>
+                                        </p> 
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Total</th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">$20.00</p></td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Created</th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Paid</th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Refunded </th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Cancelled</th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Note</th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">--</p></td>
+                                </tr>
+
+                                <tr>
+                                    <th class="ta:left text-slate-700 font-semibold">Fields</th>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">--</p></td>
+                                </tr>
+                               
+                            </table>
+                        </div>
+
+                        <div class="mt-8 mb-6 w-full border rounded-lg p-4">
+                            <table class="w-full table">
+                                
+                                <thead>
+                                    <tr>
+                                        <th class="ta:left text-slate-700 font-semibold">Items</th>
+                                        <th class="ta:left text-slate-700 font-semibold">Price</th>
+                                        <th class="ta:left text-slate-700 font-semibold">Qty</th>
+                                        <th class="ta:left text-slate-700 font-semibold">Total</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td class="ta:left">LxRoot License</td>
+                                        <td class="ta:left">$20</td>
+                                        <td class="ta:left">1</td>
+                                        <td class="ta:left">$20.00</td>
+                                    </tr>
+
+                                </tbody>
+
+                                <tfoot class="border-0">
+                                    <tr>
+                                        <td rowspan="6" colspan="2" class="ta:right border-0"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <th class="ta:right">VAT (0%)</th>
+                                        <td>$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="ta:right">Total</th>
+                                        <td>$20.00</td>
+                                    </tr>
+                                   
+                                </tfoot>
+                               
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+      </section>
+  </div>
+
+{{end}}
+
+
+{{define "scriptsrc"}}
+  <script src="resources/js/nlib.js"></script>
+  <script src="resources/js/main.js"></script>
+{{end}}
+
+
+{{define "script"}}
+
+  <script>
+
+  </script>
+
+{{end}}

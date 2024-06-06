@@ -5893,3 +5893,13 @@ button[disabled]{
 .ta\:right{
   text-align: right;
 }
+
+.table td, .table th {
+    border: 1px solid hsl(0, 0%, 86%);
+    border-width: 0 0 1px;
+    padding: .75em;
+    vertical-align: top;
+}
+.border-0{
+  border-width: 0 0 0px;
+}
