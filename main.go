@@ -241,6 +241,7 @@ func main() {
 	r.HandleFunc("/orders", orders)                 //My orders
 	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails
 	r.HandleFunc("/invoices", invoices)             //invoice
+	r.HandleFunc("/license", licenseKey)            //license details
 	r.HandleFunc("/logout", logout)                 //logout
 
 	//r.HandleFunc("/webhook", webhookHandler)
