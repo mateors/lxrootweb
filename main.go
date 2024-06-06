@@ -197,6 +197,7 @@ func init() {
 	//fmt.Println(loginId)
 	//count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, "bill.rassel@gmail.com"), database.DB)
 	//fmt.Println(count)
+	//aesEncDecTest()
 	//os.Exit(1)
 }
 
