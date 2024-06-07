@@ -222,6 +222,7 @@ func main() {
 	r.HandleFunc("/terms", terms)
 	r.HandleFunc("/privacy", privacy)
 	r.HandleFunc("/shop", shop)                     //store page
+	r.HandleFunc("/complete", complete)             //complete shopping
 	r.HandleFunc("/product", product)               //product_details
 	r.HandleFunc("/checkout", checkout)             //checkout + signup
 	r.HandleFunc("/faqs", faqs)                     //
