@@ -457,10 +457,10 @@ type DocKeeper struct {
 	Type           string  `json:"type"`
 	CompanyID      string  `json:"cid"`                    //foreign key
 	WarehouseID    string  `json:"warehouse_id,omitempty"` //foreign key
-	DocName        string  `json:"doc_name"`
-	DocType        string  `json:"doc_type"`
-	DocRef         string  `json:"doc_ref"`
-	DocNumber      string  `json:"doc_number"`
+	DocName        string  `json:"doc_name"`               //Shopping Cart
+	DocType        string  `json:"doc_type"`               //cart,purchase,sales,voucher
+	DocRef         string  `json:"doc_ref"`                //visitorSession or stripe reference
+	DocNumber      string  `json:"doc_number"`             //auto generated
 	DocDescription string  `json:"doc_description"`
 	PostingDate    string  `json:"posting_date"`
 	TaxRule        string  `json:"tax_rule"`
