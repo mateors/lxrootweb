@@ -2991,6 +2991,9 @@ html {
 .border-warning {
   border-color: var(--clr-warning);
 }
+.border-sky-500{
+ border-color: #0ea5e9; 
+}
 
 .border-\[\#808afd\] {
   --tw-border-opacity: 1;
@@ -3278,6 +3281,9 @@ html {
 .p-0 {
   padding: 0px;
 }
+.\!p-1 {
+  padding: 0.25rem !important;
+}
 
 .p-1 {
   padding: 0.25rem;
@@ -3500,6 +3506,9 @@ html {
 
 .pt-10 {
   padding-top: 2.5rem;
+}
+.\!pt-6 {
+  padding-top: 1.5rem !important;
 }
 
 .pt-16 {
@@ -5969,4 +5978,8 @@ select:read-only{
 }
 .inline-block{
   display: inline-block;
+}
+
+.align-middle{
+  vertical-align: middle !important;
 }
