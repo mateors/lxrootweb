@@ -164,20 +164,20 @@ type VisitorSession struct {
 }
 
 //DeviceLog tracks user device info (where they login to the system)
-type DeviceLog struct {
-	ID          string `json:"id"`
-	Type        string `json:"type"`
-	CompanyID   string `json:"cid"`      //foreign key
-	LoginID     string `json:"login_id"` //foreign key
-	Browser     string `json:"browser"`
-	DeviceType  string `json:"device_type"`
-	Os          string `json:"os"`
-	Platform    string `json:"platform"`
-	ScreenSize  string `json:"screen_size"`
-	GeoLocation string `json:"geolocation,omitempty"`
-	CreateDate  string `json:"create_date"`
-	Status      int    `json:"status"`
-}
+// type DeviceLog struct {
+// 	ID          string `json:"id"`
+// 	Type        string `json:"type"`
+// 	CompanyID   string `json:"cid"`      //foreign key
+// 	LoginID     string `json:"login_id"` //foreign key
+// 	Browser     string `json:"browser"`
+// 	DeviceType  string `json:"device_type"`
+// 	Os          string `json:"os"`
+// 	Platform    string `json:"platform"`
+// 	ScreenSize  string `json:"screen_size"`
+// 	GeoLocation string `json:"geolocation,omitempty"`
+// 	CreateDate  string `json:"create_date"`
+// 	Status      int    `json:"status"`
+// }
 
 //LoginSession keeps user login session for 24 hours or more
 type LoginSession struct {
@@ -222,18 +222,18 @@ type Settings struct {
 }
 
 //Message table
-type Message struct {
-	ID          string `json:"id"`
-	Type        string `json:"type"`
-	CompanyID   string `json:"cid"`          //foreign key
-	MessageType string `json:"message_type"` //contactus,inapp,email,sms,verify
-	Sender      string `json:"sender"`       //sender = login.username
-	Receiver    string `json:"receiver"`     //receiver = login.username
-	Subject     string `json:"subject"`
-	MessageBody string `json:"message_body"`
-	CreateDate  string `json:"create_date"`
-	Status      int    `json:"status"`
-}
+// type Message struct {
+// 	ID          string `json:"id"`
+// 	Type        string `json:"type"`
+// 	CompanyID   string `json:"cid"`          //foreign key
+// 	MessageType string `json:"message_type"` //contactus,inapp,email,sms,verify
+// 	Sender      string `json:"sender"`       //sender = login.username
+// 	Receiver    string `json:"receiver"`     //receiver = login.username
+// 	Subject     string `json:"subject"`
+// 	MessageBody string `json:"message_body"`
+// 	CreateDate  string `json:"create_date"`
+// 	Status      int    `json:"status"`
+// }
 
 //Verification message
 type Verification struct {
