@@ -747,6 +747,21 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 				err = lxql.RawSQL(sql, database.DB)
 				logError("delCartItem", err)
 			}
+
+		} else if strings.ToUpper(todo) == "COUPON" {
+
+			code := r.FormValue("code") //discount code
+			fmt.Println(code)
+
+			docNumber, err := getCookie("docid", r)
+			if err == nil {
+				sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
+				row, err := singleRow(sql)
+				//fmt.Println(sql)
+				fmt.Println(err, row)
+
+			}
+			fmt.Println(todo, r.Form)
 		}
 
 		http.Redirect(w, r, "/checkout", http.StatusSeeOther)

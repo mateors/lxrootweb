@@ -467,7 +467,7 @@ type DocKeeper struct {
 	AccountID      string  `json:"account_id"`     //foreign key
 	TaxRule        string  `json:"tax_rule"`       //*** foreign key tax.id
 	TotalTax       float64 `json:"total_tax"`      //***
-	TotalDiscount  float64 `json:"total_discount"` //***
+	TotalDiscount  float64 `json:"total_discount"` //*** may be applied discount_code
 	TotalPayable   float64 `json:"total_payable"`  //***
 	PaymentStatus  string  `json:"payment_status"`
 	DocStatus      string  `json:"doc_status"`

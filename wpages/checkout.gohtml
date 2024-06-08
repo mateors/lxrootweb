@@ -62,7 +62,7 @@
                     </div>
 
                     <a href="/shop" class="gap-x-2 !h-auto text-secondary text-slate-600 hover:text-primary">
-                        <span class="underline">Continue Exploring</span>
+                        <span class="underline">Continue shopping</span>
                         <span class="material-iconp">east</span>
                     </a>
                 </div>
@@ -396,18 +396,17 @@
 
                     {{range $row :=.Rows}}
                     {{$id := index $row "id"}}
-
-                    <div class="product-details flex gap-x-5 items-end">
+                    <div class="product-details flex gap-x-5 mb-2 items-center justify-center">
                         <div class="product-img hidden md:block">
                             <img class="w-20 h-20 object-cover" src="resources/image/license.png" alt="">
                         </div>
                         <div class="grow">
                             <p class="caption-text text-slate-500">{{index $row "tags"}}</p>
-                            <p class="body-text1 text-slate-800 !font-bold -mt-1 mb-2">{{index $row "item_name"}}</p>
-                            <a href="#" class="w-fit caption-text border border-slate-300 rounded-sm py-1 px-2">&nbsp;</a>
+                            <p class="text-slate-800 !font-bold">{{index $row "item_name"}}</p>
+                            <a href="#" class="caption-text border-slate-300 rounded-sm px-2">&nbsp;</a>
                         </div>
                         <div class="grow-0 justify-end items-end">
-                            <p class="product-price head-5 text-slate-800 !font-bold mb-2">${{index $row "price"}}</p>
+                            <p class="product-price text-slate-800 !font-bold mb-2">${{index $row "price"}}</p>
                             <button delitem data-id="{{$id}}" class="flex items-center justify-center p-1 border border-slate-300 rounded-sm tooltip-left tooltip-error transition-all hover:bg-slate-200" data-tooltip="Remove Item">
                                 <span class="material-icon">delete_outline</span>
                             </button>
@@ -415,33 +414,34 @@
                     </div>
                     {{end}}
 
-                    
-
                     <div class="coupon flex gap-5 items-center py-5 border-b border-slate-300">
                         <div class="field w-full">
-                            <input type="text" autocomplete="off" name="coupon-field" id="coupon-field" placeholder="Enter your coupon" class="w-full">
+                            <input type="text" autocomplete="off" id="coupon" placeholder="Discount code?" class="w-full">
                         </div>
-                        <button type="submit" class="outline-button !h-10 !body-text2">Apply</button>
+                        <button id="btnApply" type="submit" class="outline-button !font-light !h-10 text-slate-800">Apply</button>
                     </div>
+
                     <div class="py-3 border-b border-slate-300">
                         <div class="flex gap-4 items-center justify-between py-2">
-                            <p class="body-text2 text-slate-500">Subtotal:</p>
-                            <p class="body-text2 !font-bold text-slate-800">${{moneyFormat (subTotal .Rows)}}</p>
+                            <p class="text-slate-500">Subtotal:</p>
+                            <p class="text-slate-800">${{moneyFormat (subTotal .Rows)}}</p>
                         </div>
 
                         <div class="flex gap-4 items-center justify-between py-2">
-                            <p class="body-text2 text-slate-500">VAT (0%):</p>
-                            <p class="body-text2 !font-bold text-slate-800">${{moneyFormat (taxTotal .Rows)}}</p>
+                            <p class="text-slate-500">VAT (0%):</p>
+                            <p class="text-slate-800">${{moneyFormat (taxTotal .Rows)}}</p>
                         </div>
                     </div>
+
                     <div class="flex gap-4 items-center justify-between py-5">
                         <p class="head-4 !font-medium text-slate-800">Total to pay</p>
                         <p class="head-4 !font-medium text-slate-800">${{moneyFormat .TotalPayable}}</p>
                     </div>
                 </div>
+
                 <div class="grow flex items-end">
                     <div class="sticky bottom-10 w-full">
-                        <button class="filled-button !w-full !bg-primary text-white">
+                        <button disabled class="filled-button !font-light !w-full !bg-primary text-white">
                             Place order & pay
                         </button>
                     </div>
@@ -464,11 +464,30 @@
 {{define "script"}}
 
 <script>
+
+    $('#btnApply').on('click', (e)=> {
+    
+        let code=$('#coupon').val();
+        console.log(coupon);
+
+        let cBtn = $('#btnApply');
+        cBtn.empty();
+        cBtn.addClass("!bg-secondaryDeep");
+        cBtn.addChild(elmDivSpinner());
+        cBtn.prop('disabled', true);
+        vForm(location.href,{code,todo:'coupon'},'post');
+
+    });
    
     $('#cartItems').find('button[delitem]').on('click', (e) => {
     
+        let delBtn = $(e.target).closest("button");
+        let id=delBtn.attr('data-id'); //$(e.target).closest("button").attr('data-id');
 
-        let id=$(e.target).closest("button").attr('data-id');
+        delBtn.empty();
+        delBtn.addClass("!bg-secondaryDeep");
+        delBtn.addChild(elmDivSpinner());
+        delBtn.prop('disabled', true);
         vForm(location.href,{id,todo:'delete'},'post');
     
     });
