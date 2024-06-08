@@ -31,16 +31,25 @@
 
     <div class="content h-full">
 
-        <div class="flex gap-3 justify-center items-center bg-primary p-2">
-            <a href="/shop" class="px-3 py-[2px] text-body2 font-medium text-white opacity-40">Shop</a>
+        <div class="bg-primary p-2">
+            <div class="container mx-auto flex justify-between items-center md:px-4">
 
-            <div class="w-2 h-2 rounded-full bg-ghostWhite"></div>
+                <div>&nbsp;</div>
 
-            <a href="/checkout" class="px-3 py-[2px] rounded-full bg-white text-body2 font-medium text-secondary hover:bg-ghostWhite">Checkout</a>
+                <div class="flex items-center justify-center md:gap-x-2">
+                    <a href="/shop" class="px-3 py-[2px] text-body2 font-medium text-white opacity-40">Shop</a>
+                    <div class="w-2 h-2 rounded-full bg-ghostWhite"></div>
+                    <a href="/checkout" class="px-3 py-[2px] text-body2 font-medium text-secondary hover:bg-ghostWhite bg-white rounded-full">Checkout</a>
+                    <div class="w-2 h-2 rounded-full bg-ghostWhite opacity-40"></div>
+                    <div class="px-3 py-[2px] text-body2 font-medium text-gray-200 opacity-40">Complete</div>
+                </div>
 
-            <div class="w-2 h-2 rounded-full bg-ghostWhite opacity-40"></div>
+                <div class="flex items-center gap-x-2 text-white">
+                    <span class="material-iconp">shopping_cart</span>
+                    <span class="">0 items</span>
+                </div>
+            </div>
 
-            <a href="/complete" class="px-3 py-[2px] text-body2 font-medium text-gray-200 opacity-40">Complete</a>
         </div>
 
         <div class="content-wrap bg-white h-full min-h-[calc(100vh-133px)] md:grid grid-cols-[1fr,minmax(auto,calc(1408px-36rem)),32rem,1fr] grid-rows-1">
