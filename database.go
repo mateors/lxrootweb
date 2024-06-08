@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mateors/mtool"
 	"github.com/rs/xid"
@@ -412,7 +413,7 @@ func addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, l
 	var form = make(map[string]interface{})
 	id = xid.New().String()
 	if postingDate == "" {
-		postingDate = mtool.TimeNow()
+		postingDate = time.Now().Format("2006-01-02")
 	}
 	if docNumber == "" {
 		docNumber = id
@@ -463,6 +464,35 @@ func addTransactionRecord(trxType, docNumber, itemId, itemInfo, itemSerial, qty,
 	form["price"] = price
 	form["payable_amount"] = str2int(qty) * str2int(price)
 	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
+// Meta Data
+func addItem(itemName, itemCategory, itemCode, itemDesc, image, buyPrice, salePrice, supplier string) (id string, err error) {
+
+	modelName := structName(Item{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["item_code"] = itemCode
+	form["category_id"] = itemCategory //license,domain,hosting
+	form["item_type"] = "subscription" //service -> subscription
+	form["item_name"] = itemName
+	form["item_description"] = itemDesc
+	form["item_image"] = image
+	form["buy_price"] = buyPrice
+	form["sale_price"] = salePrice
+	form["tags"] = "lxroot"
+	form["supplier"] = supplier
+	form["uom"] = "unit"
+	form["tracking"] = "unique_serial"
+	form["availability"] = "available"
 	form["status"] = 1
 	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err

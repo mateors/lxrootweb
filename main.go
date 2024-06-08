@@ -54,8 +54,10 @@ func init() {
 		lxql.RegisterModel(Authc{})
 		lxql.RegisterModel(DocKeeper{})
 		lxql.RegisterModel(TransactionRecord{})
+		lxql.RegisterModel(LedgerTransaction{})
 		lxql.RegisterModel(DocPayShipInfo{})
 		lxql.RegisterModel(Subscription{})
+		lxql.RegisterModel(Item{})
 
 	}
 
@@ -203,6 +205,9 @@ func init() {
 	//count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, "bill.rassel@gmail.com"), database.DB)
 	//fmt.Println(count)
 	//aesEncDecTest()
+
+	//id, err := addItem("lxroot", "subscription", "lxroot-license-monthly", "20 cents per app", "", "", "20", "")
+	//fmt.Println(err, id)
 	//os.Exit(1)
 }
 

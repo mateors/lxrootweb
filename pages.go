@@ -514,9 +514,6 @@ func shop(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		//ftokenh := hmacHash(ctoken, ENCDECPASS) //plain to hash
-		//fmt.Println(hashStr, ftokenh, hashStr == ftokenh)
-
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -558,12 +555,15 @@ func shop(w http.ResponseWriter, r *http.Request) {
 
 			//
 			itemId := r.FormValue("item") //item.item_code
+
 			qty := "2"
 			docRef := visitorInfo(r, w)
-			_, err = addToCart(itemId, qty, docRef, "", "")
+			docId, err := addToCart(itemId, qty, docRef, "", "")
 			if err == nil {
 				errNo = 0
 				errMsg = "OK"
+				setCookie("docid", docId, 24*86400, w)
+
 			} else if err != nil {
 				errNo = 1
 				errMsg = err.Error()
@@ -673,23 +673,86 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		docId, err := getCookie("docid", r)
+		fmt.Println(err, docId)
+
+		sql := fmt.Sprintf("SELECT item_name,sale_price,tags FROM item WHERE ")
+		singleRow(sql)
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			CsrfToken    string
 		}{
 			Title:        "Checkout | LxRoot",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			CsrfToken:    ctoken,
 		}
 
 		err = tmplt.Execute(w, data)
 		if err != nil {
 			log.Println(err)
 		}
+
+	} else if r.Method == http.MethodPost {
+
+		r.ParseForm()
+		var errNo int = 1
+		var errMsg string
+		commonDataSet(r)
+		//fmt.Println("##", r.Form)
+
+		funcsMap := map[string]interface{}{
+			"validCSRF": validCSRF,
+		}
+		rmap := make(map[string]interface{})
+		for key := range r.Form {
+			rmap[key] = r.FormValue(key)
+		}
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
+
+		if response == "OKAY" {
+
+			//
+			itemId := r.FormValue("item") //item.item_code
+			qty := "2"
+			docRef := visitorInfo(r, w)
+			docId, err := addToCart(itemId, qty, docRef, "", "")
+			if err == nil {
+				errNo = 0
+				errMsg = "OK"
+				setCookie("docid", docId, 24*86400, w)
+
+			} else if err != nil {
+				errNo = 1
+				errMsg = err.Error()
+			}
+
+		} else {
+
+			errNo = 1
+			errMsg = response
+		}
+
+		var row = make(map[string]interface{})
+		row["error"] = errNo
+		row["message"] = errMsg
+		bs, err := json.Marshal(row)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, string(bs))
 	}
 }
 

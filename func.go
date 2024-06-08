@@ -771,10 +771,21 @@ func addToCart(itemId, qty, docRef, loginId, accountId string) (docId string, er
 	docStatus := "pending"
 	docId, err = addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, loginId, accountId)
 	if err == nil {
-		price := "20"
-		itemInfo := ""
+
+		sql := fmt.Sprintf("SELECT item_name,sale_price FROM %s WHERE id='%s';", tableToBucket("item"), itemId)
+		row, err := singleRow(sql)
+		logError("addToCart", err)
+		price, _ := row["sale_price"].(string)
+		itemInfo, _ := row["item_name"].(string)
 		itemSerial := ""
 		addTransactionRecord(docType, docId, itemId, itemInfo, itemSerial, qty, price)
+
+		oldDocNumber := lxql.FieldByValue("doc_keeper", "doc_number", fmt.Sprintf("doc_ref='%s' AND doc_type='cart' AND status=1", docRef), database.DB)
+		sql = fmt.Sprintf("UPDATE %s SET status=9 WHERE id='%s';", tableToBucket("doc_keeper"), oldDocNumber)
+		lxql.RawSQL(sql, database.DB)
+
+		sql = fmt.Sprintf("UPDATE %s SET status=9 WHERE doc_number='%s';", tableToBucket("transaction_record"), oldDocNumber)
+		lxql.RawSQL(sql, database.DB)
 	}
 	return
 }
