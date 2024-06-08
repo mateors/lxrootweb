@@ -2,60 +2,89 @@
 
     <div class="content h-full">
 
-        <div class="flex gap-3 justify-center items-center bg-primary p-2">
+        <div class="bg-primary p-2">
 
-            <a href="/shop" class="px-3 py-[2px] rounded-full bg-white text-body2 font-medium text-secondary hover:bg-ghostWhite">Shop</a>
-            <div class="w-2 h-2 rounded-full bg-ghostWhite opacity-40"></div>
-            <a href="/checkout" class="px-3 py-[2px] text-body2 font-medium text-white opacity-40">Checkout</a>
-            <div class="w-2 h-2 rounded-full bg-ghostWhite opacity-40"></div>
-            <div class="px-3 py-[2px] text-body2 font-medium text-gray-200 opacity-40">Complete</div>
+            <div class="container mx-auto flex gap-3 justify-between items-center px-4">
+
+                <div>&nbsp;</div>
+
+                <div class="flex items-center justify-center gap-x-2">
+                    <a href="/shop" class="px-3 py-[2px] rounded-full bg-white text-body2 font-medium text-secondary hover:bg-ghostWhite">Shop</a>
+                    <div class="w-2 h-2 rounded-full bg-ghostWhite opacity-40"></div>
+                    <a href="/checkout" class="px-3 py-[2px] text-body2 font-medium text-white opacity-40">Checkout</a>
+                    <div class="w-2 h-2 rounded-full bg-ghostWhite opacity-40"></div>
+                    <div class="px-3 py-[2px] text-body2 font-medium text-gray-200 opacity-40">Complete</div>
+                </div>
+
+                <div class="flex items-center gap-x-2 text-white">
+                    <span class="material-iconp">shopping_cart</span>
+                    <span class="">0 items</span>
+                </div>
+
+            </div>
 
         </div>
 
         <div class="container mx-auto pt-10 pb-2 px-5 flex gap-2 items-center justify-between border-b border-slate-200">
            <div class=" flex gap-2 items-center">
                 <a href="#" class="body-text1 text-slate-400 underline">LXROOT</a>
-                <p>\</p>
-                <p class="body-text2 !font-bold text-secondary">LICENCE KEY</p>
+                <p>/</p>
+                <p class="body-text2 !font-semibold text-slate-700">LICENCE KEY</p>
             </div>
 
             <a href="#" class="flex items-center gap-1">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15 13.4C14.3667 13.4 13.8 13.65 13.3667 14.0417L7.425 10.5834C7.46667 10.3917 7.5 10.2 7.5 10C7.5 9.80002 7.46667 9.60835 7.425 9.41669L13.3 5.99169C13.75 6.40835 14.3417 6.66669 15 6.66669C16.3833 6.66669 17.5 5.55002 17.5 4.16669C17.5 2.78335 16.3833 1.66669 15 1.66669C13.6167 1.66669 12.5 2.78335 12.5 4.16669C12.5 4.36669 12.5333 4.55835 12.575 4.75002L6.7 8.17502C6.25 7.75835 5.65833 7.50002 5 7.50002C3.61667 7.50002 2.5 8.61669 2.5 10C2.5 11.3834 3.61667 12.5 5 12.5C5.65833 12.5 6.25 12.2417 6.7 11.825L12.6333 15.2917C12.5917 15.4667 12.5667 15.65 12.5667 15.8334C12.5667 17.175 13.6583 18.2667 15 18.2667C16.3417 18.2667 17.4333 17.175 17.4333 15.8334C17.4333 14.4917 16.3417 13.4 15 13.4Z" fill="#5865F2"/>
-                </svg>
-                <p class="body-text2 !font-bold text-primary">Share</p>
+                <span class="material-iconp">share</span>
+                <p class="body-text2 !font-bold uppercase">Share</p>
             </a>
         </div>
 
-        <div class="container mx-auto py-10 md:py-16 px-5 content-wrap bg-white h-full grid md:grid-cols-[1fr,1.5fr] gap-10">
-            <div class="product-image">
-                <img src="resources/image/license.png" alt="" class="max-h-96 max-w-[360px] object-cover">
+        <div class="container mx-auto py-2 md:py-4 px-4 content-wrap bg-white h-full grid md:grid-cols-[1fr,2fr] gap-4">
+
+            
+
+            <div class="product-images max-w-[360px] max-h-96">
+                <img src="resources/image/license.png" alt="lxroot-license" class="max-h-96 max-w-[360px] object-cover">
             </div>
+
             <div class="product-details">
-                <h1 class="title head-3 !font-medium mb-2">Licence Key</h1>
-                <p class="head-5 !font-medium text-secondary mb-4">$5 per month</p>
-                <p class="body-text2 text-slate-500">
+                <h1 class="head-3 mb-1">Licence Key</h1>
+                <p class="fs:22px !font-light text-slate-600 mb-4">From $20 a month</p>
+                <p class="text-slate-600">
                     Your licence key and installation guide will be sent by email. <br />
                     One licence key covers your entire cluster and includes:
                 </p>
 
-                <p class="body-text2 !font-medium text-slate-600 my-4">
+                <p class="text-slate-600 my-4">
                     - All current features <br />
                     - Unlimited servers <br />
-                    - Technical support (9am - 9pm GMT) 
+                    - Technical support (9am - 9pm UTC) 
                 </p>
 
-                <p class="body-text2 text-slate-500">
-                    You will be billed per-website with a $5 minimum (This will only increase when you add more than 33 websites).  Your first month will be charged at $5, month 2 onwards will be invoiced based on your actual website usage.
+                <p class="text-slate-600">
+                    You will be billed per-website or application with a $20 minimum (This will only increase when you add more than 100 websites or applications).  Your first month will be charged at $20, month 2 onwards will be invoiced based on your actual website/application usage.
                 </p>
 
-                <a href="/checkout" class="filled-button !w-full mt-8 !gap-4  !text-white ">
+                <p class="mt-4 text-slate-600">Cancel any time, no minimum commitment.</p>
+
+                <div class="mt-8 mb-1"><label class="fs:12px font-semibold text-slate-700 uppercase">Billing Term *</label></div>
+
+                <div class="mt-0 product-card-grid">
+                    <div class="term-card relative">
+                        <span class="absolute material-iconp check_position text-dodgerblue">check_circle</span>
+                        <div class="flex items-center justify-center border border-b-0 border-dodgerblue rounded-t p-2 bg-white"><p class="px-4 text-slate-500 font-semibold">Monthly</p></div>
+                        <div class="flex items-center justify-center border !border-t-gainsboro border-dodgerblue p-8 bg-aliceblue"><p class="text-slate-700 fs:28px">$20</p></div>
+                    </div>
+                </div>
+
+                <button type="button" class="filled-button !letter-spacing-0 !h-12 !w-full !font-normal mt-6 !gap-4 !text-white">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.1667 15C13.2417 15 12.5 15.7417 12.5 16.6667C12.5 17.1087 12.6756 17.5326 12.9882 17.8452C13.3008 18.1577 13.7247 18.3333 14.1667 18.3333C14.6087 18.3333 15.0327 18.1577 15.3452 17.8452C15.6578 17.5326 15.8334 17.1087 15.8334 16.6667C15.8334 16.2246 15.6578 15.8007 15.3452 15.4881C15.0327 15.1756 14.6087 15 14.1667 15ZM0.833374 1.66666V3.33332H2.50004L5.50004 9.65832L4.36671 11.7C4.24171 11.9333 4.16671 12.2083 4.16671 12.5C4.16671 12.942 4.3423 13.3659 4.65486 13.6785C4.96742 13.9911 5.39135 14.1667 5.83337 14.1667H15.8334V12.5H6.18337C6.12812 12.5 6.07513 12.478 6.03606 12.439C5.99699 12.3999 5.97504 12.3469 5.97504 12.2917C5.97504 12.25 5.98337 12.2167 6.00004 12.1917L6.75004 10.8333H12.9584C13.5834 10.8333 14.1334 10.4833 14.4167 9.97499L17.4 4.58332C17.4584 4.44999 17.5 4.30832 17.5 4.16666C17.5 3.94564 17.4122 3.73368 17.256 3.5774C17.0997 3.42112 16.8877 3.33332 16.6667 3.33332H4.34171L3.55837 1.66666M5.83337 15C4.90837 15 4.16671 15.7417 4.16671 16.6667C4.16671 17.1087 4.3423 17.5326 4.65486 17.8452C4.96742 18.1577 5.39135 18.3333 5.83337 18.3333C6.2754 18.3333 6.69932 18.1577 7.01188 17.8452C7.32445 17.5326 7.50004 17.1087 7.50004 16.6667C7.50004 16.2246 7.32445 15.8007 7.01188 15.4881C6.69932 15.1756 6.2754 15 5.83337 15Z" fill="#fff"/>
-                    </svg>
-                    Add to Cart
-                </a>
+                        <path d="M14.1667 15C13.2417 15 12.5 15.7417 12.5 16.6667C12.5 17.1087 12.6756 17.5326 12.9882 17.8452C13.3008 18.1577 13.7247 18.3333 14.1667 18.3333C14.6087 18.3333 15.0327 18.1577 15.3452 17.8452C15.6578 17.5326 15.8334 17.1087 15.8334 16.6667C15.8334 16.2246 15.6578 15.8007 15.3452 15.4881C15.0327 15.1756 14.6087 15 14.1667 15ZM0.833374 1.66666V3.33332H2.50004L5.50004 9.65832L4.36671 11.7C4.24171 11.9333 4.16671 12.2083 4.16671 12.5C4.16671 12.942 4.3423 13.3659 4.65486 13.6785C4.96742 13.9911 5.39135 14.1667 5.83337 14.1667H15.8334V12.5H6.18337C6.12812 12.5 6.07513 12.478 6.03606 12.439C5.99699 12.3999 5.97504 12.3469 5.97504 12.2917C5.97504 12.25 5.98337 12.2167 6.00004 12.1917L6.75004 10.8333H12.9584C13.5834 10.8333 14.1334 10.4833 14.4167 9.97499L17.4 4.58332C17.4584 4.44999 17.5 4.30832 17.5 4.16666C17.5 3.94564 17.4122 3.73368 17.256 3.5774C17.0997 3.42112 16.8877 3.33332 16.6667 3.33332H4.34171L3.55837 1.66666M5.83337 15C4.90837 15 4.16671 15.7417 4.16671 16.6667C4.16671 17.1087 4.3423 17.5326 4.65486 17.8452C4.96742 18.1577 5.39135 18.3333 5.83337 18.3333C6.2754 18.3333 6.69932 18.1577 7.01188 17.8452C7.32445 17.5326 7.50004 17.1087 7.50004 16.6667C7.50004 16.2246 7.32445 15.8007 7.01188 15.4881C6.69932 15.1756 6.2754 15 5.83337 15Z" fill="#fff"/>
+                    </svg> 
+                    Add to cart - $20 (excl. taxes)
+                </button>
             </div>
+
+
         </div>
 
     </div>
