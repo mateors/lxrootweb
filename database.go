@@ -406,7 +406,7 @@ func addAuthc(loginId, token, ipAddress, expireDate string) (id string, err erro
 	return id, err
 }
 
-func addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, loginId, accountId string) (id string, err error) {
+func addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId string) (id string, err error) {
 
 	modelName := structName(DocKeeper{})
 	table := customTableName(modelName)
@@ -429,6 +429,9 @@ func addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, l
 	form["posting_date"] = postingDate
 	form["login_id"] = loginId
 	form["account_id"] = accountId
+	form["total_discount"] = totalDiscount
+	form["total_tax"] = totalTax
+	form["total_payable"] = totalPayable
 	form["doc_status"] = docStatus
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 1

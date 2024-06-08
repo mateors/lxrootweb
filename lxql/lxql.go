@@ -555,7 +555,7 @@ func GetRows(sql string, db *sql.DB) ([]map[string]interface{}, error) {
 		}
 
 	} else {
-		fmt.Println("else:>", orows, len(orows))
+		//fmt.Println("else:>", orows, len(orows))
 	}
 	return nrows, nil
 }

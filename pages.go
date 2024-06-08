@@ -555,10 +555,14 @@ func shop(w http.ResponseWriter, r *http.Request) {
 
 			//
 			itemId := r.FormValue("item") //item.item_code
+			docNumber, err := getCookie("docid", r)
+			if err == nil {
+				fmt.Println("update doc_keeper table", docNumber)
+			}
 
-			qty := "2"
+			qty := "1"
 			docRef := visitorInfo(r, w)
-			docId, err := addToCart(itemId, qty, docRef, "", "")
+			docId, err := addToCart(itemId, qty, docRef, docNumber, "", "")
 			if err == nil {
 				errNo = 0
 				errMsg = "OK"
@@ -662,7 +666,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header2.gohtml",
 			"templates/footer2.gohtml",
@@ -673,11 +677,25 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		docId, err := getCookie("docid", r)
-		fmt.Println(err, docId)
+		docNumber, err := getCookie("docid", r)
+		logError("checkout", err)
 
-		sql := fmt.Sprintf("SELECT item_name,sale_price,tags FROM item WHERE ")
-		singleRow(sql)
+		sql := fmt.Sprintf(`SELECT t.id,t.item_id,t.quantity,t.price,t.tax_amount,t.payable_amount,t.trx_type,i.item_name,i.tags,d.doc_number,d.total_payable 
+							FROM lxroot._default.transaction_record t
+							LEFT JOIN lxroot._default.doc_keeper d ON d.doc_number=t.doc_number
+							LEFT JOIN lxroot._default.item i ON i.id=t.item_id
+							WHERE t.doc_number="%s";`, docNumber)
+		sql = cleanText(sql)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		var totalPayable string
+		if len(rows) > 0 {
+			totalPayable, _ = rows[0]["total_payable"].(string)
+		}
 
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
@@ -690,12 +708,16 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			Rows         []map[string]interface{} //cart items
+			TotalPayable string
 		}{
 			Title:        "Checkout | LxRoot",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
 			CsrfToken:    ctoken,
+			Rows:         rows,
+			TotalPayable: totalPayable,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -706,53 +728,29 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 
 		r.ParseForm()
-		var errNo int = 1
-		var errMsg string
-		commonDataSet(r)
-		//fmt.Println("##", r.Form)
+		id := r.FormValue("id")
+		todo := r.FormValue("todo")
+		//fmt.Println(todo)
 
-		funcsMap := map[string]interface{}{
-			"validCSRF": validCSRF,
-		}
-		rmap := make(map[string]interface{})
-		for key := range r.Form {
-			rmap[key] = r.FormValue(key)
-		}
-		response := CheckMultipleConditionTrue(rmap, funcsMap)
+		if strings.ToUpper(todo) == "DELETE" {
 
-		if response == "OKAY" {
-
-			//
-			itemId := r.FormValue("item") //item.item_code
-			qty := "2"
-			docRef := visitorInfo(r, w)
-			docId, err := addToCart(itemId, qty, docRef, "", "")
+			//update docKepper table
+			sql := fmt.Sprintf("SELECT doc_number,payable_amount FROM %s WHERE id=%q;", tableToBucket("transaction_record"), id)
+			row, err := singleRow(sql)
 			if err == nil {
-				errNo = 0
-				errMsg = "OK"
-				setCookie("docid", docId, 24*86400, w)
+				docNumber, _ := row["doc_number"].(string)
+				payableAmount, _ := row["payable_amount"].(string)
+				sql = fmt.Sprintf("UPDATE %s SET total_payable=total_payable-%s WHERE doc_number=%q;", tableToBucket("doc_keeper"), payableAmount, docNumber)
+				lxql.RawSQL(sql, database.DB)
 
-			} else if err != nil {
-				errNo = 1
-				errMsg = err.Error()
+				sql := fmt.Sprintf("DELETE FROM %s WHERE id=%q;", tableToBucket("transaction_record"), id)
+				err = lxql.RawSQL(sql, database.DB)
+				logError("delCartItem", err)
 			}
-
-		} else {
-
-			errNo = 1
-			errMsg = response
 		}
 
-		var row = make(map[string]interface{})
-		row["error"] = errNo
-		row["message"] = errMsg
-		bs, err := json.Marshal(row)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(bs))
+		http.Redirect(w, r, "/checkout", http.StatusSeeOther)
+		return
 	}
 }
 

@@ -22,6 +22,7 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/mateors/money"
 	"github.com/mateors/mtool"
 	uuid "github.com/satori/go.uuid"
 )
@@ -29,6 +30,37 @@ import (
 type charInfo struct {
 	Index int
 	Char  rune
+}
+
+var FuncMap = template.FuncMap{
+
+	"moneyFormat": moneyFormat,
+	"subTotal":    subTotal,
+	"taxTotal":    taxTotal,
+}
+
+func moneyFormat(amount interface{}) string {
+
+	return money.CommaSeparatedMoneyFormat(amount)
+}
+
+func subTotal(data []map[string]interface{}) float64 {
+
+	var total float64
+	for _, row := range data {
+		payableAmount, _ := strconv.ParseFloat(row["payable_amount"].(string), 64)
+		total += payableAmount
+	}
+	return total
+}
+func taxTotal(data []map[string]interface{}) float64 {
+
+	var total float64
+	for _, row := range data {
+		amount, _ := strconv.ParseFloat(row["tax_amount"].(string), 64)
+		total += amount
+	}
+	return total
 }
 
 func structName(myvar interface{}) string {

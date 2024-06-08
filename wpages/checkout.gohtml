@@ -390,26 +390,33 @@
                 </div>
             </div>
 
-            <div class="product-summary px-6 py-16 md:py-16 md:px-0 md:pl-24 text-slate-700 flex flex-col">
+            <!---Cart Items--->
+            <div id="cartItems" class="product-summary px-6 py-16 md:py-16 md:px-0 md:pl-24 text-slate-700 flex flex-col">
                 <div class="grow-0">
-                    <div class="product-details flex gap-5 items-end">
+
+                    {{range $row :=.Rows}}
+                    {{$id := index $row "id"}}
+
+                    <div class="product-details flex gap-x-5 items-end">
                         <div class="product-img hidden md:block">
                             <img class="w-20 h-20 object-cover" src="resources/image/license.png" alt="">
                         </div>
                         <div class="grow">
-                            <p class="caption-text text-slate-500">LxRoot</p>
-                            <p class="body-text1 text-slate-800 !font-bold -mt-1 mb-2">License Key - Monthly</p>
-                            <a href="#" class="w-fit caption-text border border-slate-300 rounded-sm py-1 px-2">Details</a>
+                            <p class="caption-text text-slate-500">{{index $row "tags"}}</p>
+                            <p class="body-text1 text-slate-800 !font-bold -mt-1 mb-2">{{index $row "item_name"}}</p>
+                            <a href="#" class="w-fit caption-text border border-slate-300 rounded-sm py-1 px-2">&nbsp;</a>
                         </div>
                         <div class="grow-0 justify-end items-end">
-                            <p class="product-price head-5 text-slate-800 !font-bold mb-2">$20</p>
-                            <button class="w-8 h-8 flex items-center justify-center p-1 border border-slate-300 rounded-sm tooltip-left tooltip-error transition-all hover:bg-slate-200" data-tooltip="Remove Item">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path class="fill-slate-600" d="M19 4H15.5L14.5 3H9.5L8.5 4H5V6H19M6 19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19V7H6V19Z"/>
-                                </svg>
+                            <p class="product-price head-5 text-slate-800 !font-bold mb-2">${{index $row "price"}}</p>
+                            <button delitem data-id="{{$id}}" class="flex items-center justify-center p-1 border border-slate-300 rounded-sm tooltip-left tooltip-error transition-all hover:bg-slate-200" data-tooltip="Remove Item">
+                                <span class="material-icon">delete_outline</span>
                             </button>
                         </div>
                     </div>
+                    {{end}}
+
+                    
+
                     <div class="coupon flex gap-5 items-center py-5 border-b border-slate-300">
                         <div class="field w-full">
                             <input type="text" autocomplete="off" name="coupon-field" id="coupon-field" placeholder="Enter your coupon" class="w-full">
@@ -419,17 +426,17 @@
                     <div class="py-3 border-b border-slate-300">
                         <div class="flex gap-4 items-center justify-between py-2">
                             <p class="body-text2 text-slate-500">Subtotal:</p>
-                            <p class="body-text2 !font-bold text-slate-800">$20.00</p>
+                            <p class="body-text2 !font-bold text-slate-800">${{moneyFormat (subTotal .Rows)}}</p>
                         </div>
 
                         <div class="flex gap-4 items-center justify-between py-2">
                             <p class="body-text2 text-slate-500">VAT (0%):</p>
-                            <p class="body-text2 !font-bold text-slate-800">$0.00</p>
+                            <p class="body-text2 !font-bold text-slate-800">${{moneyFormat (taxTotal .Rows)}}</p>
                         </div>
                     </div>
                     <div class="flex gap-4 items-center justify-between py-5">
                         <p class="head-4 !font-medium text-slate-800">Total to pay</p>
-                        <p class="head-4 !font-medium text-slate-800">$20.00</p>
+                        <p class="head-4 !font-medium text-slate-800">${{moneyFormat .TotalPayable}}</p>
                     </div>
                 </div>
                 <div class="grow flex items-end">
@@ -449,8 +456,7 @@
 
 {{define "scriptsrc"}}
 
-    <script src="resources/js/jquery-3.4.1.min.js"></script>
-    <script src="resources/js/select2.min.js"></script>
+    <script src="resources/js/nlib.js"></script>
     <script src="resources/js/main.js"></script>
 
 {{end}}
@@ -458,61 +464,15 @@
 {{define "script"}}
 
 <script>
-    $('#country-select').select2({
-            placeholder :'Select Country :',
-            width: '100%',
-            // allowClear:true,      
-    });
-    $('#modal-country-select').select2({
-            placeholder :'Select Country :',
-            width: '100%',
-            // allowClear:true,      
+   
+    $('#cartItems').find('button[delitem]').on('click', (e) => {
+    
+
+        let id=$(e.target).closest("button").attr('data-id');
+        vForm(location.href,{id,todo:'delete'},'post');
+    
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const creditDebitField = document.getElementById('credit-debit-field');
-        const paypalField = document.getElementById('paypal-field');
-        const cardPaymentForm = document.querySelector('.card-payment-form');
-        const paypalForm = document.querySelector('.paypal-form');
-
-        // Add event listeners to radio buttons
-        creditDebitField.addEventListener('change', function() {
-            if (this.checked) {
-                cardPaymentForm.style.display = 'block';
-                paypalForm.style.display = 'none';
-            }
-        });
-
-        paypalField.addEventListener('change', function() {
-            if (this.checked) {
-                cardPaymentForm.style.display = 'none';
-                paypalForm.style.display = 'block';
-            }
-        });
-    });
-
-    function validateField(fieldName) {
-      const fieldValue = document.getElementById(fieldName).value;
-      const fieldInput = document.getElementById(fieldName);
-      const errorElement = document.getElementById(fieldName + "-error");
-      const errorIcon = document.getElementById(fieldName + "-error-icon");
-      console.log(fieldName, fieldValue);
-      if (fieldValue.trim() === "") {
-        errorElement.classList.remove("hidden");
-        errorIcon.classList.remove('hidden');
-        fieldInput.classList.add('error');
-      } else {
-        errorElement.classList.add("hidden");
-        errorIcon.classList.add('hidden');
-        fieldInput.classList.remove('error');
-      }
-      const passIcon = document.getElementById(fieldName + "-pass-icon");
-      if (fieldValue.trim() === "") {
-        passIcon.classList.add("right-8");
-      } else {
-        passIcon.classList.remove("right-8");
-      }
-    }
 </script>
 
 {{end}}
