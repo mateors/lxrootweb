@@ -52,6 +52,11 @@ func init() {
 		lxql.RegisterModel(LoginSession{})
 		lxql.RegisterModel(ActivityLog{})
 		lxql.RegisterModel(Authc{})
+		lxql.RegisterModel(DocKeeper{})
+		lxql.RegisterModel(TransactionRecord{})
+		lxql.RegisterModel(DocPayShipInfo{})
+		lxql.RegisterModel(Subscription{})
+
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)

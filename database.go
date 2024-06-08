@@ -9,6 +9,7 @@ import (
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/mateors/mtool"
@@ -399,6 +400,69 @@ func addAuthc(loginId, token, ipAddress, expireDate string) (id string, err erro
 	form["create_date"] = mtool.TimeNow()
 	form["expire_date"] = expireDate
 	form["update_date"] = ""
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
+func addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, loginId, accountId string) (id string, err error) {
+
+	modelName := structName(DocKeeper{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	if postingDate == "" {
+		postingDate = mtool.TimeNow()
+	}
+	if docNumber == "" {
+		docNumber = id
+	}
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["doc_name"] = docName
+	form["doc_type"] = docType
+	form["doc_ref"] = docRef //visitorSession
+	form["doc_number"] = docNumber
+	form["posting_date"] = postingDate
+	form["login_id"] = loginId
+	form["account_id"] = accountId
+	form["doc_status"] = docStatus
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
+func str2int(val string) int {
+	ival, err := strconv.Atoi(val)
+	if err != nil {
+		return 0
+	}
+	return ival
+}
+
+func addTransactionRecord(trxType, docNumber, itemId, itemInfo, itemSerial, qty, price string) (id string, err error) {
+
+	modelName := structName(TransactionRecord{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["trx_type"] = trxType
+	form["doc_number"] = docNumber
+	form["item_id"] = itemId
+	form["item_info"] = itemInfo
+	form["item_serial"] = itemSerial
+	form["quantity"] = qty
+	form["rate"] = 1
+	form["price"] = price
+	form["payable_amount"] = str2int(qty) * str2int(price)
+	form["create_date"] = mtool.TimeNow()
 	form["status"] = 1
 	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err

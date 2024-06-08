@@ -469,7 +469,7 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 		sessionCode = xid.New().String()
 	}
 
-	fmt.Println("todo:", todo)
+	//fmt.Println("todo:", todo)
 	if todo == "insert" {
 
 		row["id"] = xid.New().String()
@@ -760,4 +760,21 @@ func decrypt(encryptedString string, keyString string) (decryptedString string) 
 	}
 
 	return fmt.Sprintf("%s", plaintext)
+}
+
+func addToCart(itemId, qty, docRef, loginId, accountId string) (docId string, err error) {
+
+	docName := "shopping cart"
+	docType := "cart"
+	docNumber := "" //fmt.Sprintf("TMP-%s", utility.GeneratePassword(6, true, false))
+	postingDate := ""
+	docStatus := "pending"
+	docId, err = addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, loginId, accountId)
+	if err == nil {
+		price := "20"
+		itemInfo := ""
+		itemSerial := ""
+		addTransactionRecord(docType, docId, itemId, itemInfo, itemSerial, qty, price)
+	}
+	return
 }

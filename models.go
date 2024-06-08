@@ -1,6 +1,6 @@
 package main
 
-//Company #1 wise database
+//Company #1 wise database <> META_INFO
 type Company struct {
 	ID          string `json:"id"`
 	Type        string `json:"type"`
@@ -9,7 +9,7 @@ type Company struct {
 	Status      int    `json:"status"`
 }
 
-//Access #2 login type admin,super,user,etc
+//Access #2 login type admin,super,user,etc <> META_INFO
 type Access struct {
 	ID         string `json:"id"`
 	Type       string `json:"type"`
@@ -18,6 +18,7 @@ type Access struct {
 	Status     int    `json:"status"`
 }
 
+//<> META_INFO
 type Country struct {
 	ID             string `json:"id"`
 	Type           string `json:"type"`
@@ -210,7 +211,7 @@ type Authc struct {
 	Status     int    `json:"status"`
 }
 
-//Setting table keep only one file
+//Setting table keep only one file <> META_INFO
 type Settings struct {
 	ID         string `json:"id"`
 	Type       string `json:"type"`
@@ -249,7 +250,7 @@ type Verification struct {
 	Status              int    `json:"status"`
 }
 
-//AccountHead+AccountGroup merged into achead Achead
+//AccountHead+AccountGroup merged into achead Achead <> META_INFO
 type Achead struct {
 	ID                   string  `json:"id"`            //unique id*
 	Type                 string  `json:"type"`          //table
@@ -291,7 +292,7 @@ type Achead struct {
 // 	Status     int    `json:"status"`
 // }
 
-//Tax ..
+//Tax .. <> META_INFO
 type Tax struct {
 	ID                string  `json:"id"`
 	Type              string  `json:"type"`
@@ -307,7 +308,7 @@ type Tax struct {
 }
 
 //Department itemDepartment -> ItemLine or department are same just one under another
-//TableMap::-> Deprtment & ItemLine
+//TableMap::-> Deprtment & ItemLine <> META_INFO
 type Department struct {
 	ID          string `json:"id"`
 	Type        string `json:"type"`
@@ -321,7 +322,7 @@ type Department struct {
 }
 
 //Category or ItemCategory/ItemGroup keeps product group/category info
-//TableMap::-> ItemGroup > website /shop
+//TableMap::-> ItemGroup > website /shop <> META_INFO
 type Category struct {
 	ID            string `json:"id"`
 	Type          string `json:"type"`
@@ -462,12 +463,12 @@ type DocKeeper struct {
 	DocNumber      string  `json:"doc_number"` //auto generated
 	DocDescription string  `json:"doc_description"`
 	PostingDate    string  `json:"posting_date"`
-	TaxRule        string  `json:"tax_rule"`
-	LoginID        string  `json:"login_id"`   //foreign key
-	AccountID      string  `json:"account_id"` //foreign key
-	TotalPayable   float64 `json:"total_payable"`
-	TotalTax       float64 `json:"total_tax"`
-	TotalDiscount  float64 `json:"total_discount"`
+	LoginID        string  `json:"login_id"`       //foreign key
+	AccountID      string  `json:"account_id"`     //foreign key
+	TaxRule        string  `json:"tax_rule"`       //*** foreign key tax.id
+	TotalPayable   float64 `json:"total_payable"`  //***
+	TotalTax       float64 `json:"total_tax"`      //***
+	TotalDiscount  float64 `json:"total_discount"` //***
 	PaymentStatus  string  `json:"payment_status"`
 	DocStatus      string  `json:"doc_status"`
 	CreateDate     string  `json:"create_date"`
@@ -556,7 +557,7 @@ type LedgerTransaction struct {
 // 	Status           int    `json:"status"` //0=Inactive, 1=Active, 9=Deleted
 // }
 
-//PaymentOption ...
+//PaymentOption ...META_INFO
 type PaymentOption struct {
 	ID               string `json:"id"`
 	Type             string `json:"type"`
