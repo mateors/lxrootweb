@@ -46,7 +46,7 @@
 
                 <div class="flex items-center gap-x-2 text-white">
                     <span class="material-iconp">shopping_cart</span>
-                    <span class="">0 items</span>
+                    <a href="/checkout"><span class="">{{.CartCount}} items</span></a>
                 </div>
             </div>
 
@@ -427,6 +427,13 @@
                             <p class="text-slate-800">${{moneyFormat (subTotal .Rows)}}</p>
                         </div>
 
+                        {{if ne .TotalDiscount ""}}
+                        <div class="flex gap-4 items-center justify-between py-2">
+                            <p class="text-slate-500">Discount:</p>
+                            <p class="text-slate-800">${{moneyFormat .TotalDiscount}}</p>
+                        </div>
+                        {{end}}
+
                         <div class="flex gap-4 items-center justify-between py-2">
                             <p class="text-slate-500">VAT (0%):</p>
                             <p class="text-slate-800">${{moneyFormat (taxTotal .Rows)}}</p>
@@ -441,7 +448,7 @@
 
                 <div class="grow flex items-end">
                     <div class="sticky bottom-10 w-full">
-                        <button disabled class="filled-button !font-light !w-full !bg-primary text-white">
+                        <button type="button" disableds id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
                             Place order & pay
                         </button>
                     </div>
@@ -489,6 +496,18 @@
         delBtn.addChild(elmDivSpinner());
         delBtn.prop('disabled', true);
         vForm(location.href,{id,todo:'delete'},'post');
+    
+    });
+
+    $('#btnPlaceOrder').on('click', (e) => {
+    
+        //console.log(e.target);
+        let cBtn = $('#btnPlaceOrder');
+        cBtn.empty();
+        cBtn.addChild(elmDivSpinner());
+        cBtn.addChild(document.createTextNode('Please wait'));
+        cBtn.prop('disabled', true);
+        vForm(location.href,{todo:'order'},'post');
     
     });
 

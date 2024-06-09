@@ -514,6 +514,9 @@ func shop(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		docNumber, _ := getCookie("docid", r)
+		count := lxql.CheckCount("transaction_record", fmt.Sprintf("doc_number='%s' AND trx_type='cart' AND status=1", docNumber), database.DB)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -521,12 +524,14 @@ func shop(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			CartCount    int
 		}{
-			Title:        "Shop | LxRoot",
+			Title:        "LxRoot Shop",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
 			CsrfToken:    ctoken,
+			CartCount:    count,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -680,7 +685,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		docNumber, err := getCookie("docid", r)
 		logError("checkout", err)
 
-		sql := fmt.Sprintf(`SELECT t.id,t.item_id,t.quantity,t.price,t.tax_amount,t.payable_amount,t.trx_type,i.item_name,i.tags,d.doc_number,d.total_payable 
+		sql := fmt.Sprintf(`SELECT t.id,t.item_id,t.quantity,t.price,t.tax_amount,t.payable_amount,t.trx_type,i.item_name,i.tags,d.doc_number,d.total_payable,d.total_discount 
 							FROM lxroot._default.transaction_record t
 							LEFT JOIN lxroot._default.doc_keeper d ON d.doc_number=t.doc_number
 							LEFT JOIN lxroot._default.item i ON i.id=t.item_id
@@ -692,9 +697,13 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		var totalPayable string
+		var totalPayable, totalDiscount string
 		if len(rows) > 0 {
 			totalPayable, _ = rows[0]["total_payable"].(string)
+			totalDiscount, _ = rows[0]["total_discount"].(string)
+			if totalDiscount == "0" {
+				totalDiscount = ""
+			}
 		}
 
 		ctoken := csrfToken()
@@ -703,21 +712,25 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 		base := GetBaseURL(r)
 		data := struct {
-			Title        string
-			Base         string
-			BodyClass    string
-			MainDivClass string
-			CsrfToken    string
-			Rows         []map[string]interface{} //cart items
-			TotalPayable string
+			Title         string
+			Base          string
+			BodyClass     string
+			MainDivClass  string
+			CsrfToken     string
+			Rows          []map[string]interface{} //cart items
+			TotalPayable  string
+			TotalDiscount string
+			CartCount     int
 		}{
-			Title:        "Checkout | LxRoot",
-			Base:         base,
-			BodyClass:    "bg-white text-slate-700",
-			MainDivClass: "main min-h-[calc(100vh-52px)]",
-			CsrfToken:    ctoken,
-			Rows:         rows,
-			TotalPayable: totalPayable,
+			Title:         "LxRoot Checkout",
+			Base:          base,
+			BodyClass:     "bg-white text-slate-700",
+			MainDivClass:  "main min-h-[calc(100vh-52px)]",
+			CsrfToken:     ctoken,
+			Rows:          rows,
+			TotalPayable:  totalPayable,
+			TotalDiscount: totalDiscount,
+			CartCount:     len(rows),
 		}
 
 		err = tmplt.Execute(w, data)
@@ -750,18 +763,35 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 		} else if strings.ToUpper(todo) == "COUPON" {
 
-			code := r.FormValue("code") //discount code
-			fmt.Println(code)
+			//code := r.FormValue("code") //discount code
+			docNumber, err := getCookie("docid", r)
+			if err == nil {
+				sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
+				row, err := singleRow(sql)
+				fmt.Println(err, row)
+			}
+			//fmt.Println(todo, r.Form)
+
+		} else if strings.ToUpper(todo) == "ORDER" {
+
+			smap, err := getSessionInfo(r)
+			if err != nil {
+				//http.Redirect(w, r, "/logout", http.StatusSeeOther)
+				//return
+				fmt.Println(err)
+			}
 
 			docNumber, err := getCookie("docid", r)
 			if err == nil {
-				sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
-				row, err := singleRow(sql)
-				//fmt.Println(sql)
-				fmt.Println(err, row)
 
+				sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
+				row, err := singleRow(sql)
+				if err == nil {
+					fmt.Println("login info ->", smap)
+					fmt.Println(docNumber, row)
+				}
 			}
-			fmt.Println(todo, r.Form)
+
 		}
 
 		http.Redirect(w, r, "/checkout", http.StatusSeeOther)
@@ -1657,9 +1687,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//ctoken := csrfToken()
-		//hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
-		//setCookie("ctoken", hashStr, 1800, w)
+		docNumber, _ := getCookie("docid", r)
+		count := lxql.CheckCount("transaction_record", fmt.Sprintf("doc_number='%s' AND trx_type='cart' AND status=1", docNumber), database.DB)
+		fmt.Println("cart_count:", count)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1667,13 +1697,13 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			Base         string
 			BodyClass    string
 			MainDivClass string
-			//CsrfToken    string
+			CartCount    int
 		}{
 			Title:        "LxRoot Dashboard",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
-			//CsrfToken:    ctoken,
+			CartCount:    count,
 		}
 
 		err = tmplt.Execute(w, data)

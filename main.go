@@ -208,7 +208,30 @@ func init() {
 
 	//id, err := addItem("lxroot", "subscription", "lxroot-license-monthly", "20 cents per app", "", "", "20", "")
 	//fmt.Println(err, id)
-	//os.Exit(1)
+	//requestBalance("sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ")
+	//listAllPrices(secretKey string) (map[string]interface{}, error)
+	//row, err := listAllPrices("sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQs")
+	// rurl := "https://api.stripe.com/v1/prices"
+	// stripeKey := "sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ"
+	// row, err := apiGetRequest(rurl, stripeKey)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// var fmap = make(map[string]string)
+	// fmap["currency"] = "usd"
+	// fmap["unit_amount"] = "2000"
+	// fmap["recurring[interval]"] = "month"
+	// fmap["product_data[name]"] = "LxRoot License Monthly" //product.name
+	// fmap["nickname"] = "LxRoot License Monthly"
+	// row, err := apiRequest("https://api.stripe.com/v1/prices", stripeKey, fmap)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return
+	// }
+	// for key, val := range row {
+	// 	fmt.Printf("%v = %v, %T\n", key, val, val)
+	// }
+	// os.Exit(1)
 }
 
 func main() {
