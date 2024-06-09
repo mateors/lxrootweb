@@ -212,7 +212,7 @@ func init() {
 	//listAllPrices(secretKey string) (map[string]interface{}, error)
 	//row, err := listAllPrices("sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQs")
 	// rurl := "https://api.stripe.com/v1/prices"
-	// stripeKey := "sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ"
+	//stripeKey := "sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ"
 	// row, err := apiGetRequest(rurl, stripeKey)
 	// if err != nil {
 	// 	log.Fatal(err)
@@ -223,15 +223,22 @@ func init() {
 	// fmap["recurring[interval]"] = "month"
 	// fmap["product_data[name]"] = "LxRoot License Monthly" //product.name
 	// fmap["nickname"] = "LxRoot License Monthly"
-	// row, err := apiRequest("https://api.stripe.com/v1/prices", stripeKey, fmap)
+	// row, err := apiPostRequest("https://api.stripe.com/v1/prices", stripeKey, fmap)
+	// row, err := createSession(stripeKey, "doc_200", "alauddin@mateors.com", "price_1PPlulJFUQv2NTJsqGsPFpLa", "1")
 	// if err != nil {
-	// 	log.Println(err)
-	// 	return
+	// 	log.Fatal(err)
 	// }
+
+	//get url and redirect to that url for stripe checkout
+	//status
+	//id
+
 	// for key, val := range row {
 	// 	fmt.Printf("%v = %v, %T\n", key, val, val)
 	// }
-	// os.Exit(1)
+
+	//fmt.Println(unixToDateTime(1720542106))
+	//os.Exit(1)
 }
 
 func main() {

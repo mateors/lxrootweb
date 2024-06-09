@@ -134,7 +134,7 @@ func apiGetRequest(rurl, secretKey string) (map[string]interface{}, error) {
 	return rmap, nil
 }
 
-func apiRequest(rurl, secretKey string, fmap map[string]string) (map[string]interface{}, error) {
+func apiPostRequest(rurl, secretKey string, fmap map[string]string) (map[string]interface{}, error) {
 
 	var fv = make(url.Values)
 	for key, val := range fmap {
@@ -173,7 +173,7 @@ func apiRequest(rurl, secretKey string, fmap map[string]string) (map[string]inte
 }
 
 // when we create price it automatically added under a product
-func createSubscriptionPrice(stripeSecretKey, priceName, priceInCents string) (map[string]interface{}, error) {
+func createSubscriptionPrice(stripeSecretKey, productName, priceInCents string) (map[string]interface{}, error) {
 
 	//type = recurring
 	//stripeKey := "sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ"
@@ -181,14 +181,29 @@ func createSubscriptionPrice(stripeSecretKey, priceName, priceInCents string) (m
 	fmap["currency"] = "usd"
 	fmap["unit_amount"] = priceInCents
 	fmap["recurring[interval]"] = "month"
-	fmap["product_data[name]"] = priceName //product.name
-	fmap["nickname"] = priceName
-	row, err := apiRequest("https://api.stripe.com/v1/prices", stripeSecretKey, fmap)
-	if err != nil {
-		return nil, err
-	}
-	// for key, val := range row {
-	// 	fmt.Printf("%v = %v, %T\n", key, val, val)
-	// }
-	return row, nil
+	fmap["product_data[name]"] = productName //product.name
+	fmap["nickname"] = productName
+	return apiPostRequest("https://api.stripe.com/v1/prices", stripeSecretKey, fmap)
+}
+
+// stripe checkout session
+func createSession(stripeSecretKey, docNumber, customerEmail, priceId, qty string) (map[string]interface{}, error) {
+
+	//type = recurring
+	//stripeKey := "sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ"
+	successUrl := "https://lxroot.com/complete"
+	var fmap = make(map[string]string)
+	fmap["client_reference_id"] = docNumber
+
+	fmap["line_items[0][price]"] = priceId
+	fmap["line_items[0][quantity]"] = qty
+	fmap["line_items[1][price]"] = "price_1PPddlJFUQv2NTJs4sxm013J"
+	fmap["line_items[1][quantity]"] = "2"
+
+	fmap["success_url"] = successUrl
+	fmap["customer_email"] = customerEmail
+	fmap["mode"] = "subscription" //payment,setup,subscription
+	//fmap["customer_creation"]="always" //payment
+	//set payment_intent_data.setup_future_usage to have Checkout automatically
+	return apiPostRequest("https://api.stripe.com/v1/checkout/sessions", stripeSecretKey, fmap)
 }
