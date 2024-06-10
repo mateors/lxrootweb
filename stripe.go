@@ -322,7 +322,6 @@ func chargeParser(evtData map[string]interface{}) (*Charge, error) {
 	return chrg, err
 }
 
-
 func stripeWebHook(w http.ResponseWriter, r *http.Request) {
 
 	//r.ParseForm()

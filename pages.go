@@ -792,6 +792,26 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
+		} else if strings.ToUpper(todo) == "CHECKOUT" {
+
+			docNumber, err := getCookie("docid", r)
+			if err == nil {
+				// sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
+				// row, err := singleRow(sql)
+				// if err == nil {
+				// 	fmt.Println("login info ->", smap)
+				// 	fmt.Println(docNumber, row)
+				// }
+				priceId := "price_1PPlulJFUQv2NTJsqGsPFpLa"
+				customerEmail := "billahmdmostain@gmail.com"
+				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail, priceId, "1")
+				if err == nil {
+					rurl, isOk := row["url"].(string)
+					if isOk {
+						http.Redirect(w, r, rurl, http.StatusSeeOther)
+					}
+				}
+			}
 		}
 
 		http.Redirect(w, r, "/checkout", http.StatusSeeOther)

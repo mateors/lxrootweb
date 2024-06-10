@@ -17,7 +17,7 @@ const numbers string = "0123456789"
 const symbols string = "!^*+_-=$#"
 
 var WPORT string
-var JWTSECRET, LOGENABLE, EMAILUSER, EMAILPASS, EMAILSERVER, EMAILPORT string
+var JWTSECRET, LOGENABLE, EMAILUSER, EMAILPASS, EMAILSERVER, EMAILPORT, STRIPE_SECRETKEY string
 
 func envFilePath() string {
 	dir, _ := os.Getwd()
@@ -46,6 +46,7 @@ func init() {
 	EMAILPASS = os.Getenv("EMAILPASS")
 	EMAILSERVER = os.Getenv("EMAILSERVER")
 	EMAILPORT = os.Getenv("EMAILPORT")
+	STRIPE_SECRETKEY = os.Getenv("STRIPE_SECRETKEY")
 
 }
 
