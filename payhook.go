@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"lxrootweb/database"
-	"lxrootweb/lxql"
 	"net/http"
 	"strconv"
 )
@@ -70,7 +68,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("--> Unknown event.Type")
 		}
 
-		err = lxql.InsertUpdateMap(eMap, database.DB)
+		_, err = addEvent() //lxql.InsertUpdateMap(eMap, database.DB)
 		logError("eventInsertERR", err)
 		w.WriteHeader(http.StatusOK)
 
