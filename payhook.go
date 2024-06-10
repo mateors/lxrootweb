@@ -10,14 +10,15 @@ import (
 )
 
 const (
-	PAYMENT_INENT_CREATED     = "payment_intent.created"    //1 ok
-	INVOICE_CREATED           = "invoice.created"           //2 ok
-	INVOICE_FINALIZED         = "invoice.finalized"         //3 ok
-	CHARGE_SUCCEEDED          = "charge.succeeded"          //4 ok
-	PAYMENT_INTENT_SUCCEEDED  = "payment_intent.succeeded"  //5 ok
-	INVOICE_UPDATED           = "invoice.updated"           //6 ok
-	INVOICE_PAID              = "invoice.paid"              //7 ok
-	INVOICE_PAYMENT_SUCCEEDED = "invoice.payment_succeeded" //8 ok
+	PAYMENT_INENT_CREATED      = "payment_intent.created"     //1 ok
+	INVOICE_CREATED            = "invoice.created"            //2 ok
+	INVOICE_FINALIZED          = "invoice.finalized"          //3 ok
+	CHARGE_SUCCEEDED           = "charge.succeeded"           //4 ok
+	PAYMENT_INTENT_SUCCEEDED   = "payment_intent.succeeded"   //5 ok
+	INVOICE_UPDATED            = "invoice.updated"            //6 ok
+	INVOICE_PAID               = "invoice.paid"               //7 ok
+	INVOICE_PAYMENT_SUCCEEDED  = "invoice.payment_succeeded"  //8 ok
+	CHECKOUT_SESSION_COMPLETED = "checkout.session.completed" //
 )
 
 func paymentHook(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +52,28 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("3-->", INVOICE_FINALIZED)
 
 		} else if evt.Type == CHARGE_SUCCEEDED { //4
+
 			fmt.Println("4-->", CHARGE_SUCCEEDED)
+			pCharge, err := chargeParser2(evt.Data)
+			if err == nil {
+
+				//checkout_session
+				durl, err := stripeReceiptToPdfUrl(pCharge.ReceiptUrl)
+				if err == nil {
+					//fmt.Println(err, durl)
+					filename, err := DownloadFile("data/invoice", durl)
+					if err == nil {
+
+						fmt.Println(pCharge.BillingDetails.Email, filename)
+						docNumber, err := emailToDocNumber(pCharge.BillingDetails.Email)
+						fmt.Println(err, docNumber)
+						if err == nil {
+							sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), filename, docNumber)
+							lxql.RawSQL(sql, database.DB)
+						}
+					}
+				}
+			}
 
 		} else if evt.Type == PAYMENT_INTENT_SUCCEEDED { //5
 			fmt.Println("5-->", PAYMENT_INTENT_SUCCEEDED)
@@ -60,10 +82,25 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("6-->", INVOICE_UPDATED)
 
 		} else if evt.Type == INVOICE_PAID { //7
+
 			fmt.Println("7-->", INVOICE_PAID)
+			inv, err := invoiceParser(evt.Data)
+			fmt.Println(err, inv.Customer, inv.AmountPaid, inv.Subscription2, inv.PaymentIntent, inv.CustomerEmail, inv.CustomerName, inv.Number, inv.CustomerPhone)
+			fmt.Println(inv.InvoicePdf, inv.HostedInvoiceUrl)
 
 		} else if evt.Type == INVOICE_PAYMENT_SUCCEEDED { //8
 			fmt.Println("8-->", INVOICE_PAYMENT_SUCCEEDED)
+
+		} else if evt.Type == CHECKOUT_SESSION_COMPLETED {
+
+			fmt.Println("9-->", CHECKOUT_SESSION_COMPLETED)
+			pSession, err := checkoutSessionParser(evt.Data)
+			if err == nil {
+				sql := fmt.Sprintf("UPDATE %s SET payment_status=%q, doc_status=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), pSession.PaymentStatus, pSession.Status, pSession.ClentReferenceId)
+				fmt.Println(pSession.ClentReferenceId, sql) //docNumber
+				err = lxql.RawSQL(sql, database.DB)
+				logError("checkoutSessionSuccessERR", err)
+			}
 
 		} else {
 			fmt.Println("--> Unknown event.Type")

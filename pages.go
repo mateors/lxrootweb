@@ -797,19 +797,19 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		} else if strings.ToUpper(todo) == "CHECKOUT" {
 
 			docId := r.FormValue("docid")
-			fmt.Println("checkout:", docId)
+			//fmt.Println("checkout:", docId)
 			docNumber, err := getCookie("docid", r)
 			if err == nil {
-				// sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
-				// row, err := singleRow(sql)
-				// if err == nil {
-				// 	fmt.Println("login info ->", smap)
-				// 	fmt.Println(docNumber, row)
-				// }
+
 				priceId := "price_1PPlulJFUQv2NTJsqGsPFpLa"
 				customerEmail := "billahmdmostain@gmail.com"
 				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail, priceId, "1")
 				if err == nil {
+
+					sessionId, _ := row["id"].(string) //checkout.session.id
+					sql := fmt.Sprintf("UPDATE %s SET doc_status=%q, doc_description=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), "checkout_session", sessionId, docId)
+					lxql.RawSQL(sql, database.DB)
+
 					rurl, isOk := row["url"].(string)
 					if isOk {
 						http.Redirect(w, r, rurl, http.StatusSeeOther)

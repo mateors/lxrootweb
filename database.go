@@ -406,7 +406,7 @@ func addAuthc(loginId, token, ipAddress, expireDate string) (id string, err erro
 	return id, err
 }
 
-func addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId string) (id string, err error) {
+func addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId string) (id string, err error) {
 
 	modelName := structName(DocKeeper{})
 	table := customTableName(modelName)
@@ -697,3 +697,15 @@ func usernameToAccounInfo(username string) (map[string]interface{}, error) {
 // 	}
 // 	return nrows, nil
 // }
+
+func emailToDocNumber(email string) (docNumber string, err error) {
+
+	sql := fmt.Sprintf(`SELECT d.doc_number FROM %s l LEFT JOIN %s d ON d.login_id=l.id WHERE d.doc_status='checkout_session' AND l.username="%s";`, tableToBucket("login"), tableToBucket("doc_keeper"), email)
+	row, err := singleRow(sql)
+	if err != nil {
+		log.Println(sql)
+		return "", err
+	}
+	docNumber, _ = row["doc_number"].(string)
+	return
+}

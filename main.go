@@ -266,7 +266,14 @@ func init() {
 	// fmt.Println(err, row)
 	//err = lxql.InsertUpdateObject("event", evt.ID, &evt, database.DB)
 	//fmt.Println(err)
-	//os.Exit(1)
+
+	rurl := "https://pay.stripe.com/receipts/invoices/CAcaFwoVYWNjdF8xT2pxeUZKRlVRdjJOVEpzKLWOm7MGMgZ9ouzNg6s6LBbPoyN2PS0meir7wTTJAHXYzGPo0iTp-0u4GdFOsmFoLJi7IAVevpykoFy7?s=ap"
+	durl, err := stripeReceiptToPdfUrl(rurl)
+	fmt.Println(err, durl)
+
+	filename, err := DownloadFile("data/invoice", durl)
+	fmt.Println(err, filename)
+	os.Exit(1)
 }
 
 func main() {
@@ -292,7 +299,7 @@ func main() {
 	r.HandleFunc("/shop", shop)                     //store page
 	r.HandleFunc("/complete", complete)             //complete shopping
 	r.HandleFunc("/product", product)               //product_details
-	r.HandleFunc("/checkout", checkout)             //checkout + signup
+	r.HandleFunc("/checkout", checkout)             //checkout + ***
 	r.HandleFunc("/faqs", faqs)                     //
 	r.HandleFunc("/about", about)                   //
 	r.HandleFunc("/contact", contact)               //contact us
@@ -315,7 +322,6 @@ func main() {
 	r.HandleFunc("/logout", logout)                 //logout
 
 	r.HandleFunc("/payhook", paymentHook)
-
 	//r.HandleFunc("/webhook", webhookHandler)
 
 	addr := fmt.Sprintf(":%s", utility.WPORT)

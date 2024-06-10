@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -250,10 +252,24 @@ func invoiceParser(evtData map[string]interface{}) (*Invoice, error) {
 	}
 	jsonBytes, err := json.Marshal(obj)
 	if err != nil {
-		log.Println(err)
 		return nil, err
 	}
 	var inv = &Invoice{}
+	err = json.Unmarshal(jsonBytes, inv)
+	return inv, err
+}
+
+func checkoutSessionParser(evtData map[string]interface{}) (*Session, error) {
+
+	obj, isOk := evtData["object"]
+	if !isOk {
+		return nil, errors.New("wrong object")
+	}
+	jsonBytes, err := json.Marshal(obj)
+	if err != nil {
+		return nil, err
+	}
+	var inv = &Session{}
 	err = json.Unmarshal(jsonBytes, inv)
 	return inv, err
 }
@@ -492,8 +508,8 @@ func stripeWebHook(w http.ResponseWriter, r *http.Request) {
 
 			chrg, err := chargeParser(evt.Data)
 			fmt.Println(err, chrg)
-			fmt.Println(chrg.Billing_details)
-			fmt.Println(chrg.Billing_details.Email)
+			fmt.Println(chrg.BillingDetails)
+			fmt.Println(chrg.BillingDetails.Email)
 			fmt.Println(chrg.Paid)
 
 		} else if evt.Type == "invoice.payment_succeeded" {
@@ -549,4 +565,52 @@ func stripeWebHook(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintln(w, r.RemoteAddr)
 	}
+}
+
+func contentDispositionToFilename(content string) (filename string) {
+
+	//content := resp.Header.Get("Content-Disposition") //attachment; filename="Receipt-2082-6216.pdf"; filename*=UTF-8''Receipt-2082-6216.pdf
+	slc := strings.Split(content, ";")
+	if len(slc) > 2 {
+		filename = strings.Split(slc[1], "=")[1]
+		filename = strings.Replace(filename, "\"", "", -1)
+	}
+	return
+}
+
+func stripeReceiptToPdfUrl(rurl string) (string, error) {
+
+	//"https://pay.stripe.com/receipts/invoices/CAcaFwoVYWNjdF8xT2pxeUZKRlVRdjJOVEpzKLWOm7MGMgZ9ouzNg6s6LBbPoyN2PS0meir7wTTJAHXYzGPo0iTp-0u4GdFOsmFoLJi7IAVevpykoFy7?s=ap"
+	purl, err := url.Parse(rurl)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s://%s%s/pdf", purl.Scheme, purl.Host, purl.Path), nil
+}
+
+func DownloadFile(dir string, url string) (string, error) {
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	content := resp.Header.Get("Content-Disposition") //attachment; filename="Receipt-2082-6216.pdf"; filename*=UTF-8''Receipt-2082-6216.pdf
+	filename := contentDispositionToFilename(content)
+
+	fileAbsolutePath := filepath.Join(dir, filename)
+	os.MkdirAll(filepath.Dir(fileAbsolutePath), 0755)
+
+	// Create the file
+	out, err := os.Create(fileAbsolutePath)
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	return fileAbsolutePath, err
 }

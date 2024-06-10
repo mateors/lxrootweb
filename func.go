@@ -810,7 +810,7 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId
 
 	if docNumber == "" {
 		docUpdate = false
-		docId, err = addDocKepper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId)
+		docId, err = addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId)
 		if err != nil {
 			return
 		}

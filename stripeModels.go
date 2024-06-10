@@ -69,6 +69,7 @@ type Invoice struct {
 	CustomerAddress     BillingAddress `json:"customer_address"`
 	CustomerEmail       string         `json:"customer_email"`
 	CustomerName        string         `json:"customer_name"`
+	CustomerPhone       string         `json:"customer_phone"`
 	Created             int64          `json:"created"`
 	Subscription2       string         `json:"subscription"`
 	PeriodStart         int64          `json:"period_start"`
@@ -133,19 +134,21 @@ type CheckoutCustomerDetails struct {
 
 //checkout.session
 type Session struct {
-	ID              string                  `json:"id"`
-	Cancel_url      string                  `json:"cancel_url"`
-	Currency        string                  `json:"currency"`
-	Customer        string                  `json:"customer"`
-	CustomerDetails CheckoutCustomerDetails `json:"customer_details"` //map[string]interface{}
-	Customer_email  string                  `json:"customer_email"`
-	Payment_intent  string                  `json:"payment_intent"`
-	Payment_status  string                  `json:"payment_status"`
-	Success_url     string                  `json:"success_url"`
-	Mode            string                  `json:"mode"`
-	Amount_total    int64                   `json:"amount_total"`
-	Subscription2   string                  `json:"subscription"`
-	Status          string                  `json:"status"`
+	ID               string                  `json:"id"`
+	ClentReferenceId string                  `json:"client_reference_id"`
+	CancelUrl        string                  `json:"cancel_url"`
+	Currency         string                  `json:"currency"`
+	Customer         string                  `json:"customer"`
+	Invoice          string                  `json:"invoice"`
+	CustomerDetails  CheckoutCustomerDetails `json:"customer_details"` //map[string]interface{}
+	CustomerEmail    string                  `json:"customer_email"`
+	PaymentIntent    string                  `json:"payment_intent"`
+	PaymentStatus    string                  `json:"payment_status"`
+	SuccessUrl       string                  `json:"success_url"`
+	Mode             string                  `json:"mode"` //subscription
+	AmountTotal      int64                   `json:"amount_total"`
+	Subscription2    string                  `json:"subscription"`
+	Status           string                  `json:"status"` //open,complete,expired
 }
 
 type BillingDetails struct {
@@ -158,20 +161,20 @@ type BillingDetails struct {
 type Charge struct {
 	ID                   string                 `json:"id"`
 	Amount               int64                  `json:"amount"`
-	Amount_captured      int64                  `json:"amount_captured"`
-	Amount_refunded      int64                  `json:"amount_refunded"`
-	Balance_transaction  string                 `json:"balance_transaction"`
-	Billing_details      BillingDetails         `json:"billing_details"`
+	AmountCaptured       int64                  `json:"amount_captured"`
+	AmountRefunded       int64                  `json:"amount_refunded"`
+	BalanceTransaction   string                 `json:"balance_transaction"`
+	BillingDetails       BillingDetails         `json:"billing_details"`
 	Invoice              string                 `json:"invoice"`
 	Currency             string                 `json:"currency"`
 	Customer             string                 `json:"customer"`
 	Description          string                 `json:"description"`
 	Paid                 bool                   `json:"paid"`
 	Refunded             bool                   `json:"refunded"`
-	Payment_intent       string                 `json:"payment_intent"`
-	Payment_method       string                 `json:"payment_method"`
+	PaymentIntent        string                 `json:"payment_intent"`
+	PaymentMethod        string                 `json:"payment_method"`
 	PaymentMethodDetials map[string]interface{} `json:"payment_method_details"`
-	Receipt_url          string                 `json:"receipt_url"`
+	ReceiptUrl           string                 `json:"receipt_url"`
 	Created              int64                  `json:"created"`
 	Status               string                 `json:"status"`
 }
