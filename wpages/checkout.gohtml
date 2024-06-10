@@ -448,7 +448,7 @@
 
                 <div class="grow flex items-end">
                     <div class="sticky bottom-10 w-full">
-                        <button type="button" disableds id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
+                        <button type="button" data-docid="{{.DocNumber}}" disableds id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
                             Place order & pay
                         </button>
                     </div>
@@ -501,13 +501,14 @@
 
     $('#btnPlaceOrder').on('click', (e) => {
     
-        //console.log(e.target);
         let cBtn = $('#btnPlaceOrder');
+        let docId=cBtn.attr('data-docid');
+        console.log(docId);
         cBtn.empty();
         cBtn.addChild(elmDivSpinner());
         cBtn.addChild(document.createTextNode('Please wait'));
         cBtn.prop('disabled', true);
-        vForm(location.href,{todo:'order'},'post');
+        vForm(location.href,{docid:docId,todo:'checkout'},'post'); //order
     
     });
 

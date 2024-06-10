@@ -721,6 +721,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			TotalPayable  string
 			TotalDiscount string
 			CartCount     int
+			DocNumber     string
 		}{
 			Title:         "LxRoot Checkout",
 			Base:          base,
@@ -731,6 +732,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			TotalPayable:  totalPayable,
 			TotalDiscount: totalDiscount,
 			CartCount:     len(rows),
+			DocNumber:     docNumber,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -794,6 +796,8 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 		} else if strings.ToUpper(todo) == "CHECKOUT" {
 
+			docId := r.FormValue("docid")
+			fmt.Println("checkout:", docId)
 			docNumber, err := getCookie("docid", r)
 			if err == nil {
 				// sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
