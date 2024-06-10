@@ -499,6 +499,19 @@ func shop(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
+		//var loginRequired bool = true
+		smap, err := getSessionInfo(r)
+		if err == nil {
+			//loginRequired = false
+			//http.Redirect(w, r, "/logout", http.StatusSeeOther)
+			//return
+		}
+
+		var yourname string = "Sign In"
+		if len(smap) > 1 {
+			yourname, _ = smap["account_name"].(string)
+		}
+
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header2.gohtml",
@@ -525,6 +538,7 @@ func shop(w http.ResponseWriter, r *http.Request) {
 			MainDivClass string
 			CsrfToken    string
 			CartCount    int
+			Yourname     string
 		}{
 			Title:        "LxRoot Shop",
 			Base:         base,
@@ -532,6 +546,7 @@ func shop(w http.ResponseWriter, r *http.Request) {
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
 			CsrfToken:    ctoken,
 			CartCount:    count,
+			Yourname:     yourname,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -669,6 +684,14 @@ func product(w http.ResponseWriter, r *http.Request) {
 
 func checkout(w http.ResponseWriter, r *http.Request) {
 
+	var loginRequired bool = true
+	smap, err := getSessionInfo(r)
+	if err == nil {
+		loginRequired = false
+		//http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		//return
+	}
+
 	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
@@ -710,6 +733,16 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		//formName := r.FormValue("form")
+		//fmt.Println(isLoggedIn, smap, len(smap))
+		//if formName == "" {
+		//	formName = "signin"
+		//}
+		var yourname string
+		if len(smap) > 1 {
+			yourname, _ = smap["account_name"].(string)
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title         string
@@ -722,6 +755,9 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			TotalDiscount string
 			CartCount     int
 			DocNumber     string
+			LoginRequired bool
+			Yourname      string
+			//FormName      string
 		}{
 			Title:         "LxRoot Checkout",
 			Base:          base,
@@ -733,6 +769,9 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			TotalDiscount: totalDiscount,
 			CartCount:     len(rows),
 			DocNumber:     docNumber,
+			LoginRequired: loginRequired,
+			Yourname:      yourname,
+			//FormName:      formName,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -801,7 +840,8 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			docNumber, err := getCookie("docid", r)
 			if err == nil {
 
-				priceId := "price_1PPlulJFUQv2NTJsqGsPFpLa"
+				priceId := "price_1PPlulJFUQv2NTJsqGsPFpLa" //
+
 				customerEmail := "billahmdmostain@gmail.com"
 				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail, priceId, "1")
 				if err == nil {

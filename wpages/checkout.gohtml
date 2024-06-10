@@ -55,6 +55,7 @@
         <div class="content-wrap bg-white h-full min-h-[calc(100vh-133px)] md:grid grid-cols-[1fr,minmax(auto,calc(1408px-36rem)),32rem,1fr] grid-rows-1">
 
             <div class="bg-white form-area px-6 py-10 md:py-16 md:px-0 md:pr-24">
+
                 <div class="flex gap-3 flex-col md:flex-row items-center mb-10 px-5 py-4 bg-slate-100 justify-between rounded-md border-l-4 border-sky-500">
                     <div class="flex gap-3">
                         <span class="material-iconp text-sky-500">store</span>
@@ -66,328 +67,12 @@
                         <span class="material-iconp">east</span>
                     </a>
                 </div>
-                
-                <div class="rounded-md overflow-hidden border border-slate-200">
-                    <div class="flex gap-2 justify-between bg-primary py-2 px-4">
-                        <p class="text-white uppercase">Payment Details</p>
-                        <span class="material-iconp text-white">credit_card</span> 
-                    </div>
 
-                    <div class="p-4 md:p-8">
-                        <p class="body-text2 mb-2">Select a new payment method:</p>
-                        <div class="border border-slate-200 rounded">
-                            <label class="field flex gap-3 justify-between items-center mb-0 px-4 py-3 border-b border-slate-200">
-                                <div class="flex gap-3 items-center mb-0">
-                                    <input type="radio" value="credit-debit-field" name="payment-method" id="credit-debit-field" class="custom-radio">
-                                    <span class="circle"></span>
-                                    <p class="body-text2">Credit or debit card</p>
-                                </div>
-                                <div class="hidden md:flex gap-1">
-                                    <img class="h-5 w-auto" src="resources/icon/american-express.svg" alt="" srcset="">
-                                    <img class="h-5 w-auto" src="resources/icon/maestro.svg" alt="" srcset="">
-                                    <img class="h-5 w-auto" src="resources/icon/mastercard.svg" alt="" srcset="">
-                                    <img class="h-5 w-auto" src="resources/icon/visa.svg" alt="" srcset="">
-                                </div>
-                            </label>
-                            <div class="card-payment-form bg-slate-50 px-4 py-4 border-b border-slate-200 hidden">
-                                <form action="">
-                                    <div class="md:grid grid-cols-2 gap-3">
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="cnumber-field">Card Number</label>
-                                            <input type="text" autocomplete="off" id="cnumber-field" name="cnumber-field" class="bg-white" placeholder="1234 1234 1234 1234">
-                                        </div>
-                                        <div class="md:grid grid-cols-2 gap-3">
-                                            <div class="field flex flex-col mb-4">
-                                                <label for="expiration-field">Expiration </label>
-                                                <input type="text" autocomplete="off" id="expiration-field" name="expiration-field" class="bg-white" placeholder="MM / YY">
-                                            </div>
-                                            <div class="field flex flex-col mb-4">
-                                                <label for="cvc-field">CVC </label>
-                                                <input type="text" autocomplete="off" id="cvc-field" name="cvc-field" class="bg-white" placeholder="CVC">
-                                            </div>
-                                        </div>
-                                    </div>
+                <!---starts here---->
 
-                                    <div class="select-field relative">
-                                        <label for="select-country" class="not-floating block mb-1">
-                                            Country/Region
-                                        </label>
 
-                                        <select  id="country-select" class="custom-select select-no-label">
-                                            <option value="" disabled selected>Select Domain :</option>
-                                            <option value=""></option>
-                                            <option value="Bangladesh">Bangladesh</option>
-                                            <option value="United States">United States</option>
-                                            <option value="India">India</option>
-                                        </select>
+                <!---ends here------>
 
-                                    </div>
-
-                                    <p class="caption-text mt-3 mb-5 text-slate-500">By providing your card information, you allow Enhance Hosting Automation Ltd to charge your card for future payments in accordance with their terms.</p>
-                                    <div class="save-payment-details mb-3">
-                                        <p class="body-text2 text-slate-600">Do you want us to securely store this payment detail for future billing?</p>
-                                        <label class="field flex gap-3 items-center my-2">
-                                            <input type="checkbox" name="save-details-field" id="save-details-field" checked>
-                                            <p class="body-text2 text-slate-700">Save Payment Details</p>
-                                        </label>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <label class="field flex gap-3 justify-between items-center mb-0 px-4 py-3">
-                                <div class="flex gap-3 items-center mb-0">
-                                    <input type="radio" value="paypal-field" name="payment-method" id="paypal-field" class="custom-radio">
-                                    <span class="circle"></span>
-                                    <p class="body-text2">Paypal</p>
-                                </div>
-                                <div class="flex gap-1">
-                                    <img class="h-5 w-auto" src="resources/icon/paypal-wide.svg" alt="" srcset="">
-                                </div>
-                            </label>
-                            <div class="paypal-form bg-slate-50 px-4 py-4 border-t border-slate-200 hidden">
-                                <p class=" bg-yellow-50 border-l-4 border-yellow-400 rounded-md px-4 py-3">Upon continuing, you'll be redirected away from this page to complete payment.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="rounded-md border border-slate-200 mt-10">
-                    <div class="flex gap-x-2 justify-between bg-primary py-2 px-4 rounded-t-md">
-                        <p class="text-white uppercase">Billing Details</p>
-                        <span class="material-iconp text-white">my_location</span> 
-                    </div>
-
-                    <div class="p-4 md:p-8">
-                        <div class="field mb-4">
-                            <input type="text" autocomplete="off" name="address-field" id="address-field" placeholder="Enter your address" class="w-full">
-                        </div>
-
-                        <div class="dropdown hover-dropdown h-full w-fit flex items-center !relative" data-dropdown="">
-                            <button class="body-text1 !font-medium menu-btn flex gap-[2px] items-center justify-center p-1 rounded-full group/btn text-secondary text-sm transition" data-dropdown-btn="">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.99799H13V10.998H19V12.998Z" fill="#40C0E7"/>
-                                </svg>
-                                <span class="underline body-text2">Add new</span>
-                            </button>
-
-                            <div class="dropdown-content py-1 w-72 absolute top-12 left-0 bg-white text-primary before:left-8 before:!right-[unset] after:left-[33px] after:!right-[unset]  z-50">
-                                <div class="container mx-auto py-2">
-                                
-
-                                    <button class="menu-btn w-full px-4 !py-2 flex gap-2 items-center text-secondary hover:text-primary hover:bg-slate-100 transition" data-modal="add-address-modal">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 6C13.93 6 15.5 7.57 15.5 9.5C15.5 11.43 13.93 13 12 13C10.07 13 8.5 11.43 8.5 9.5C8.5 7.57 10.07 6 12 6ZM12 20C9.97 20 7.57 19.18 5.86 17.12C7.6116 15.7457 9.77362 14.9988 12 14.9988C14.2264 14.9988 16.3884 15.7457 18.14 17.12C16.43 19.18 14.03 20 12 20Z" fill="black"></path>
-                                        </svg>
-                                        <span class="body-text2 ">Add new address</span>
-                                    </button>
-                                    
-
-                                    <button data-modal="add-company-modal" class="menu-btn w-full px-4 !py-2 flex gap-2 items-center text-secondary hover:text-primary hover:bg-slate-100 transition">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z" fill="#E74C4C"></path>
-                                        </svg>
-                                        <span class="body-text2 ">Add Company Details</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            
-                        </div>
-                        <div class="modal-wrap" id="add-address-modal">
-                            <div class="modal-content rounded-md !overflow-hidden flex flex-col">
-                                <div class="modal-header  bg-primary p-4 relative">
-                                    <p class="body-text1 text-white text-center">Add address</p>
-                                    <button class="modal-closer menu-btn hover:!bg-primaryMiddle !w-8 !h-8 absolute top-1/2 -translate-y-1/2 right-4" data-modal-closer="">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path class="stroke-white" d="M20 20L4 4M20 4L4 20" stroke="black" stroke-width="2" stroke-linecap="round"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                                
-                                <div class=" px-8 py-8 grow overflow-y-auto">
-                                    <form action="">
-                                        <div class="field mb-2">
-                                            <input type="text" autocomplete="off" name="address-field" id="address-field" placeholder="Enter your address" class="w-full">
-                                        </div>
-                                        <p class="caption-text text-slate-400 text-center mb-2">Or enter address manually</p>
-
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="faddress-field">Address <span class="required-spot">*</span></label>
-                                            <div class="relative w-full">
-                                                <input class="w-full" type="text" autocomplete="off" id="faddress-field" name="faddress-field" placeholder="Enter Address first line" onblur="validateField('faddress-field')">
-                                                <svg id="faddress-field-error-icon" class="hidden error-icon absolute right-3 bottom-1/2 translate-y-1/2 w-5 h-5 pointer-events-none" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <g clip-path="url(#clip0_176_54)">
-                                                    <path class="fill-red-600" d="M12 0C5.4 0 0 5.4 0 12C0 18.6 5.4 24 12 24C18.6 24 24 18.6 24 12C24 5.4 18.6 0 12 0ZM13.5 19.5H10.5V16.5H13.5V19.5ZM13.5 15H10.5V4.5H13.5V15Z" fill="#ef1d1d"/>
-                                                    </g>
-                                                    <defs>
-                                                    <clipPath id="clip0_176_54">
-                                                    <rect width="24" height="24" fill="white"/>
-                                                    </clipPath>
-                                                    </defs>
-                                                </svg>
-                                            </div>
-                                            <div id="faddress-field-error" class="text-[14px] text-red-500 mt-1 hidden">
-                                                Please enter address first line.
-                                            </div>
-                                            <!-- <div class="field flex flex-col mb-4"> -->
-                                        </div>
-                                        
-                                        <div class="field flex flex-col mb-4">
-                                            <input type="text" autocomplete="off" id="laddress-field" name="laddress-field" placeholder="Enter Address second line">
-                                            
-                                        </div>
-
-                                        <div class="md:grid grid-cols-[1.5fr,1fr] gap-3 ">
-                                            <div class="field flex flex-col mb-4">
-                                                <label for="city-field">City <span class="required-spot">*</span></label>
-                                                <div class="relative w-full">
-                                                    <input class="w-full" type="text" autocomplete="off" id="city-field" name="city-field" placeholder="City" onblur="validateField('city-field')">
-                                                    <svg id="city-field-error-icon" class="hidden error-icon absolute right-3 bottom-1/2 translate-y-1/2 w-5 h-5 pointer-events-none" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <g clip-path="url(#clip0_176_54)">
-                                                        <path class="fill-red-600" d="M12 0C5.4 0 0 5.4 0 12C0 18.6 5.4 24 12 24C18.6 24 24 18.6 24 12C24 5.4 18.6 0 12 0ZM13.5 19.5H10.5V16.5H13.5V19.5ZM13.5 15H10.5V4.5H13.5V15Z" fill="#ef1d1d"/>
-                                                        </g>
-                                                        <defs>
-                                                        <clipPath id="clip0_176_54">
-                                                        <rect width="24" height="24" fill="white"/>
-                                                        </clipPath>
-                                                        </defs>
-                                                    </svg>
-                                                </div>
-                                                <div id="city-field-error" class="text-[14px] text-red-500 mt-1 hidden">
-                                                    The city field is required
-                                                </div>
-                                            </div>
-                                            <div class="field flex flex-col mb-4">
-                                                <label for="postcode-field">Postcode <span class="required-spot">*</span></label>
-                                                <div class="relative w-full">
-                                                    <input class="w-full" type="text" autocomplete="off" id="postcode-field" name="postcode-field" placeholder="Postcode" onblur="validateField('postcode-field')">
-                                                    <svg id="postcode-field-error-icon" class="hidden error-icon absolute right-3 bottom-1/2 translate-y-1/2 w-5 h-5 pointer-events-none" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <g clip-path="url(#clip0_176_54)">
-                                                        <path class="fill-red-600" d="M12 0C5.4 0 0 5.4 0 12C0 18.6 5.4 24 12 24C18.6 24 24 18.6 24 12C24 5.4 18.6 0 12 0ZM13.5 19.5H10.5V16.5H13.5V19.5ZM13.5 15H10.5V4.5H13.5V15Z" fill="#ef1d1d"/>
-                                                        </g>
-                                                        <defs>
-                                                        <clipPath id="clip0_176_54">
-                                                        <rect width="24" height="24" fill="white"/>
-                                                        </clipPath>
-                                                        </defs>
-                                                    </svg>
-                                                </div>
-                                                <div id="postcode-field-error" class="text-[14px] text-red-500 mt-1 hidden">
-                                                    The postcode field is required
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="select-field relative">
-                                            <label for="country-select" class="not-floating block mb-1">
-                                                Country/Region
-                                            </label>
-                                            
-                                            <select  id="modal-country-select" class="custom-select select-no-label">
-                                                <option value="" disabled selected>Select Domain :</option>
-                                                <option value=""></option>
-                                                <option value="Bangladesh">Bangladesh</option>
-                                                <option value="United States">United States</option>
-                                                <option value="India">India</option>
-                                            </select>
-
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="modal-footer grow-0 py-4 px-8 relative flex justify-between border-t border-slate-200" >
-                                    <button class="menu-btn filled-button !font-normal !h-12 !bg-slate-100 text-secondary hover:text-secondaryDeep hover:!bg-slate-200 hover:!shadow-none" data-modal-closer="add-address-modal">
-                                        Cancel
-                                    </button>
-
-                                    <button disabled class=" filled-button !font-medium !h-12 !bg-primary !text-white hover:!bg-primary">
-                                        Add Address
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="modal-scrim"></div>
-                        </div>
-
-                        <div class="modal-wrap" id="add-company-modal">
-                            <div class="modal-content rounded-md !overflow-hidden flex flex-col">
-                                <div class="modal-header  bg-primary p-4 relative">
-                                    <p class="body-text1 text-white text-center">Add company</p>
-                                    <button class="modal-closer menu-btn hover:!bg-primaryMiddle !w-8 !h-8 absolute top-1/2 -translate-y-1/2 right-4" data-modal-closer="">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path class="stroke-white" d="M20 20L4 4M20 4L4 20" stroke="black" stroke-width="2" stroke-linecap="round"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                                
-                                <div class=" px-8 py-8 grow overflow-y-auto">
-                                    <form action="">
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="companyname-field">Name <span class="required-spot">*</span></label>
-                                            <input type="text" autocomplete="off" id="companyname-field" name="companyname-field" class="w-full" placeholder="Name" onblur="validateField('companyname-field')">
-                                            <div id="companyname-field-error" class="text-[14px] text-red-500 mt-1 hidden">
-                                                The name field is required.
-                                            </div>
-                                        </div>
-
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="vat-field">Registered TAX/VAT ID </label>
-                                            <input type="text" autocomplete="off" id="vat-field" class="w-full" name="vat-field" placeholder="Name">
-                                        </div>
-
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="regnum-field">Registration Number</label>
-                                            <input type="text" autocomplete="off" id="regnum-field" class="w-full" name="regnum-field" placeholder="Name">
-                                            
-                                        </div>
-                                        
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="email-field">Email Address <span class="required-spot">*</span></label>
-                                            <input type="text" autocomplete="off" id="email-field" name="email-field" class="w-full" placeholder="Name" onblur="validateField('email-field')">
-                                            <div id="email-field-error" class="text-[14px] text-red-500 mt-1 hidden">
-                                                The email field is required.
-                                            </div>
-                                        </div>
-
-                                        <div class="field flex flex-col mb-4">
-                                            <label for="phone-field">Phone <span class="required-spot">*</span></label>
-                                            <input type="text" autocomplete="off" id="phone-field" name="phone-field" class="w-full" placeholder="Name" onblur="validateField('phone-field')">
-                                            <div id="phone-field-error" class="text-[14px] text-red-500 mt-1 hidden">
-                                                The phone field is required.
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="modal-footer grow-0 py-4 px-8 relative flex justify-between border-t border-slate-200" >
-                                    <button class="menu-btn filled-button !font-normal !h-12 !bg-slate-100 text-secondary hover:text-secondaryDeep hover:!bg-slate-200 hover:!shadow-none" data-modal-closer="add-address-modal">
-                                        Cancel
-                                    </button>
-
-                                    <button disabled class=" filled-button !h-12 !bg-primary !text-white hover:!bg-primary">
-                                        Add Company
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="modal-scrim"></div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="rounded-md border border-slate-200 mt-10 overflow-hidden">
-                    <div class="flex gap-2 justify-between bg-primary py-2 px-4">
-                        <p class="text-white uppercase">Order Fields</p>
-                        <span class="material-iconp text-white">insert_drive_file</span> 
-
-                    </div>
-
-                    <div class="p-4 md:p-8">
-                        <div class="field mb-4">
-                            <label for="order-note-field">Order Note</label>
-                            <textarea type="text" name="order-note-field" id="order-note-field" placeholder="Add Note" class="w-full !h-auto mt-2"></textarea>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!---Cart Items--->
@@ -448,7 +133,14 @@
 
                 <div class="grow flex items-end">
                     <div class="sticky bottom-10 w-full">
-                        <button type="button" data-docid="{{.DocNumber}}" disableds id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
+                        
+                        {{if .LoginRequired}}
+                        <div class="flex gap-x-4 text-slate-700 caption-text">
+                            <span class="material-iconp">login</span>
+                            <a href="/signin" class="mb-4 underline">Sign in to proceed with checkout</a>
+                        </div>
+                        {{end}}
+                        <button type="button" data-docid="{{.DocNumber}}" {{if .LoginRequired}}disabled{{end}} id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
                             Place order & pay
                         </button>
                     </div>
