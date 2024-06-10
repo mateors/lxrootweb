@@ -267,13 +267,13 @@ func init() {
 	//err = lxql.InsertUpdateObject("event", evt.ID, &evt, database.DB)
 	//fmt.Println(err)
 
-	rurl := "https://pay.stripe.com/receipts/invoices/CAcaFwoVYWNjdF8xT2pxeUZKRlVRdjJOVEpzKLWOm7MGMgZ9ouzNg6s6LBbPoyN2PS0meir7wTTJAHXYzGPo0iTp-0u4GdFOsmFoLJi7IAVevpykoFy7?s=ap"
-	durl, err := stripeReceiptToPdfUrl(rurl)
-	fmt.Println(err, durl)
+	// rurl := "https://pay.stripe.com/receipts/invoices/CAcaFwoVYWNjdF8xT2pxeUZKRlVRdjJOVEpzKLWOm7MGMgZ9ouzNg6s6LBbPoyN2PS0meir7wTTJAHXYzGPo0iTp-0u4GdFOsmFoLJi7IAVevpykoFy7?s=ap"
+	// durl, err := stripeReceiptToPdfUrl(rurl)
+	// fmt.Println(err, durl)
 
-	filename, err := DownloadFile("data/invoice", durl)
-	fmt.Println(err, filename)
-	os.Exit(1)
+	// filename, err := DownloadFile("data/invoice", durl)
+	// fmt.Println(err, filename)
+	// os.Exit(1)
 }
 
 func main() {
