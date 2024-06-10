@@ -1083,8 +1083,8 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		for key := range r.Form {
 			rmap[key] = r.FormValue(key)
 		}
-		response := CheckMultipleConditionTrue(rmap, funcsMap)
 
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
 		if response == "ERROR email already exist" {
 			errNo = 1
 			errMsg = response

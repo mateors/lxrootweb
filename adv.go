@@ -262,15 +262,24 @@ func vcodeIdValidation(args map[string]interface{}) string {
 
 func validSignupField(args map[string]interface{}) string {
 
-	firstName := args["first_name"].(string)
+	firstName, isOk := args["first_name"].(string)
+	if !isOk {
+		return "ERROR first name field required"
+	}
 	if firstName == "" {
 		return "ERROR first_name is required"
 	}
-	lastName := args["last_name"].(string)
+	lastName, isOk := args["last_name"].(string)
+	if !isOk {
+		return "ERROR last name field required"
+	}
 	if lastName == "" {
 		return "ERROR last_name is required"
 	}
-	passwd := args["passwd"].(string)
+	passwd, isOk := args["passwd"].(string)
+	if !isOk {
+		return "ERROR password field required"
+	}
 	if passwd == "" {
 		return "ERROR password is required"
 	}

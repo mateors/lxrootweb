@@ -11,14 +11,14 @@ import (
 )
 
 const (
-	PAYMENT_INENT_CREATED     = "payment_intent.created"    //1
-	INVOICE_CREATED           = "invoice.created"           //2
-	INVOICE_FINALIZED         = "invoice.finalized"         //3
-	CHARGE_SUCCEEDED          = "charge.succeeded"          //4
-	PAYMENT_INTENT_SUCCEEDED  = "payment_intent.succeeded"  //5
-	INVOICE_UPDATED           = "invoice.updated"           //6
-	INVOICE_PAID              = "invoice.paid"              //7
-	INVOICE_PAYMENT_SUCCEEDED = "invoice.payment_succeeded" //8
+	PAYMENT_INENT_CREATED     = "payment_intent.created"    //1 ok
+	INVOICE_CREATED           = "invoice.created"           //2 ok
+	INVOICE_FINALIZED         = "invoice.finalized"         //3 ok
+	CHARGE_SUCCEEDED          = "charge.succeeded"          //4 ok
+	PAYMENT_INTENT_SUCCEEDED  = "payment_intent.succeeded"  //5 ok
+	INVOICE_UPDATED           = "invoice.updated"           //6 ok
+	INVOICE_PAID              = "invoice.paid"              //7 ok
+	INVOICE_PAYMENT_SUCCEEDED = "invoice.payment_succeeded" //8 ok
 )
 
 func paymentHook(w http.ResponseWriter, r *http.Request) {
