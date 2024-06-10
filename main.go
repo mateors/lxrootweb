@@ -58,7 +58,7 @@ func init() {
 		lxql.RegisterModel(DocPayShipInfo{})
 		lxql.RegisterModel(Subscription{})
 		lxql.RegisterModel(Item{})
-
+		lxql.RegisterModel(Event{}) //StripeEvent
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -285,6 +285,8 @@ func main() {
 	r.HandleFunc("/license", licenseKey)            //license details
 	r.HandleFunc("/ticketnew", ticketNew)           //ticketnew
 	r.HandleFunc("/logout", logout)                 //logout
+
+	r.HandleFunc("/payhook", paymentHook)
 
 	//r.HandleFunc("/webhook", webhookHandler)
 

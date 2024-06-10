@@ -14,7 +14,7 @@ type Event struct {
 	ApiVersion      string                 `json:"api_version"`
 	Data            map[string]interface{} `json:"data"`
 	Request         map[string]interface{} `json:"request"`
-	Type            string                 `json:"type"` //??
+	Type            string                 `json:"type"` //?? invoice.created | charge.refunded
 	Livemode        bool                   `json:"livemode"`
 	Created         int64                  `json:"created"`
 	Object          string                 `json:"object"`
