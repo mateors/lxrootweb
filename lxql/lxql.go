@@ -3,6 +3,7 @@ package lxql
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"reflect"
@@ -245,6 +246,41 @@ func InsertUpdateMap(form map[string]interface{}, db *sql.DB) error {
 		return err
 	}
 	return nil
+}
+
+func structFieldValMap(anyStructToPointer interface{}) (map[string]interface{}, error) {
+
+	empv := reflect.ValueOf(anyStructToPointer) //must be a pointer
+	empt := reflect.TypeOf(anyStructToPointer)  //
+	if empv.Kind() != reflect.Pointer {
+		return nil, errors.New("anyStructToPointer must be a pointer")
+	}
+	var row = make(map[string]interface{})
+	for i := 0; i < empv.Elem().NumField(); i++ {
+
+		var key string
+		kfield := empt.Elem().Field(i)
+		key = kfield.Name
+		tag := kfield.Tag.Get("json")
+		if tag != "" {
+			key = tag
+		}
+		row[key] = empv.Elem().Field(i).Interface()
+	}
+	return row, nil
+}
+
+// objPtr is StructPropertyWithValue
+func InsertUpdateObject(tableName, docID string, objPtr interface{}, db *sql.DB) error {
+
+	row, err := structFieldValMap(objPtr)
+	if err != nil {
+		return err
+	}
+	jsonTxt := vMapToJsonStr(row)
+	query := upsertQueryBuilder(tableToBucket(tableName), docID, jsonTxt)
+	_, err = db.Exec(query)
+	return err
 }
 
 func scanMap(jsonBytes []uint8) map[string]interface{} {

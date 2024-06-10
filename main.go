@@ -237,7 +237,35 @@ func init() {
 	// 	fmt.Printf("%v = %v, %T\n", key, val, val)
 	// }
 
-	//fmt.Println(unixToDateTime(1720542106))
+	// fmt.Println(unixToDateTime(1720542106))
+	// fmt.Println(strToTime("1720542106").Format("2006-01-02 15:04:05"))
+	//fmt.Println(strToTime("1720542106").Format("2006-01-02 15:04:05"))
+
+	//var evt Event
+	//row := make(map[string]interface{})
+	//err = json.Unmarshal([]byte(jsonTxt), &evt)
+	//fmt.Println("##", err, evt.Created, evt.Object, evt.ID)
+	// fmt.Printf("%v %T\n", row["created"], row["created"])
+	// fmt.Printf("%v\n", row["object"])
+	// fmt.Printf("%v %T\n", row["data"], row["data"])
+	//fmt.Println(">", toTime(row["created"]).Format("2006-01-02 15:04:05"))
+	//fmt.Println("<", toTime(int64(1717990849)))
+
+	// ns := struct {
+	// 	Name string
+	// 	Age  int
+	// 	Lang []string
+	// 	Info map[string]interface{}
+	// }{
+	// 	Name: "Mostain",
+	// 	Age:  40,
+	// 	Lang: []string{"go", "rust", "python"},
+	// 	Info: row,
+	// }
+	// row, err := structFieldValMap(&ns)
+	// fmt.Println(err, row)
+	//err = lxql.InsertUpdateObject("event", evt.ID, &evt, database.DB)
+	//fmt.Println(err)
 	//os.Exit(1)
 }
 

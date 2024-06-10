@@ -501,13 +501,15 @@ func addItem(itemName, itemCategory, itemCode, itemDesc, image, buyPrice, salePr
 	return id, err
 }
 
-func addEvent() (id string, err error) {
+func addEvent(id string) (string, error) {
 
 	modelName := structName(Event{})
 	//table := customTableName(modelName)
 	var form = make(map[string]interface{})
-	//id = xid.New().String()
-	//form["id"] = id
+	if id == "" {
+		id = xid.New().String()
+	}
+	form["id"] = id
 	//form["type"] = table
 	//form["cid"] = COMPANY_ID
 	form["table"] = modelName

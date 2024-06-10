@@ -14,6 +14,7 @@ import (
 	"lxrootweb/utility"
 	"math"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -577,6 +578,29 @@ func float64totime(val float64) time.Time {
 	return time.Unix(intTimestamp, 0)
 }
 
+func toTime(val interface{}) time.Time {
+
+	switch s := val.(type) {
+
+	case string:
+		sint64, _ := strconv.ParseInt(s, 10, 64)
+		return time.Unix(sint64, 0)
+
+	case float64:
+		return time.Unix(int64(s), 0)
+
+	case int:
+		return time.Unix(int64(s), 0)
+
+	case int64:
+		return time.Unix(s, 0)
+
+	default:
+		fmt.Printf("toTime() -> type of val is %T", s)
+	}
+	return time.Time{}
+}
+
 // true = not expire, false = expired
 func checkUnExpired(expStr string) bool {
 
@@ -805,4 +829,33 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId
 	// sql = fmt.Sprintf("UPDATE %s SET status=9 WHERE doc_number='%s';", tableToBucket("transaction_record"), oldDocNumber)
 	// lxql.RawSQL(sql, database.DB)
 	return
+}
+
+func structFieldValMap(anyStructToPointer interface{}) (map[string]interface{}, error) {
+
+	empv := reflect.ValueOf(anyStructToPointer) //must be a pointer
+	empt := reflect.TypeOf(anyStructToPointer)  //
+
+	if empv.Kind() != reflect.Pointer {
+		return nil, errors.New("anyStructToPointer must be a pointer")
+	}
+
+	var row = make(map[string]interface{})
+
+	for i := 0; i < empv.Elem().NumField(); i++ {
+
+		//vField := empv.Elem().Field(i)
+		var key string
+		kfield := empt.Elem().Field(i)
+		key = kfield.Name
+		tag := kfield.Tag.Get("json")
+		if tag != "" {
+			key = tag
+		}
+		//fmt.Println(empt.Elem().Field(i), empv.Elem().Field(i))
+		row[key] = empv.Elem().Field(i).Interface()
+	}
+	//fmt.Println(row, len(row))
+	return row, nil
+
 }
