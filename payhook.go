@@ -53,8 +53,8 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 		} else if evt.Type == CHARGE_SUCCEEDED { //4
 
-			fmt.Println("4-->", CHARGE_SUCCEEDED)
-			pCharge, err := chargeParser2(evt.Data)
+			pCharge, err := chargeParser(evt.Data)
+			fmt.Println("4-->", CHARGE_SUCCEEDED, err)
 			if err == nil {
 
 				//checkout_session
@@ -83,10 +83,10 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 		} else if evt.Type == INVOICE_PAID { //7
 
-			fmt.Println("7-->", INVOICE_PAID)
-			inv, err := invoiceParser(evt.Data)
-			fmt.Println(err, inv.Customer, inv.AmountPaid, inv.Subscription2, inv.PaymentIntent, inv.CustomerEmail, inv.CustomerName, inv.Number, inv.CustomerPhone)
-			fmt.Println(inv.InvoicePdf, inv.HostedInvoiceUrl)
+			//fmt.Println("7-->", INVOICE_PAID)
+			//inv, err := invoiceParser(evt.Data)
+			//fmt.Println(err, inv.Customer, inv.AmountPaid, inv.Subscription2, inv.PaymentIntent, inv.CustomerEmail, inv.CustomerName, inv.Number, inv.CustomerPhone)
+			//fmt.Println(inv.InvoicePdf, inv.HostedInvoiceUrl)
 
 		} else if evt.Type == INVOICE_PAYMENT_SUCCEEDED { //8
 			fmt.Println("8-->", INVOICE_PAYMENT_SUCCEEDED)

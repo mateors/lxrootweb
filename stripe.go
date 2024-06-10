@@ -290,21 +290,6 @@ func paymentIntentParser(evtData map[string]interface{}) (*PaymentIntent, error)
 	return payint, err
 }
 
-func chargeParser2(obj interface{}) (*Charge, error) {
-
-	// obj, isOk := evtData["object"]
-	// if !isOk {
-	// 	return nil, errors.New("wrong object")
-	// }
-	jsonBytes, err := json.Marshal(obj)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	var chrg = &Charge{}
-	err = json.Unmarshal(jsonBytes, chrg)
-	return chrg, err
-}
 
 func sessionParser(evtData map[string]interface{}) (*Session, error) {
 

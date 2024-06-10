@@ -812,6 +812,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 					rurl, isOk := row["url"].(string)
 					if isOk {
+						delCookie("docid", r, w)
 						http.Redirect(w, r, rurl, http.StatusSeeOther)
 					}
 				}
