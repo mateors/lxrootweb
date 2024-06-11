@@ -447,7 +447,7 @@ func str2int(val string) int {
 	return ival
 }
 
-func addTransactionRecord(trxType, docNumber, itemId, itemInfo, itemSerial, qty, price string) (id string, err error) {
+func addTransactionRecord(trxType, docNumber, itemId, itemInfo, itemSerial, stripePriceId, qty, price string) (id string, err error) {
 
 	modelName := structName(TransactionRecord{})
 	table := customTableName(modelName)
@@ -462,6 +462,7 @@ func addTransactionRecord(trxType, docNumber, itemId, itemInfo, itemSerial, qty,
 	form["item_id"] = itemId
 	form["item_info"] = itemInfo
 	form["item_serial"] = itemSerial
+	form["stock_info"] = stripePriceId
 	form["quantity"] = qty
 	form["rate"] = 1
 	form["price"] = price

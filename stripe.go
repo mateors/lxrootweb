@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"lxrootweb/database"
+	"lxrootweb/lxql"
 	"net/http"
 	"net/url"
 	"os"
@@ -190,24 +192,27 @@ func createSubscriptionPrice(stripeSecretKey, productName, priceInCents string) 
 }
 
 // stripe checkout session
-func createSession(stripeSecretKey, docNumber, customerEmail, priceId, qty string) (map[string]interface{}, error) {
+func createSession(stripeSecretKey, docNumber, customerEmail string) (map[string]interface{}, error) {
 
 	//type = recurring
-	//stripeKey := "sk_test_51OjqyFJFUQv2NTJsitgDUhNX3CPbns3eE3IyxSdTc8yEhI5p24SDyn9lyEI4AqaMSRghw6V25XoStkYa8Zl7zEOg006vuF1cTQ"
-	successUrl := "https://lxroot.com/complete"
 	var fmap = make(map[string]string)
 	fmap["client_reference_id"] = docNumber
 
-	fmap["line_items[0][price]"] = priceId
-	fmap["line_items[0][quantity]"] = qty
-	fmap["line_items[1][price]"] = "price_1PPddlJFUQv2NTJs4sxm013J"
-	fmap["line_items[1][quantity]"] = "2"
+	sql := fmt.Sprintf("SELECT stock_info,quantity FROM %s WHERE doc_number=%q;", tableToBucket("transaction_record"), docNumber)
+	rows, err := lxql.GetRows(sql, database.DB)
+	if err == nil {
 
-	fmap["success_url"] = successUrl
+		for i, row := range rows {
+			stripePriceId, _ := row["stock_info"].(string)
+			quantity, _ := row["quantity"].(string)
+			fmap[fmt.Sprintf("line_items[%d][price]", i)] = stripePriceId //stcok_info = stripe priceId
+			fmap[fmt.Sprintf("line_items[%d][quantity]", i)] = quantity
+		}
+	}
+	fmap["success_url"] = "https://lxroot.com/complete"
 	fmap["customer_email"] = customerEmail
 	fmap["mode"] = "subscription" //payment,setup,subscription
-	//fmap["customer_creation"]="always" //payment
-	//set payment_intent_data.setup_future_usage to have Checkout automatically
+
 	return apiPostRequest("https://api.stripe.com/v1/checkout/sessions", stripeSecretKey, fmap)
 }
 
@@ -289,7 +294,6 @@ func paymentIntentParser(evtData map[string]interface{}) (*PaymentIntent, error)
 	err = json.Unmarshal(jsonBytes, payint)
 	return payint, err
 }
-
 
 func sessionParser(evtData map[string]interface{}) (*Session, error) {
 

@@ -692,8 +692,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 	smap, err := getSessionInfo(r)
 	if err == nil {
 		loginRequired = false
-		//http.Redirect(w, r, "/logout", http.StatusSeeOther)
-		//return
 	}
 
 	if r.Method == http.MethodGet {
@@ -737,11 +735,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		//formName := r.FormValue("form")
-		//fmt.Println(isLoggedIn, smap, len(smap))
-		//if formName == "" {
-		//	formName = "signin"
-		//}
 		var yourname string
 		if len(smap) > 1 {
 			yourname, _ = smap["account_name"].(string)
@@ -761,7 +754,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			DocNumber     string
 			LoginRequired bool
 			Yourname      string
-			//FormName      string
 		}{
 			Title:         "LxRoot Checkout",
 			Base:          base,
@@ -775,7 +767,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			DocNumber:     docNumber,
 			LoginRequired: loginRequired,
 			Yourname:      yourname,
-			//FormName:      formName,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -788,7 +779,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		id := r.FormValue("id")
 		todo := r.FormValue("todo")
-		//fmt.Println(todo)
 
 		if strings.ToUpper(todo) == "DELETE" {
 
@@ -808,52 +798,36 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 		} else if strings.ToUpper(todo) == "COUPON" {
 
-			//code := r.FormValue("code") //discount code
-			docNumber, err := getCookie("docid", r)
-			if err == nil {
-				sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
-				row, err := singleRow(sql)
-				fmt.Println(err, row)
-			}
-			//fmt.Println(todo, r.Form)
-
-		} else if strings.ToUpper(todo) == "ORDER" {
-
-			smap, err := getSessionInfo(r)
-			if err != nil {
-				//http.Redirect(w, r, "/logout", http.StatusSeeOther)
-				//return
-				fmt.Println(err)
-			}
-
-			docNumber, err := getCookie("docid", r)
-			if err == nil {
-
-				sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
-				row, err := singleRow(sql)
-				if err == nil {
-					fmt.Println("login info ->", smap)
-					fmt.Println(docNumber, row)
-				}
-			}
+			// code := r.FormValue("code") //discount code
+			// docNumber, err := getCookie("docid", r)
+			// if err == nil {
+			// 	sql := fmt.Sprintf("SELECT * FROM %s WHERE doc_type='cart' AND status=1 AND doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
+			// 	row, err := singleRow(sql)
+			// 	fmt.Println(err, row)
+			// }
 
 		} else if strings.ToUpper(todo) == "CHECKOUT" {
 
+			if len(smap) == 0 {
+				log.Println("No login session found to redirecting to checkout page...")
+				http.Redirect(w, r, "/checkout", http.StatusSeeOther)
+				return
+			}
+
+			loginId, _ := smap["id"].(string)
+			accountId, _ := smap["account_id"].(string)
+			customerEmail, _ := smap["username"].(string)
 			docId := r.FormValue("docid")
-			//fmt.Println("checkout:", docId)
 			docNumber, err := getCookie("docid", r)
+
 			if err == nil {
 
-				priceId := "price_1PPlulJFUQv2NTJsqGsPFpLa" //
-
-				customerEmail := "billahmdmostain@gmail.com"
-				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail, priceId, "1")
+				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail)
 				if err == nil {
 
 					sessionId, _ := row["id"].(string) //checkout.session.id
-					sql := fmt.Sprintf("UPDATE %s SET doc_status=%q, doc_description=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), "checkout_session", sessionId, docId)
+					sql := fmt.Sprintf("UPDATE %s SET login_id=%q, account_id=%q, doc_status=%q, doc_description=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), loginId, accountId, "checkout_session", sessionId, docId)
 					lxql.RawSQL(sql, database.DB)
-
 					rurl, isOk := row["url"].(string)
 					if isOk {
 						delCookie("docid", r, w)
@@ -862,7 +836,6 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
-
 		http.Redirect(w, r, "/checkout", http.StatusSeeOther)
 		return
 	}

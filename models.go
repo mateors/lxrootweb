@@ -354,7 +354,7 @@ type Item struct {
 	ID              string `json:"id"`
 	Type            string `json:"type"`
 	CompanyID       string `json:"cid"`         //foreign key
-	ItemCode        string `json:"item_code"`   //item_code = 12 character(4+4+4) ItemLine.Supplier.ItemSerial
+	ItemCode        string `json:"item_code"`   //stripe.priceId = price_1PPlulJFUQv2NTJsqGsPFpLa
 	CategoryID      string `json:"category_id"` //foreign key as item_group
 	ItemType        string `json:"item_type"`   //raw_material,stockable,consumable,service|license_key
 	ItemName        string `json:"item_name"`
@@ -485,7 +485,7 @@ type TransactionRecord struct {
 	DocNumber      string  `json:"doc_number"` //foriegn key
 	ItemID         string  `json:"item_id"`
 	ItemInfo       string  `json:"item_info"`
-	StockInfo      string  `json:"stock_info"`
+	StockInfo      string  `json:"stock_info"`  //stripePriceId => price_1PPlulJFUQv2NTJsqGsPFpLa
 	ProductSerial  string  `json:"item_serial"` //SKU or barcode | license_key
 	Quantity       int     `json:"quantity"`
 	Rate           float64 `json:"rate"`  //per unit price, GAAP Compliance

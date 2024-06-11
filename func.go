@@ -795,11 +795,12 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId
 	docStatus := "pending"
 	docId = docNumber
 
-	sql := fmt.Sprintf("SELECT item_name,sale_price FROM %s WHERE id='%s';", tableToBucket("item"), itemId)
+	sql := fmt.Sprintf("SELECT item_name,item_code,sale_price FROM %s WHERE id='%s';", tableToBucket("item"), itemId)
 	row, err := singleRow(sql)
 	logError("addToCart", err)
 	price, _ := row["sale_price"].(string)
 	itemInfo, _ := row["item_name"].(string)
+	stripePriceId, _ := row["item_code"].(string) //
 	itemSerial := ""
 
 	totalDiscount := ""
@@ -816,7 +817,7 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId
 		}
 	}
 
-	addTransactionRecord(docType, docId, itemId, itemInfo, itemSerial, qty, price)
+	addTransactionRecord(docType, docId, itemId, itemInfo, itemSerial, stripePriceId, qty, price)
 
 	if docUpdate {
 		sql = fmt.Sprintf("UPDATE %s SET total_payable=total_payable+%s WHERE doc_number=%q;", tableToBucket("doc_keeper"), totalPayable, docId)
