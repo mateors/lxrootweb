@@ -710,3 +710,15 @@ func emailToDocNumber(email string) (docNumber string, err error) {
 	docNumber, _ = row["doc_number"].(string)
 	return
 }
+
+func docToCartCount(docNumber string) (count int) {
+
+	qs := `SELECT count(*)as cnt FROM %s d LEFT JOIN %s t ON t.doc_number=d.doc_number WHERE d.doc_number="%s" AND d.doc_status="pending";`
+	sql := fmt.Sprintf(qs, tableToBucket("doc_keeper"), tableToBucket("transaction_record"), docNumber)
+	row, err := singleRow(sql)
+	if err == nil {
+		cnt := fmt.Sprint(row["cnt"]) //float64
+		count = str2int(cnt)
+	}
+	return
+}

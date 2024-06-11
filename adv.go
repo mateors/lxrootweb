@@ -34,9 +34,20 @@ type charInfo struct {
 
 var FuncMap = template.FuncMap{
 
-	"moneyFormat": moneyFormat,
-	"subTotal":    subTotal,
-	"taxTotal":    taxTotal,
+	"moneyFormat":      moneyFormat,
+	"subTotal":         subTotal,
+	"taxTotal":         taxTotal,
+	"checkoutDisabled": checkoutDisabled,
+}
+
+func checkoutDisabled(loginRequired bool, cartCount int) bool {
+
+	if !loginRequired && cartCount == 0 {
+		return true
+	} else if loginRequired && cartCount > 0 {
+		return true
+	}
+	return false
 }
 
 func moneyFormat(amount interface{}) string {

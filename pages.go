@@ -499,14 +499,7 @@ func shop(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		//var loginRequired bool = true
-		smap, err := getSessionInfo(r)
-		if err == nil {
-			//loginRequired = false
-			//http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			//return
-		}
-
+		smap, _ := getSessionInfo(r)
 		var yourname string = "Sign In"
 		if len(smap) > 1 {
 			yourname, _ = smap["account_name"].(string)
@@ -527,10 +520,17 @@ func shop(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		docNumber, _ := getCookie("docid", r)
-		count := lxql.CheckCount("transaction_record", fmt.Sprintf("doc_number='%s' AND trx_type='cart' AND status=1", docNumber), database.DB)
+		docNumber, err := getCookie("docid", r)
+		if err == nil {
+			docStatus := lxql.FieldByValue("doc_keeper", "doc_status", fmt.Sprintf("doc_number=%q", docNumber), database.DB)
+			if docStatus != "pending" {
+				delCookie("docid", r, w)
+			}
+		}
 
+		var count int = docToCartCount(docNumber)
 		base := GetBaseURL(r)
+
 		data := struct {
 			Title        string
 			Base         string
@@ -651,6 +651,8 @@ func complete(w http.ResponseWriter, r *http.Request) {
 
 func product(w http.ResponseWriter, r *http.Request) {
 
+	smap, _ := getSessionInfo(r)
+
 	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
@@ -664,25 +666,77 @@ func product(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		docNumber, err := getCookie("docid", r)
+		if err == nil {
+			docStatus := lxql.FieldByValue("doc_keeper", "doc_status", fmt.Sprintf("doc_number=%q", docNumber), database.DB)
+			if docStatus != "pending" {
+				delCookie("docid", r, w)
+			}
+		}
+
+		sql := fmt.Sprintf(`SELECT t.id,t.item_id,t.quantity,t.price,t.tax_amount,t.payable_amount,t.trx_type,i.item_name,i.tags,d.doc_number,d.total_payable,d.total_discount 
+							FROM lxroot._default.transaction_record t
+							LEFT JOIN lxroot._default.doc_keeper d ON d.doc_number=t.doc_number
+							LEFT JOIN lxroot._default.item i ON i.id=t.item_id
+							WHERE t.doc_number="%s" AND d.doc_status="pending";`, docNumber)
+		sql = cleanText(sql)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
+		var yourname string = "Sign In"
+		if len(smap) > 1 {
+			yourname, _ = smap["account_name"].(string)
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			CsrfToken    string
 			Yourname     string
+			CartCount    int
 		}{
 			Title:        "Product Details | LxRoot",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
-			Yourname:     "Sign In",
+			CsrfToken:    ctoken,
+			Yourname:     yourname,
+			CartCount:    len(rows),
 		}
 
 		err = tmplt.Execute(w, data)
 		if err != nil {
 			log.Println(err)
 		}
+	} else if r.Method == http.MethodPost {
+
+		itemId := r.FormValue("item") //item.item_code
+		docNumber, err := getCookie("docid", r)
+		if err == nil {
+			fmt.Println("update doc_keeper table", docNumber)
+		}
+
+		qty := "1"
+		docRef := visitorInfo(r, w)
+		docId, err := addToCart(itemId, qty, docRef, docNumber, "", "")
+		if err == nil {
+			setCookie("docid", docId, 24*86400, w)
+			http.Redirect(w, r, "/checkout", http.StatusSeeOther)
+			return
+		}
+
+		http.Redirect(w, r, "/product", http.StatusSeeOther)
+		return
 	}
 }
 
@@ -708,13 +762,18 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		}
 
 		docNumber, err := getCookie("docid", r)
-		logError("checkout", err)
+		if err == nil {
+			docStatus := lxql.FieldByValue("doc_keeper", "doc_status", fmt.Sprintf("doc_number=%q", docNumber), database.DB)
+			if docStatus != "pending" {
+				delCookie("docid", r, w)
+			}
+		}
 
 		sql := fmt.Sprintf(`SELECT t.id,t.item_id,t.quantity,t.price,t.tax_amount,t.payable_amount,t.trx_type,i.item_name,i.tags,d.doc_number,d.total_payable,d.total_discount 
 							FROM lxroot._default.transaction_record t
 							LEFT JOIN lxroot._default.doc_keeper d ON d.doc_number=t.doc_number
 							LEFT JOIN lxroot._default.item i ON i.id=t.item_id
-							WHERE t.doc_number="%s";`, docNumber)
+							WHERE t.doc_number="%s" AND d.doc_status="pending";`, docNumber)
 		sql = cleanText(sql)
 		rows, err := lxql.GetRows(sql, database.DB)
 		if err != nil {
@@ -819,10 +878,13 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			customerEmail, _ := smap["username"].(string)
 			docId := r.FormValue("docid")
 			docNumber, err := getCookie("docid", r)
+			fmt.Println(docNumber, err)
 
 			if err == nil {
 
 				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail)
+				fmt.Println(err, row)
+
 				if err == nil {
 
 					sessionId, _ := row["id"].(string) //checkout.session.id
@@ -1724,10 +1786,6 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
@@ -1740,8 +1798,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		}
 
 		docNumber, _ := getCookie("docid", r)
-		count := lxql.CheckCount("transaction_record", fmt.Sprintf("doc_number='%s' AND trx_type='cart' AND status=1", docNumber), database.DB)
-		fmt.Println("cart_count:", count)
+		count := docToCartCount(docNumber)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1750,12 +1807,15 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CartCount    int
+			AccessName   string
+			SessionMap   map[string]interface{}
 		}{
 			Title:        "LxRoot Dashboard",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CartCount:    count,
+			SessionMap:   smap,
 		}
 
 		err = tmplt.Execute(w, data)

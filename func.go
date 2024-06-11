@@ -821,7 +821,6 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId
 
 	if docUpdate {
 		sql = fmt.Sprintf("UPDATE %s SET total_payable=total_payable+%s WHERE doc_number=%q;", tableToBucket("doc_keeper"), totalPayable, docId)
-		fmt.Println(sql)
 		lxql.RawSQL(sql, database.DB)
 	}
 	// oldDocNumber := lxql.FieldByValue("doc_keeper", "doc_number", fmt.Sprintf("doc_ref='%s' AND doc_type='cart' AND status=1", docRef), database.DB)

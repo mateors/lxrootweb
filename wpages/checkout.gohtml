@@ -140,7 +140,7 @@
                             <a href="/signin" class="mb-4 underline">Sign in to proceed with checkout</a>
                         </div>
                         {{end}}
-                        <button type="button" data-docid="{{.DocNumber}}" {{if .LoginRequired}}disabled{{end}} id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
+                        <button type="button" data-docid="{{.DocNumber}}" {{if checkoutDisabled .LoginRequired .CartCount}}disabled{{end}} id="btnPlaceOrder" class="filled-button !font-light !w-full !bg-primary text-white gap-2">
                             Place order & pay
                         </button>
                     </div>
@@ -167,15 +167,14 @@
     $('#btnApply').on('click', (e)=> {
     
         let code=$('#coupon').val();
-        console.log(coupon);
-
+        //console.log(coupon);
         let cBtn = $('#btnApply');
         cBtn.empty();
         cBtn.addClass("!bg-secondaryDeep");
         cBtn.addChild(elmDivSpinner());
         cBtn.prop('disabled', true);
         vForm(location.href,{code,todo:'coupon'},'post');
-
+        
     });
    
     $('#cartItems').find('button[delitem]').on('click', (e) => {
