@@ -633,11 +633,13 @@ func complete(w http.ResponseWriter, r *http.Request) {
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			Yourname     string
 		}{
 			Title:        "LxRoot order complete",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			Yourname:     "Sign In", //need to change
 		}
 
 		err = tmplt.Execute(w, data)
@@ -668,11 +670,13 @@ func product(w http.ResponseWriter, r *http.Request) {
 			Base         string
 			BodyClass    string
 			MainDivClass string
+			Yourname     string
 		}{
 			Title:        "Product Details | LxRoot",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			Yourname:     "Sign In",
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1094,6 +1098,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			MainDivClass   string
 			CsrfToken      string
 			SuccessMessage string
+			Yourname       string
 		}{
 			Title:          "Signup | LxRoot",
 			Base:           base,
@@ -1101,6 +1106,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			MainDivClass:   "main min-h-[calc(100vh-52px)]",
 			CsrfToken:      ctoken,
 			SuccessMessage: successMsg,
+			Yourname:       "Sign In",
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1251,6 +1257,7 @@ func verify(w http.ResponseWriter, r *http.Request) {
 			MainDivClass   string
 			ErrorMessage   string
 			SuccessMessage string
+			Yourname       string
 		}{
 			Title:          "LxRoot | Reset password",
 			Base:           base,
@@ -1258,6 +1265,7 @@ func verify(w http.ResponseWriter, r *http.Request) {
 			MainDivClass:   "main min-h-[calc(100vh-52px)]",
 			ErrorMessage:   errMsg,
 			SuccessMessage: message,
+			Yourname:       "Sign In",
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1312,6 +1320,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			MainDivClass string
 			CsrfToken    string
 			ErrorMessage string
+			Yourname     string
 		}{
 			Title:        "Signin | LxRoot",
 			Base:         base,
@@ -1319,6 +1328,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
 			CsrfToken:    ctoken,
 			ErrorMessage: errMessage,
+			Yourname:     "Sign In",
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1512,12 +1522,14 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			Yourname     string
 		}{
 			Title:        "LxRoot | Reset password",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
 			CsrfToken:    ctoken,
+			Yourname:     "Sign In",
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1639,6 +1651,7 @@ func resetPassForm(w http.ResponseWriter, r *http.Request) {
 			ValidToken   bool
 			ErroMsg      string
 			Username     string
+			Yourname     string
 		}{
 			Title:        "LxRoot | Reset password form",
 			Base:         base,
@@ -1648,6 +1661,7 @@ func resetPassForm(w http.ResponseWriter, r *http.Request) {
 			ValidToken:   isValid,
 			ErroMsg:      invalidMsg,
 			Username:     email,
+			Yourname:     "Sign In",
 		}
 
 		err = tmplt.Execute(w, data)
