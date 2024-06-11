@@ -8,6 +8,7 @@ import (
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
+	"net/url"
 	"strings"
 	"text/template"
 
@@ -794,7 +795,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		var yourname string
+		var yourname string = "Sign In"
 		if len(smap) > 1 {
 			yourname, _ = smap["account_name"].(string)
 		}
@@ -878,15 +879,15 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			customerEmail, _ := smap["username"].(string)
 			docId := r.FormValue("docid")
 			docNumber, err := getCookie("docid", r)
-			fmt.Println(docNumber, err)
+			logError("checkoutGetCookieERR", err)
 
 			if err == nil {
 
 				row, err := createSession(utility.STRIPE_SECRETKEY, docNumber, customerEmail)
-				fmt.Println(err, row)
-
+				if err != nil {
+					log.Println("createSessionERROR:", err)
+				}
 				if err == nil {
-
 					sessionId, _ := row["id"].(string) //checkout.session.id
 					sql := fmt.Sprintf("UPDATE %s SET login_id=%q, account_id=%q, doc_status=%q, doc_description=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), loginId, accountId, "checkout_session", sessionId, docId)
 					lxql.RawSQL(sql, database.DB)
@@ -1347,6 +1348,14 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		setCookie("ctoken", hashStr, 1800, w)
 		errMessage := r.FormValue("error")
 
+		var referer string
+		purl, err := url.Parse(r.Referer())
+		if err == nil {
+			referer = purl.Path
+			setCookie("redirect", referer, 120, w)
+		}
+		fmt.Println("referer:", referer)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -1375,8 +1384,6 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 		//sTime := time.Now()
 		r.ParseForm()
-		//var errNo int = 1
-		//var errMsg string
 		var rurl string
 		commonDataSet(r)
 
@@ -1481,11 +1488,15 @@ func signin(w http.ResponseWriter, r *http.Request) {
 						}
 						_, err = addLoginSession(loginId, visitorSessionID, ipAddress, city, country, userAgent)
 						logError("addLoginSession", err)
-						//errNo = 0
-						//errMsg = "login successful"
-						rurl = "/dashboard"
-						//fmt.Println("addUpdateLoginSessionTakes:", time.Since(sTime).Seconds(), "sec")
 
+						rurl = "/dashboard"
+						redirect, _ := getCookie("redirect", r)
+						if redirect == "/checkout" {
+							rurl = redirect
+							delCookie("redirect", r, w)
+						}
+
+						//fmt.Println("addUpdateLoginSessionTakes:", time.Since(sTime).Seconds(), "sec")
 						//send email alert for login
 						//sTime = time.Now()
 						//_, _, browser := userAgntDetails(userAgent)
@@ -1494,25 +1505,18 @@ func signin(w http.ResponseWriter, r *http.Request) {
 					}
 
 				} else {
-					//errNo = 1
-					//errMsg = "ERROR invalid username or password1"
 					rurl = "/signin?error=Invalid username or password"
 				}
 			}
 			if len(rows) == 0 {
-				//errNo = 2
-				//errMsg = "ERROR invalid username or password2."
 				rurl = "/signin?error=invalid username or password"
 			}
 
 		} else {
-			//errNo = 9
-			//errMsg = "Validation error!"
 			rurl = "/signin?error=invalid username or password."
 			log.Println(response)
 		}
 
-		//fmt.Println(errMsg, errNo)
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
 		return
 	}
@@ -2092,6 +2096,9 @@ func orders(w http.ResponseWriter, r *http.Request) {
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
+
+		purl, err := url.Parse(r.RequestURI)
+		fmt.Println(err, purl.Path)
 
 		base := GetBaseURL(r)
 		data := struct {

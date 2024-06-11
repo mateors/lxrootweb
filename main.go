@@ -273,7 +273,8 @@ func init() {
 
 	// filename, err := DownloadFile("data/invoice", durl)
 	// fmt.Println(err, filename)
-	// os.Exit(1)
+	//docCheckoutProcess("cpjrjlq2r9et0ao3vuqg")
+	//os.Exit(1)
 }
 
 func main() {
@@ -314,7 +315,7 @@ func main() {
 	r.HandleFunc("/security", security)             //security
 	r.HandleFunc("/ticket", ticket)                 //ticket
 	r.HandleFunc("/ticket/{tid}", ticketDetails)    //ticket/details
-	r.HandleFunc("/orders", orders)                 //My orders
+	r.HandleFunc("/orders", orders)                 //Billing > My orders
 	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails
 	r.HandleFunc("/invoices", invoices)             //invoice
 	r.HandleFunc("/license", licenseKey)            //license details

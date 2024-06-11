@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"lxrootweb/database"
-	"lxrootweb/lxql"
 	"net/http"
 	"net/url"
 	"os"
@@ -197,22 +195,27 @@ func createSession(stripeSecretKey, docNumber, customerEmail string) (map[string
 	//type = recurring
 	var fmap = make(map[string]string)
 	fmap["client_reference_id"] = docNumber
+	rmap := docCheckoutProcess(docNumber)
 
-	sql := fmt.Sprintf("SELECT stock_info,quantity FROM %s WHERE doc_number=%q;", tableToBucket("transaction_record"), docNumber)
-	rows, err := lxql.GetRows(sql, database.DB)
-	if err == nil {
-
-		for i, row := range rows {
-			stripePriceId, _ := row["stock_info"].(string)
-			quantity, _ := row["quantity"].(string)
-			fmap[fmt.Sprintf("line_items[%d][price]", i)] = stripePriceId //stcok_info = stripe priceId
-			fmap[fmt.Sprintf("line_items[%d][quantity]", i)] = quantity
-		}
+	var i int
+	for stripePriceId, quantity := range rmap {
+		fmap[fmt.Sprintf("line_items[%d][price]", i)] = stripePriceId //stcok_info = stripe priceId
+		fmap[fmt.Sprintf("line_items[%d][quantity]", i)] = fmt.Sprint(quantity)
+		i++
 	}
+	// sql := fmt.Sprintf("SELECT stock_info,quantity FROM %s WHERE doc_number=%q;", tableToBucket("transaction_record"), docNumber)
+	// rows, err := lxql.GetRows(sql, database.DB)
+	// if err == nil {
+	// 	for i, row := range rows {
+	// 		stripePriceId, _ := row["stock_info"].(string)
+	// 		quantity, _ := row["quantity"].(string)
+	// 		fmap[fmt.Sprintf("line_items[%d][price]", i)] = stripePriceId //stcok_info = stripe priceId
+	// 		fmap[fmt.Sprintf("line_items[%d][quantity]", i)] = quantity
+	// 	}
+	// }
 	fmap["success_url"] = "https://lxroot.com/complete"
 	fmap["customer_email"] = customerEmail
 	fmap["mode"] = "subscription" //payment,setup,subscription
-
 	return apiPostRequest("https://api.stripe.com/v1/checkout/sessions", stripeSecretKey, fmap)
 }
 

@@ -722,3 +722,35 @@ func docToCartCount(docNumber string) (count int) {
 	}
 	return
 }
+
+func docWiseItems(docNumber string) ([]map[string]interface{}, error) {
+
+	sql := fmt.Sprintf("SELECT stock_info,quantity FROM %s WHERE doc_number=%q;", tableToBucket("transaction_record"), docNumber)
+	return lxql.GetRows(sql, database.DB)
+}
+
+func groupItemPrice(rows []map[string]interface{}) map[string]interface{} {
+
+	var rmap = make(map[string]interface{})
+	for _, row := range rows {
+		key, _ := row["stock_info"].(string) //stripePriceId
+		qty, _ := row["quantity"].(string)
+		val, isExist := rmap[key]
+		if isExist {
+			rmap[key] = val.(int) + str2int(qty)
+		} else {
+			rmap[key] = str2int(qty)
+		}
+	}
+	return rmap
+}
+
+func docCheckoutProcess(docNumber string) map[string]interface{} {
+
+	//check and make sure doc_kepper.doc_status is pending
+	rows, err := docWiseItems(docNumber)
+	if err != nil {
+		return nil
+	}
+	return groupItemPrice(rows)
+}

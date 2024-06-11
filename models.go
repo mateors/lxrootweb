@@ -667,6 +667,7 @@ type Subscription struct {
 	Name              string `json:"name"`               //Lxroot License
 	AccountId         string `json:"account_id"`         //foreign key
 	Subscriber        string `json:"subscriber"`         //login_id
+	LicenseKey        string `json:"license_key"`        //lxroot license
 	Domain            string `json:"domain"`             //where lince used > wget -qO- lxr.sh | bash -s yourdomain.com
 	Renews            string `json:"billing"`            //monthly|yearly
 	Price             int64  `json:"price"`              //price
