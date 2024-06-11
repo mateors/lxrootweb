@@ -7,6 +7,8 @@ import (
 	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"net/http"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 const (
@@ -87,6 +89,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			//inv, err := invoiceParser(evt.Data)
 			//fmt.Println(err, inv.Customer, inv.AmountPaid, inv.Subscription2, inv.PaymentIntent, inv.CustomerEmail, inv.CustomerName, inv.Number, inv.CustomerPhone)
 			//fmt.Println(inv.InvoicePdf, inv.HostedInvoiceUrl)
+			//inv.PeriodStart
 
 		} else if evt.Type == INVOICE_PAYMENT_SUCCEEDED { //8
 			fmt.Println("8-->", INVOICE_PAYMENT_SUCCEEDED)
@@ -96,10 +99,24 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("9-->", CHECKOUT_SESSION_COMPLETED)
 			pSession, err := checkoutSessionParser(evt.Data)
 			if err == nil {
+
 				sql := fmt.Sprintf("UPDATE %s SET payment_status=%q, doc_status=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), pSession.PaymentStatus, pSession.Status, pSession.ClentReferenceId)
-				fmt.Println(pSession.ClentReferenceId, sql) //docNumber
 				err = lxql.RawSQL(sql, database.DB)
 				logError("checkoutSessionSuccessERR", err)
+
+				sql = fmt.Sprintf("SELECT login_id,account_id,total_payable FROM %s WHERE doc_number=%q;", tableToBucket("doc_keeper"), pSession.ClentReferenceId)
+				row, _ := singleRow(sql)
+				loginId, _ := row["login_id"].(string)
+				accountId, _ := row["account_id"].(string)
+				totalPayable, _ := row["total_payable"].(string)
+
+				licenseKey := uuid.NewV1().String()
+				subscriptionStart := ""
+				subscriptionEnd := ""
+				addSubscription(accountId, pSession.Customer, licenseKey, "monthly", totalPayable, pSession.PaymentStatus, subscriptionStart, subscriptionEnd, "")
+
+				docNumber := pSession.Invoice
+				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId)
 			}
 
 		} else {

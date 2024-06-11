@@ -522,6 +522,32 @@ func addEvent(id string) (string, error) {
 	return id, err
 }
 
+func addSubscription(accountId, stripeCustomer, licenseKey, billing, price, paymentStatus, subscriptionStart, subscriptionEnd, remarks string) (id string, err error) {
+
+	modelName := structName(Subscription{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["account_id"] = accountId
+	form["subscriber"] = stripeCustomer //stripe.customer
+	form["license_key"] = licenseKey    //
+	//form["domain"] = domain
+	form["billing"] = billing
+	form["price"] = price
+	form["payment_status"] = paymentStatus
+	form["subscription_start"] = subscriptionStart
+	form["subscription_end"] = subscriptionEnd
+	form["create_date"] = mtool.TimeNow()
+	form["remarks"] = remarks
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
 func accessIdByName(accessName string) string {
 
 	sql := fmt.Sprintf("SELECT id,status FROM %s WHERE access_name='%s';", tableToBucket("access"), accessName)

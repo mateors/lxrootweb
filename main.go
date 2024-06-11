@@ -274,6 +274,9 @@ func init() {
 	// filename, err := DownloadFile("data/invoice", durl)
 	// fmt.Println(err, filename)
 	//docCheckoutProcess("cpjrjlq2r9et0ao3vuqg")
+
+	//fmt.Println(uuid.NewV1())
+	//fmt.Println(uuid.NewV4())
 	//os.Exit(1)
 }
 
