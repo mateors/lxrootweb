@@ -133,7 +133,7 @@ func salesEmail(email, name, licenseKey string) error {
 
 func payEmailTemplateParser(name, amount, invoice, iurl string) (string, error) {
 
-	filename := "templates/email_license.gohtml"
+	filename := "templates/email_paymentconfirm.gohtml"
 	templateName := filepath.Base(filename)
 
 	var tplOutput bytes.Buffer

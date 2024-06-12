@@ -286,6 +286,8 @@ func init() {
 	// addDepartment("Sales", "SAL", "", "ticket")
 	// addDepartment("Technical", "TEC", "", "ticket")
 	// addDepartment("Bugs", "BUG", "", "ticket")
+	// doc, err := emailToDocNumber("billahmdmostain@gmail.com")
+	// fmt.Println(err, doc)
 	// os.Exit(1)
 }
 

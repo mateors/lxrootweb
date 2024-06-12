@@ -814,7 +814,7 @@ func usernameToAccounInfo(username string) (map[string]interface{}, error) {
 
 func emailToDocNumber(email string) (docNumber string, err error) {
 
-	sql := fmt.Sprintf(`SELECT d.doc_number FROM %s l LEFT JOIN %s d ON d.login_id=l.id WHERE d.doc_status='checkout_session' AND l.username="%s";`, tableToBucket("login"), tableToBucket("doc_keeper"), email)
+	sql := fmt.Sprintf(`SELECT d.doc_number FROM %s l LEFT JOIN %s d ON d.login_id=l.id WHERE d.doc_status='checkout_session' AND l.username="%s" ORDER BY d.id DESC LIMIT 1;`, tableToBucket("login"), tableToBucket("doc_keeper"), email)
 	row, err := singleRow(sql)
 	if err != nil {
 		log.Println(sql)
