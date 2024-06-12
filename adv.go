@@ -25,6 +25,8 @@ import (
 	"github.com/mateors/money"
 	"github.com/mateors/mtool"
 	uuid "github.com/satori/go.uuid"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type charInfo struct {
@@ -38,6 +40,17 @@ var FuncMap = template.FuncMap{
 	"subTotal":         subTotal,
 	"taxTotal":         taxTotal,
 	"checkoutDisabled": checkoutDisabled,
+	"toTitle":          toTitle,
+	"toUpper":          toUpper,
+}
+
+func toUpper(text string) string {
+	return strings.ToUpper(text)
+}
+
+func toTitle(str string) string {
+	caser := cases.Title(language.English)
+	return caser.String(str)
 }
 
 func checkoutDisabled(loginRequired bool, cartCount int) bool {

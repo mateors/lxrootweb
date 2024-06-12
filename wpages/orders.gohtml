@@ -36,7 +36,7 @@
 
                         <div class="flex justify-between items-center">
                             <h3 class="head-3 !fs32px !font-light text-slate-700">My orders</h3>
-                            <a href="/ticketnew" class="border rounded-full px-4 py-2 text-slate-700 hover:!border-slate-400">Place new order</a>
+                            <a href="/shop" class="border rounded-full px-4 py-2 text-slate-700 hover:!border-slate-400">Place new order</a>
                         </div>
 
 
@@ -63,27 +63,32 @@
 
                                 <tbody>
                                     
+                                    {{range $row := .Rows}}
+
+                                    {{$id:=index $row "id"}}
+
                                     <tr class="hover:shadow-md">
                                         <td class="p-4">
-                                            <a href="orders/sdsd"><label class="px-2 py-1 rounded-lg bg-sky-500 text-white label-text">Refunded</label></a>
+                                            <a href="orders/sdsd"><label class="px-2 py-1 rounded-lg bg-sky-500 text-white label-text">{{toUpper (index $row "payment_status")}}</label></a>
                                         </td> 
 
                                         <td class="ta:left">
-                                            <a href="orders/sdsd" class="block">
-                                                <p class="text-slate-700"><strong>Order #LXR-0013938</strong></p> 
-                                                <p class="text-slate-500 !font-light">Licence Key</p>
+                                            <a href="orders/{{$id}}" class="block">
+                                                <p class="text-slate-700"><strong>Order #{{toUpper (index $row "doc_number")}}</strong></p> 
+                                                <p class="text-slate-500 !font-light">{{index $row "item_info"}}</p>
                                             </a>
                                         </td> 
                                 
                                         <td class="ta:right p-4">
                                             <a href="orders/sdsd" class="block">
-                                                <p class="text-slate-700"><strong>$20.00</strong></p> 
-                                                <p class="text-slate-500 !font-light">4 months ago</p>
+                                                <p class="text-slate-700"><strong>${{index $row "price"}}</strong></p> 
+                                                <p class="text-slate-500 !font-light">{{index $row "posting_date"}}</p>
                                             </a>
                                         </td> 
                                 
                                         <td width="1"><span class="material-icons text-slate-700">navigate_next</span></td>
                                     </tr>
+                                    {{end}}
                                     
                                 </tbody>
                             </table>

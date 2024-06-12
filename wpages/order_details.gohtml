@@ -31,11 +31,13 @@
                 <!---right--->
                 <div class="w-full md:w-75% form-contents bg-slate-200 p-4 pb-10s md:p-10s">
 
-                    <!---ticket--->
+                    <!---order--->
                     <div class="p-6 bg-white border rounded-lg">
 
+                        {{$row := .Order}}
+
                         <div class="flex justify-between items-center">
-                            <h3 class="head-3 !fs32px !font-light text-slate-700">Order #LXR-013938</h3>
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">Order #{{toUpper (index $row "doc_number")}}</h3>
                         </div>
 
                         <div class="border-b p-2"></div>
@@ -48,8 +50,8 @@
                                     <td class="text-slate-700 ta:left">
                                         <p class="flex justify-between gap-2">
                                             <span>
-                                                <span class="px-2">LXR-0013938</span>
-                                                <label class="px-2 py-1 rounded bg-sky-500 text-white label-text">Refunded</label>
+                                                <span class="px-2">{{toUpper (index $row "doc_number")}}</span>
+                                                <label class="px-2 py-1 rounded bg-sky-500 text-white label-text">{{toUpper (index $row "payment_status")}}</label>
                                             </span>
                                             <a href="#" class="px-4 underline">View invoice</a>
                                         </p> 
@@ -58,27 +60,27 @@
 
                                 <tr>
                                     <th class="ta:left text-slate-700 font-semibold">Total</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">$20.00</p></td>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">${{moneyFormat (index $row "total_payable")}}</p></td>
                                 </tr>
 
                                 <tr>
                                     <th class="ta:left text-slate-700 font-semibold">Created</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">{{index $row "create_date"}}</p></td>
                                 </tr>
 
                                 <tr>
                                     <th class="ta:left text-slate-700 font-semibold">Paid</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">{{index $row "create_date"}}</p></td>
                                 </tr>
 
                                 <tr>
                                     <th class="ta:left text-slate-700 font-semibold">Refunded </th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">{{index $row "refund_date"}}-</p></td>
                                 </tr>
 
                                 <tr>
                                     <th class="ta:left text-slate-700 font-semibold">Cancelled</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
+                                    <td class="text-slate-700 ta:left"><p class="px-2">{{index $row "cancel_date"}}-</p></td>
                                 </tr>
 
                                 <tr>
@@ -108,12 +110,16 @@
 
                                 <tbody class="text-slate-700">
 
+                                    {{range $row := .Items}}
+
                                     <tr>
-                                        <td class="ta:left">LxRoot License</td>
-                                        <td class="ta:left">$20</td>
-                                        <td class="ta:left">1</td>
-                                        <td class="ta:left">$20.00</td>
+                                        <td class="ta:left">{{index $row "item_info"}}</td>
+                                        <td class="ta:left">${{index $row "price"}}</td>
+                                        <td class="ta:left">{{index $row "quantity"}}</td>
+                                        <td class="ta:left">${{moneyFormat (index $row "payable_amount")}}</td>
                                     </tr>
+
+                                    {{end}}
 
                                 </tbody>
 

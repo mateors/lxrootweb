@@ -805,7 +805,7 @@ func subscriptionDetailsByAccount(accountId string) (map[string]interface{}, err
 
 func myOrders(accountId string) ([]map[string]interface{}, error) {
 
-	sql := fmt.Sprintf(`SELECT d.doc_status,d.dco_number,d.posting_date,d.receipt_url,d.payment_status,d.doc_name,d.doc_description,d.doc_ref,d.create_date,d.total_payable,t.item_info,t.price 
+	sql := fmt.Sprintf(`SELECT d.id, d.doc_status,d.doc_number,d.posting_date,d.receipt_url,d.payment_status,d.doc_name,d.doc_description,d.doc_ref,d.create_date,d.total_payable,t.item_info,t.price 
 FROM lxroot._default.doc_keeper d 
 LEFT JOIN  lxroot._default.transaction_record t ON d.doc_number=t.doc_number
 WHERE d.account_id="%s" AND d.doc_type='cart' AND d.doc_status='complete' AND d.status=1;`, accountId)

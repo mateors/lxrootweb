@@ -473,6 +473,7 @@ type DocKeeper struct {
 	ReceiptUrl     string  `json:"receipt_url"`    //
 	DocStatus      string  `json:"doc_status"`     //pending|open,checkout_session -> open,complete,expired
 	CreateDate     string  `json:"create_date"`
+	UpdateDate     string  `json:"update_date"`
 	Status         int     `json:"status"`
 }
 

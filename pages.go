@@ -2092,11 +2092,8 @@ func orders(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		//fmt.Println("smap:", smap)
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
@@ -2111,8 +2108,14 @@ func orders(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		purl, err := url.Parse(r.RequestURI)
-		fmt.Println(err, purl.Path)
+		//purl, err := url.Parse(r.RequestURI)
+		//fmt.Println(err, purl.Path)
+		accountId, _ := smap["account_id"].(string)
+		//loginId, _ := smap["id"].(string)
+
+		rows, err := myOrders(accountId)
+		logError("myOrders", err)
+		//fmt.Println(rows)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2121,12 +2124,16 @@ func orders(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
+			Rows         []map[string]interface{}
 		}{
 			Title:        "LxRoot Orders",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			Rows:         rows,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2147,11 +2154,13 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("smap:", smap)
+		//fmt.Println("smap:", smap)
 		//sessionCode := visitorInfo(r, w) //
 		//fmt.Println(sessionCode)
 
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		docId := chi.URLParam(r, "oid") //orderId
+
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
@@ -2166,6 +2175,24 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		accountId, _ := smap["account_id"].(string)
+		//loginId, _ := smap["id"].(string)
+
+		qs := `SELECT d.id, d.doc_status,d.doc_number,d.posting_date,d.receipt_url,d.payment_status,d.doc_name,d.doc_description,d.doc_ref,d.create_date,d.total_payable,t.item_info,t.price 
+				FROM lxroot._default.doc_keeper d 
+				LEFT JOIN  lxroot._default.transaction_record t ON d.doc_number=t.doc_number
+				WHERE d.id="%s" AND d.account_id="%s";`
+		sql := fmt.Sprintf(qs, docId, accountId)
+		row, err := singleRow(cleanText(sql))
+		logError("", err)
+		//fmt.Println(row)
+
+		docNumber, _ := row["doc_number"].(string)
+		qs = `SELECT item_info,price,quantity,payable_amount FROM lxroot._default.transaction_record WHERE doc_number=%q;`
+		sql = fmt.Sprintf(qs, docNumber)
+		rows, err := lxql.GetRows(sql, database.DB)
+		logError("itemRows", err)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -2173,12 +2200,18 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
+			Order        map[string]interface{}
+			Items        []map[string]interface{}
 		}{
 			Title:        "LxRoot Order#1212",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			Order:        row,
+			Items:        rows,
 		}
 
 		err = tmplt.Execute(w, data)
