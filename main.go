@@ -326,7 +326,7 @@ func main() {
 	r.HandleFunc("/dashboard", dashboard)           //dashboard OK
 	r.HandleFunc("/profile", profile)               //profile **
 	r.HandleFunc("/security", security)             //security **
-	r.HandleFunc("/ticket", tickets)               //ticket **
+	r.HandleFunc("/ticket", tickets)                //ticket **
 	r.HandleFunc("/ticket/{tid}", ticketDetails)    //ticket/details
 	r.HandleFunc("/orders", orders)                 //Billing > My orders OK
 	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails OK

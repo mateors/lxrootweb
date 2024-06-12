@@ -934,3 +934,15 @@ func addressList(accountId string) []map[string]interface{} {
 	}
 	return rows
 }
+
+func docNumberToAccountInfo(docNumber string) map[string]interface{} {
+
+	qs := `SELECT a.account_name,a.email,d.receipt_url,d.total_payable FROM lxroot._default.doc_keeper d LEFT JOIN lxroot._default.account a ON d.account_id=a.id WHERE d.doc_number=%q;`
+	sql := fmt.Sprintf(qs)
+	row, err := singleRow(sql)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+	return row
+}

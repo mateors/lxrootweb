@@ -122,6 +122,18 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 				docNumber := pSession.Invoice
 				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId)
+
+				//pSession.ClentReferenceId == doc_number
+				invoice := pSession.ClentReferenceId
+				dmap := docNumberToAccountInfo(pSession.ClentReferenceId)
+				name, _ := dmap["account_name"].(string)
+				receiptUrl, _ := dmap["receipt_url"].(string)
+				amount, _ := dmap["total_payable"].(string)
+				email := pSession.CustomerEmail
+				err = paymentConfirmationEmail(email, name, amount, invoice, receiptUrl)
+				logError("paymentConfirmationEmail", err)
+				err = salesEmail(pSession.CustomerEmail, name, licenseKey)
+				logError("salesEmail", err)
 			}
 
 		} else {

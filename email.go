@@ -94,6 +94,84 @@ func signupEmail(email, name, location, verifyUrl string) error {
 	return err
 }
 
+func salesEmailTemplateParser(name, licenseKey string) (string, error) {
+
+	filename := "templates/email_license.gohtml"
+	templateName := filepath.Base(filename)
+
+	var tplOutput bytes.Buffer
+	tpl, err := template.New(templateName).ParseFiles(filename)
+	if err != nil {
+		return "", err
+	}
+
+	data := struct {
+		Name       string
+		LicenseKey string
+	}{
+		Name:       name,
+		LicenseKey: licenseKey,
+	}
+	err = tpl.Execute(&tplOutput, data)
+	if err != nil {
+		return "", err
+	}
+	markupText := tplOutput.String()
+	return markupText, nil
+}
+
+func salesEmail(email, name, licenseKey string) error {
+
+	markup, err := salesEmailTemplateParser(name, licenseKey)
+	if err != nil {
+		return err
+	}
+	subject := "Your LxRoot License"
+	err = htmlEmailer([]string{email}, subject, markup)
+	return err
+}
+
+func payEmailTemplateParser(name, amount, invoice, iurl string) (string, error) {
+
+	filename := "templates/email_license.gohtml"
+	templateName := filepath.Base(filename)
+
+	var tplOutput bytes.Buffer
+	tpl, err := template.New(templateName).ParseFiles(filename)
+	if err != nil {
+		return "", err
+	}
+
+	data := struct {
+		Name       string
+		Amount     string
+		Invoice    string
+		InvoiceUrl string
+	}{
+		Name:       name,
+		Amount:     amount,
+		Invoice:    invoice,
+		InvoiceUrl: iurl,
+	}
+	err = tpl.Execute(&tplOutput, data)
+	if err != nil {
+		return "", err
+	}
+	markupText := tplOutput.String()
+	return markupText, nil
+}
+
+func paymentConfirmationEmail(email, name, amount, invoice, iurl string) error {
+
+	markup, err := payEmailTemplateParser(name, amount, invoice, iurl)
+	if err != nil {
+		return err
+	}
+	subject := "Thank you for your payment"
+	err = htmlEmailer([]string{email}, subject, markup)
+	return err
+}
+
 // EMAIL CONFIG
 func htmlEmailer(toEmails []string, subject, body string) error {
 

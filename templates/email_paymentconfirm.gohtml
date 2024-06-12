@@ -22,17 +22,17 @@
             </table>
   
             <p style="color:#2a2c2e;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size:15px; line-height:24px;">
-              Hi MD MOSTAIN,
+              Hi {{.Name}},
             </p>
 
             <p style="color:#2a2c2e;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size:16px; line-height:24px;">
                 We are emailing to confirm succesful receipt of payment for your LxRoot licence.
             </p>
 
-            <p style="color: #2a2c2e;">Total amount paid: <strong>$20.00</strong></p>
+            <p style="color: #2a2c2e;">Total amount paid: <strong>${{.Amount}}</strong></p>
             
          
-            <p style="color:#2a2c2e;margin-bottom:0px;font-weight:500;">Please find invoice <a href="">LXR-455445</a> linked for your reference.</p>
+            <p style="color:#2a2c2e;margin-bottom:0px;font-weight:500;">Please find invoice <a href="{{.InvoiceUrl}}">{{.Invoice}}</a> linked for your reference.</p>
               
         
 
