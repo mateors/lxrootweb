@@ -22,11 +22,11 @@
 
                             <div class="py-2 px-6">
                                 <dl class="text-slate-500 !text-[15px]">
-                                    <dt class="border-b py-2">Status </dt>  <dd class="border-b py-2"><span class="md:ml-8 "><label class="px-2 py-2 rounded-lg bg-label-muted text-white label-text">Cancelled 3 months ago</label></span></dd> 
-                                    <dt class="border-b py-2">Renews</dt>   <dd class="border-b py-2"><span class="md:ml-8">Monthly</span></dd>
+                                    <dt class="border-b py-2">Status </dt>  <dd class="border-b py-2"><span class="md:ml-8 "><label class="px-2 py-2 rounded-lg bg-label-muted text-white label-text">{{.PaymentStatus}}</label></span></dd> 
+                                    <dt class="border-b py-2">Renews</dt>   <dd class="border-b py-2"><span class="md:ml-8">{{.Renews}}</span></dd>
 
-                                    <dt class="border-b py-2">Price</dt>    <dd class="border-b py-2"><span class="md:ml-8">$20.00</span></dd> 
-                                    <dt class="py-2">Purchased</dt>         <dd class="py-2"><span class="md:ml-8">Feb 16th, 2024</span></dd>
+                                    <dt class="border-b py-2">Price</dt>    <dd class="border-b py-2"><span class="md:ml-8">${{.Price}}</span></dd> 
+                                    <dt class="py-2">Purchased</dt>         <dd class="py-2"><span class="md:ml-8">{{.PurchaseDate}}</span></dd>
                                 </dl>
                             </div>
 
@@ -67,7 +67,7 @@
                             <div class="wrapper flex gap-6 justify-end">
                                 <!--<div class="text-slate-700 p-2 border-b-2 !border-b-secondary"><a href="#">All</a></div>
                                 <div class="text-slate-700 p-2"><a href="#">Attachments</a></div>-->
-                                <p class="px-1 text-slate-500 !font-light">Expires on June 30, 2024.</p>
+                                <p class="px-1 text-slate-500 !font-light">Expires on {{.ExpireDate}}.</p>
                             </div>
                         </div>
 
@@ -88,7 +88,7 @@
                                         <dt class="border-b py-2 text-primary">Your License key is:</dt>  
                                         <dd class="border-b py-2">
                                             <div class="flex items-center justify-start gap-x-4">
-                                            <span class="md:ml-8 text-slate-600s text-primary">6974d29e-280b-11ef-b143-00155d7b477f</span> 
+                                            <span class="md:ml-8 text-slate-600s text-primary">{{.LicenseKey}}</span> 
                                             <span class="material-icon cursor-pointer hover:text-primary">content_copy</span>
                                             </div>
                                         </dd> 

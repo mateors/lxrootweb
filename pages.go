@@ -2251,8 +2251,8 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		ticketId := chi.URLParam(r, "tid")
-		fmt.Println("smap:", smap, ticketId)
+		//ticketId := chi.URLParam(r, "tid")
+		//fmt.Println("smap:", smap, ticketId)
 		//sessionCode := visitorInfo(r, w) //
 		//fmt.Println(sessionCode)
 
@@ -2271,19 +2271,51 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		accountId, _ := smap["account_id"].(string)
+		//loginId, _ := smap["id"].(string)
+
+		row, err := subscriptionDetailsByAccount(accountId)
+		if err == nil {
+			log.Println(err)
+		}
+		fmt.Println(row)
+		licenseKey, _ := row["license_key"].(string)
+		paymentStatus, _ := row["payment_status"].(string)
+		billing, _ := row["billing"].(string)
+		price, _ := row["price"].(string)
+		purchaseDate, _ := row["create_date"].(string)
+		subscription_end, _ := row["subscription_end"].(string)
+
+		dateFormat := "January 02, 2006"
+		purchaseDate = mtool.DateTimeParser(purchaseDate, "2006-01-02 15:04:05", dateFormat)
+
 		base := GetBaseURL(r)
 		data := struct {
-			Title        string
-			Base         string
-			BodyClass    string
-			MainDivClass string
-			CsrfToken    string
+			Title         string
+			Base          string
+			BodyClass     string
+			MainDivClass  string
+			CsrfToken     string
+			SessionMap    map[string]interface{}
+			LicenseKey    string
+			PaymentStatus string
+			Renews        string
+			Price         string
+			PurchaseDate  string
+			ExpireDate    string
 		}{
-			Title:        "LxRoot License Key",
-			Base:         base,
-			BodyClass:    "bg-slate-200",
-			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
-			CsrfToken:    ctoken,
+			Title:         "LxRoot License Key",
+			Base:          base,
+			BodyClass:     "bg-slate-200",
+			MainDivClass:  "main min-h-[calc(100vh-52px)] bg-slate-200",
+			CsrfToken:     ctoken,
+			SessionMap:    smap,
+			LicenseKey:    licenseKey,
+			PaymentStatus: paymentStatus,
+			Renews:        billing,
+			Price:         price,
+			PurchaseDate:  purchaseDate,
+			ExpireDate:    toTime(subscription_end).Format(dateFormat),
 		}
 
 		err = tmplt.Execute(w, data)

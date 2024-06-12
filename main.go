@@ -315,7 +315,7 @@ func main() {
 	r.HandleFunc("/signin", signin)                 //login ***
 	r.HandleFunc("/resetpass", resetpass)           //reset
 	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
-	r.HandleFunc("/dashboard", dashboard)           //dashboard *
+	r.HandleFunc("/dashboard", dashboard)           //dashboard OK
 	r.HandleFunc("/profile", profile)               //profile
 	r.HandleFunc("/security", security)             //security
 	r.HandleFunc("/ticket", ticket)                 //ticket
@@ -323,7 +323,7 @@ func main() {
 	r.HandleFunc("/orders", orders)                 //Billing > My orders
 	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails
 	r.HandleFunc("/invoices", invoices)             //invoice
-	r.HandleFunc("/license", licenseKey)            //license details
+	r.HandleFunc("/license", licenseKey)            //license **
 	r.HandleFunc("/ticketnew", ticketNew)           //ticketnew
 	r.HandleFunc("/logout", logout)                 //logout
 
