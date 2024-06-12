@@ -443,11 +443,12 @@ type FileStore struct {
 	ID         string `json:"id"`
 	Type       string `json:"type"`        //table
 	CompanyID  string `json:"cid"`         //company
-	Reference  string `json:"reference"`   //foreign key tableOwnerId
 	OwnerTable string `json:"owner_table"` //table_name
+	Reference  string `json:"reference"`   //foreign key tableOwnerId
 	FileType   string `json:"file_type"`   //jpeg,png,pdf
 	Filepath   string `json:"filepath"`    //file_location -> filepath
 	Remarks    string `json:"remarks"`
+	CreateDate string `json:"create_date"`
 	Status     int    `json:"status"`
 }
 
@@ -637,10 +638,10 @@ type Ticket struct {
 	Department     string `json:"department"`
 	Subject        string `json:"subject"`
 	Message        string `json:"message"`
-	Referece       string `json:"reference"` //ticket_number
-	LoginId        string `json:"login_id"`  //foreign key
-	TicketPriority string `json:"priority"`  //High, Low, Medium
-	TicketStatus   string `json:"ticket_status"`
+	Referece       string `json:"reference"`     //ticket_number
+	LoginId        string `json:"login_id"`      //foreign key
+	TicketPriority string `json:"priority"`      //High, Low, Medium
+	TicketStatus   string `json:"ticket_status"` //open,closed
 	IpAddress      string `json:"ip_address"`
 	CreateDate     string `json:"create_date"`
 	UpdateDate     string `json:"update_date"` //last update

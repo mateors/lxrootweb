@@ -439,6 +439,51 @@ func addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, t
 	return id, err
 }
 
+func addDepartment(name, code, description, owner string) (id string, err error) {
+
+	modelName := structName(Department{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["name"] = name
+	form["code"] = code
+	form["description"] = description
+	form["owner"] = owner //ownerTable
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
+func addTicket(loginId, department, subject, message, reference, ipAddress string) (id string, err error) {
+
+	modelName := structName(Ticket{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	if reference == "" {
+		reference = id
+	}
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["department"] = department
+	form["subject"] = subject
+	form["message"] = message
+	form["reference"] = reference //ticketNumber
+	form["login_id"] = loginId
+	form["ticket_status"] = "open"
+	form["ip_address"] = ipAddress
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
 func str2int(val string) int {
 	ival, err := strconv.Atoi(val)
 	if err != nil {
@@ -543,6 +588,28 @@ func addSubscription(accountId, stripeCustomer, licenseKey, billing, price, paym
 	form["subscription_end"] = subscriptionEnd
 	form["create_date"] = mtool.TimeNow()
 	form["remarks"] = remarks
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
+func addFileStore(ownerTable, reference, fileType, filepath, remarks string) (id string, err error) {
+
+	modelName := structName(FileStore{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["owner_table"] = ownerTable //doc_keeper
+	form["reference"] = reference    //doc_number
+	form["file_type"] = fileType     //pdf
+	form["filepath"] = filepath      //
+	form["remarks"] = remarks        //stripe.invoice.id => evt_3PQ9PsJFUQv2NTJs0BEhJIyn
+	form["create_date"] = mtool.TimeNow()
 	form["status"] = 1
 	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err

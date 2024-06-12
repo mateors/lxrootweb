@@ -13,7 +13,10 @@ import (
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"math"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -858,4 +861,55 @@ func structFieldValMap(anyStructToPointer interface{}) (map[string]interface{}, 
 	//fmt.Println(row, len(row))
 	return row, nil
 
+}
+
+func xidToNumber(id string) int32 {
+	mid, err := xid.FromString(id)
+	if err != nil {
+		return 0
+	}
+	return mid.Counter()
+}
+
+func saveFile(fh *multipart.FileHeader, fileAbsPath string) error {
+
+	file, err := fh.Open()
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	buff := make([]byte, 512)
+	_, err = file.Read(buff)
+	if err != nil {
+		return err
+	}
+	_, err = file.Seek(0, io.SeekStart)
+	if err != nil {
+		return err
+	}
+	os.MkdirAll(filepath.Dir(fileAbsPath), 0755)
+	f, err := os.Create(fileAbsPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	_, err = io.Copy(f, file)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func parseMultipartTodo(r *http.Request) (todo string) {
+
+	r.ParseForm()
+	contentType := r.Header.Get("Content-Type")
+	if strings.Contains(contentType, "multipart/form-data") {
+		r.ParseMultipartForm(r.ContentLength)
+	}
+	todo = r.FormValue("todo")
+	if todo == "" {
+		todo = "search"
+	}
+	return
 }

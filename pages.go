@@ -9,11 +9,13 @@ import (
 	"lxrootweb/utility"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strings"
 	"text/template"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/mateors/mtool"
+	"github.com/rs/xid"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -1996,7 +1998,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func ticket(w http.ResponseWriter, r *http.Request) {
+func tickets(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
@@ -2010,7 +2012,7 @@ func ticket(w http.ResponseWriter, r *http.Request) {
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
-			"wpages/ticket.gohtml", //
+			"wpages/tickets.gohtml", //
 		)
 		if err != nil {
 			log.Println(err)
@@ -2021,6 +2023,24 @@ func ticket(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		//accountId, _ := smap["account_id"].(string)
+		var ticketStatus string = "open"
+		loginId, _ := smap["id"].(string)
+		status := r.FormValue("status")
+		if status == "" {
+			status = "1"
+		}
+		if status == "0" {
+			ticketStatus = "closed"
+		}
+
+		//closed tickets
+		sql := fmt.Sprintf("SELECT id,department,subject,reference,ticket_status,ip_address,create_date,update_date FROM %s WHERE login_id=%q AND status=%s;", tableToBucket("ticket"), loginId, status)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			return
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -2029,13 +2049,19 @@ func ticket(w http.ResponseWriter, r *http.Request) {
 			MainDivClass string
 			CsrfToken    string
 			SessionMap   map[string]interface{}
+			Rows         []map[string]interface{}
+			Count        int
+			TicketStatus string
 		}{
-			Title:        "LxRoot Active Ticket",
+			Title:        "LxRoot Closed Tickets",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
 			SessionMap:   smap,
+			Rows:         rows,
+			Count:        len(rows),
+			TicketStatus: ticketStatus,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2202,6 +2228,8 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 		sql = fmt.Sprintf(qs, docNumber)
 		rows, err := lxql.GetRows(sql, database.DB)
 		logError("itemRows", err)
+
+		fmt.Println(row["receipt_url"])
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2381,13 +2409,13 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 
 func ticketNew(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
+	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2404,6 +2432,12 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		sql := fmt.Sprintf("SELECT id,name FROM %s WHERE status=1;", tableToBucket("department"))
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			return
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -2412,6 +2446,7 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 			MainDivClass string
 			CsrfToken    string
 			SessionMap   map[string]interface{}
+			Rows         []map[string]interface{}
 		}{
 			Title:        "LxRoot New Ticket",
 			Base:         base,
@@ -2419,6 +2454,7 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
 			SessionMap:   smap,
+			Rows:         rows,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2426,5 +2462,62 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 
+	} else if r.Method == http.MethodPost {
+
+		parseMultipartTodo(r)
+
+		var message string = "OK"
+		tokenPullNSet(r)
+
+		funcsMap := map[string]interface{}{
+			"validCSRF": validCSRF,
+		}
+		rmap := make(map[string]interface{})
+		for key := range r.Form {
+			rmap[key] = r.FormValue(key)
+		}
+		response := CheckMultipleConditionTrue(rmap, funcsMap)
+		message = response
+		//fmt.Println(message)
+
+		if response == "OKAY" {
+
+			subject := r.FormValue("subject")
+			department := r.FormValue("department")
+			ticketMessage := r.FormValue("message")
+			ipAddress := cleanIp(r.RemoteAddr) //cleanIp(mtool.ReadUserIP())
+
+			loginId, _ := smap["id"].(string)
+			ticketId, _ := addTicket(loginId, department, subject, ticketMessage, "", ipAddress)
+			reference := fmt.Sprint(xidToNumber(ticketId))
+
+			for _, mfh := range r.MultipartForm.File {
+				for _, fh := range mfh {
+
+					counter := xid.New().Counter()
+					fileName := fmt.Sprintf("%d%s", counter, filepath.Ext(fh.Filename))
+					fileAbsPath := filepath.Join("data", "ticket", reference, fileName)
+					err := saveFile(fh, fileAbsPath)
+					logError("saveFile", err)
+					_, err = addFileStore("ticket", ticketId, "", fileAbsPath, "")
+					logError("addFileStore", err)
+				}
+			}
+			message = fmt.Sprintf("Ticket #%s has been successfully created.", reference)
+		}
+		fmt.Fprintln(w, message)
 	}
+}
+
+func invoice(w http.ResponseWriter, r *http.Request) {
+
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
+	inv := chi.URLParam(r, "inv")
+	fmt.Println(inv, smap)
+
+	http.ServeFile(w, r, "data/invoice/Receipt-2082-6216.pdf")
 }

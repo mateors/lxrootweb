@@ -55,10 +55,12 @@
           urls['/license']="/license";
           urls['/orders']="/orders";
           urls['/profile']="/profile";
-          urls['/ticket']="/ticket";
+          urls['/tickets']="/tickets";
           urls['/invoices']="/orders"
           urls['/security']="/profile"
-          urls['/ticketnew']="/ticket"
+          urls['/ticketnew']="/tickets"
+          urls['/ticket/']="/tickets"
+
       }
       let val=urls[findme];
       if (val==comparewithUrl){
@@ -66,6 +68,7 @@
       }else if (findme.includes(comparewithUrl)){
         return true;
       }
+      console.log(findme,comparewithUrl);
       return false;
     }
 

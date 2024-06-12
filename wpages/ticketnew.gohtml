@@ -1,6 +1,7 @@
 {{define "content"}}
 
   <div class="content h-full md:h-full bg-slate-200 mb-10">
+      <div data-message-container class="toast-container top-center"></div>
       <section class="container max-w-[960px] mx-auto">
 
         <div class="p-6s mt-8">    
@@ -17,7 +18,7 @@
                             <p class="px-5 mt-4 font-semibold shadow-sm">Menu</p>
                             <ul class="p-6">
                                 <li class="mb-2 px-2 py-2 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/ticket">My tickets</a></li>
-                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/security">New Ticket</a></li>
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/ticketnew">New Ticket</a></li>
                             </ul>
                         </div>
 
@@ -38,7 +39,7 @@
 
                         <div class="mt-6">
                             <form id="mForm" method="post">
-                                <input type="hidden" name="ftoken" value="" />
+                                <input type="hidden" name="ftoken" value="{{.CsrfToken}}" />
 
 
                                 <div class="field flex flex-col mb-4">
@@ -51,13 +52,12 @@
                                 </div>
 
                                 <div class="fields flex flex-col mb-4">
-                                    <label for="subject">Subject <span class="required-spot">*</span></label>
-                                    <select class="select" id="modal-country-select" class="custom-select select-no-label">
-                                        <option value="" disabled selected>Select Domain :</option>
-                                        <option value="">Kaunia</option>
-                                        <option value="Bangladesh">Bangladesh</option>
-                                        <option value="United States">United States</option>
-                                        <option value="India">India</option>
+                                    <label for="subject">Department <span class="required-spot">*</span></label>
+                                    <select id="modal-country-select" name="department">
+                                        {{range $row := .Rows}}
+                                        {{$name:=index $row "name"}}
+                                        <option value="{{$name}}" selected>{{$name}}</option>
+                                        {{end}}
                                     </select>
                                     <p class="text-[14px] text-red-500 mt-1 hidden">Please enter a valid subject</p>
                                 </div>
@@ -81,8 +81,6 @@
                                    </label>
                                    <div class="">2 files</div>
                                 </div>
-
-
                                 <button disabled type="submit" class="mt-4 py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Create ticket</button>
                             </form>
                         </div>
@@ -110,6 +108,68 @@
 
   <script>
 
+    let ftoken = "{{.CsrfToken}}";
+
+    let submitEnabler = () => {
+
+        let subject=$('#mForm').find('input[name="subject"]').val();
+        let message=$('#mForm').find('textarea[name="message"]').val();
+        if (subject.length>0 && message.length>0){
+            $('#mForm').find('button[type="submit"]').prop("disabled",false);
+        }else{
+            $('#mForm').find('button[type="submit"]').prop("disabled",true);
+        }
+    }
+
+    $('#mForm').find('input[name="subject"]').on('input', (e) => {
+        submitEnabler();
+    });
+
+    $('#mForm').find('textarea[name="message"]').on('input', (e) => {
+        submitEnabler();
+    });
+
+
+    $('#mForm').submit((e)=>{
+
+        e.preventDefault();
+        let submitBtn=$('#mForm').find('button[type="submit"]');
+        let btnText=submitBtn.text();
+        submitBtn.empty();
+        submitBtn.addChild(elmDivSpinner());
+        submitBtn.prop('disabled', true);
+
+        const fData = new FormData();
+        $('#mForm').find('input,textarea,select').each((e,index) => {
+            if (e.name.length>2){fData.append(e.name,e.value);}
+        });
+        var input = document.querySelector('input[type="file"]');
+        for (let i = 0; i < input.files.length; i++) {
+            let file = input.files.item(i)
+            console.log(file)
+            fData.append(`file-${i}`, input.files[i]);
+        }
+        fData.append('ftoken',ftoken);
+        fData.append("todo","insert");
+
+        $.ajax({
+            async: true,
+            type: "POST",
+            dataType: "text",
+            url: "/ticketnew",
+            data: fData,
+        
+        }).then( resp => {
+
+            showToastMessage(resp);
+            setTimeout(() => location.reload(),5000);
+
+        }).catch(err => {
+            console.log('ERR:'+err);
+        });
+        
+        return false;
+    });
 
   </script>
 

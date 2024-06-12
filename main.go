@@ -61,6 +61,8 @@ func init() {
 		lxql.RegisterModel(Event{})          //StripeEvent
 		lxql.RegisterModel(Ticket{})         //
 		lxql.RegisterModel(TicketResponse{}) //
+		lxql.RegisterModel(Department{})
+		lxql.RegisterModel(FileStore{})
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -279,7 +281,12 @@ func init() {
 
 	//fmt.Println(uuid.NewV1())
 	//fmt.Println(uuid.NewV4())
-	//os.Exit(1)
+	// addDepartment("General", "GEN", "", "ticket")
+	// addDepartment("Billing", "BIL", "", "ticket")
+	// addDepartment("Sales", "SAL", "", "ticket")
+	// addDepartment("Technical", "TEC", "", "ticket")
+	// addDepartment("Bugs", "BUG", "", "ticket")
+	// os.Exit(1)
 }
 
 func main() {
@@ -291,6 +298,7 @@ func main() {
 
 	assetPath := filepath.Join(workingDirectory, "assets")
 	r.Handle("/resources/*", http.StripPrefix("/resources/", http.FileServer(http.Dir(assetPath))))
+	//r.Handle("/vdata/*", http.StripPrefix("/vdata/", http.FileServer(http.Dir(filepath.Join(workingDirectory, "data")))))
 	//fmt.Println("Allahuakbar", utility.WPORT)
 
 	r.HandleFunc("/", homePage)
@@ -318,7 +326,7 @@ func main() {
 	r.HandleFunc("/dashboard", dashboard)           //dashboard OK
 	r.HandleFunc("/profile", profile)               //profile **
 	r.HandleFunc("/security", security)             //security **
-	r.HandleFunc("/ticket", ticket)                 //ticket **
+	r.HandleFunc("/ticket", tickets)               //ticket **
 	r.HandleFunc("/ticket/{tid}", ticketDetails)    //ticket/details
 	r.HandleFunc("/orders", orders)                 //Billing > My orders OK
 	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails OK
@@ -326,6 +334,7 @@ func main() {
 	r.HandleFunc("/license", licenseKey)            //license OK
 	r.HandleFunc("/ticketnew", ticketNew)           //ticketnew
 	r.HandleFunc("/logout", logout)                 //logout
+	r.HandleFunc("/invoice/{inv}", invoice)         //
 
 	r.HandleFunc("/payhook", paymentHook)
 	//r.HandleFunc("/webhook", webhookHandler)
