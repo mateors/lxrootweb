@@ -52,11 +52,11 @@
                             </div>
 
                             {{if eq $ticketStatus "closed"}}
-                            <div class="flex justify-center p-6"><button class="w-full p-2 border hover:!border-slate-400">Re-open ticket</button></div>
+                            <div class="flex items-center justify-center p-6"><button class="w-full p-2 border hover:!border-slate-400">Re-open ticket</button></div>
                             {{end}}
 
                             {{if eq $ticketStatus "open"}}
-                            <div class="flex justify-center p-6"><button class="w-full p-2 border hover:!border-slate-400">Close ticket</button></div>
+                            <div class="flex items-center justify-center p-6"><button id="btnClose" data-id="{{.TicketId}}" type="button" class="w-full p-2 border hover:!border-slate-400 flex items-center justify-center">Close ticket</button></div>
                             {{end}}
                            
                            
@@ -84,6 +84,7 @@
                             </div>
                         </div>
 
+                        {{if eq .TicketStatus "open"}}
                         <div class="w-full border borders rounded p-2s">
                             <form id="mForm">
                             <input type="hidden" name="tid" value="{{.TicketId}}">
@@ -101,6 +102,7 @@
                             </div>
                             </form>
                         </div>
+                        {{end}}
 
                         <!----ticket response goes here----->
 
@@ -184,6 +186,21 @@
 {{define "script"}}
 
   <script>
+
+    let ticketStatus = "{{.TicketStatus}}";
+    //console.log(ticketStatus);
+
+    $('#btnClose').on('click', (e) => {
+    
+        let delBtn = $(e.target).closest("button");
+        let tid=delBtn.attr('data-id'); //$(e.target).closest("button").attr('data-id');
+        delBtn.empty();
+        delBtn.addClass("!bg-secondaryDeep");
+        delBtn.addChild(elmDivSpinner());
+        delBtn.prop('disabled', true);
+        vForm('/ticket',{tid,todo:'close'},'post');
+    
+    });
 
     $('#mForm').submit((e)=>{
 

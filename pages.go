@@ -2076,14 +2076,12 @@ func tickets(w http.ResponseWriter, r *http.Request) {
 		if strings.ToUpper(todo) == "TICKET_REPLY" { //ticekt_reply
 
 			loginId, _ := smap["id"].(string)
-
 			ticketId := r.FormValue("tid")
 			message := r.FormValue("message")
 			ipAddress := cleanIp(r.RemoteAddr)
 			addTicketResponse(ticketId, message, loginId, ipAddress)
 
 			reference := xidToNumber(ticketId)
-			fmt.Println(reference)
 			rmessage = fmt.Sprintf("Ticket #%d response updated", reference)
 
 			for _, mfh := range r.MultipartForm.File {
@@ -2098,8 +2096,17 @@ func tickets(w http.ResponseWriter, r *http.Request) {
 					logError("addFileStore", err)
 				}
 			}
+			fmt.Fprintln(w, rmessage)
+
+		} else if strings.ToUpper(todo) == "CLOSE" {
+
+			ticketId := r.FormValue("tid")
+			//fmt.Println(ticketId, r.Referer()) //ticket?status=0
+			sql := fmt.Sprintf("UPDATE %s SET ticket_status='closed',update_date=%q,status=0 WHERE id=%q;", tableToBucket("ticket"), mtool.TimeNow(), ticketId)
+			lxql.RawSQL(sql, database.DB)
+			http.Redirect(w, r, "/ticket?status=0", http.StatusSeeOther)
 		}
-		fmt.Fprintln(w, rmessage)
+
 	}
 }
 
@@ -2140,6 +2147,7 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 		message := row["message"]
 		ipAddress := row["ip_address"]
 		createDate := row["create_date"]
+		ticketStatus := row["ticket_status"].(string)
 		//info, _ := loginToAccountRow(fmt.Sprint(ticketOwner))
 		//accountName := info["account_name"]
 		loginId, _ := smap["id"].(string)
@@ -2177,6 +2185,7 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 			MainDivClass string
 			CsrfToken    string
 			TicketId     string
+			TicketStatus string
 			SessionMap   map[string]interface{}
 			TicketInfo   map[string]interface{}
 			Responses    []map[string]interface{}
@@ -2187,6 +2196,7 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
 			TicketId:     ticketId,
+			TicketStatus: ticketStatus,
 			SessionMap:   smap,
 			TicketInfo:   row,
 			Responses:    nrows,
