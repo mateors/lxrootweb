@@ -643,7 +643,7 @@ type Ticket struct {
 	IpAddress      string `json:"ip_address"`
 	CreateDate     string `json:"create_date"`
 	UpdateDate     string `json:"update_date"` //last update
-	Status         int    `json:"status"`      //0=Inactive, 1=Active, 9=Deleted
+	Status         int    `json:"status"`      //0=Inactive/closed, 1=Active/open, 9=Deleted
 }
 
 type TicketResponse struct {
@@ -666,7 +666,7 @@ type Subscription struct {
 	ItemId            string `json:"item_id"`            //foreign key
 	Name              string `json:"name"`               //Lxroot License
 	AccountId         string `json:"account_id"`         //foreign key
-	Subscriber        string `json:"subscriber"`         //login_id
+	Subscriber        string `json:"subscriber"`         //stripe subscriber < login_id
 	LicenseKey        string `json:"license_key"`        //lxroot license
 	Domain            string `json:"domain"`             //where lince used > wget -qO- lxr.sh | bash -s yourdomain.com
 	Renews            string `json:"billing"`            //monthly|yearly

@@ -780,3 +780,34 @@ func docCheckoutProcess(docNumber string) map[string]interface{} {
 	}
 	return groupItemPrice(rows)
 }
+
+func totalOrdersByAccount(accountId string) int {
+	return lxql.CheckCount("doc_keeper", fmt.Sprintf("account_id=%q AND doc_type='cart' AND doc_status='complete' AND status=1", accountId), database.DB)
+}
+
+func totalInvoicesByAccount(accountId string) int {
+	return lxql.CheckCount("doc_keeper", fmt.Sprintf("account_id=%q AND doc_type='sales' AND doc_status IN ['complete','pending'] AND status=1", accountId), database.DB)
+}
+
+func totalUnpaidInvoicesByAccount(accountId string) int {
+	return lxql.CheckCount("doc_keeper", fmt.Sprintf("account_id=%q AND doc_type='sales' AND doc_status='pending' AND status=1", accountId), database.DB)
+}
+
+func totalActiveTicketByUser(loginId string) int {
+	return lxql.CheckCount("ticket", fmt.Sprintf("login_id=%q AND status=1", loginId), database.DB)
+}
+
+func subscriptionDetailsByAccount(accountId string) (map[string]interface{}, error) {
+
+	sql := fmt.Sprintf("SELECT license_key,billing,price,payment_status,subscription_end,create_date FROM %s WHERE account_id=%q;", tableToBucket("subscription"), accountId)
+	return singleRow(sql)
+}
+
+func myOrders(accountId string) ([]map[string]interface{}, error) {
+
+	sql := fmt.Sprintf(`SELECT d.doc_status,d.dco_number,d.posting_date,d.receipt_url,d.payment_status,d.doc_name,d.doc_description,d.doc_ref,d.create_date,d.total_payable,t.item_info,t.price 
+FROM lxroot._default.doc_keeper d 
+LEFT JOIN  lxroot._default.transaction_record t ON d.doc_number=t.doc_number
+WHERE d.account_id="%s" AND d.doc_type='cart' AND d.doc_status='complete' AND d.status=1;`, accountId)
+	return lxql.GetRows(sql, database.DB)
+}

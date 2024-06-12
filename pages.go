@@ -1804,22 +1804,36 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 		docNumber, _ := getCookie("docid", r)
 		count := docToCartCount(docNumber)
 
+		accountId, _ := smap["account_id"].(string)
+		loginId, _ := smap["id"].(string)
+
+		tickets := totalActiveTicketByUser(loginId)
+		//fmt.Println(tickets, loginId)
+
 		base := GetBaseURL(r)
 		data := struct {
-			Title        string
-			Base         string
-			BodyClass    string
-			MainDivClass string
-			CartCount    int
-			AccessName   string
-			SessionMap   map[string]interface{}
+			Title          string
+			Base           string
+			BodyClass      string
+			MainDivClass   string
+			CartCount      int
+			AccessName     string
+			SessionMap     map[string]interface{}
+			TotalOrders    int
+			TotalInvoices  int
+			UnpaidInvoices int
+			ActiveTickets  int
 		}{
-			Title:        "LxRoot Dashboard",
-			Base:         base,
-			BodyClass:    "",
-			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
-			CartCount:    count,
-			SessionMap:   smap,
+			Title:          "LxRoot Dashboard",
+			Base:           base,
+			BodyClass:      "",
+			MainDivClass:   "main min-h-[calc(100vh-52px)] bg-slate-200",
+			CartCount:      count,
+			SessionMap:     smap,
+			TotalOrders:    totalOrdersByAccount(accountId),
+			TotalInvoices:  totalInvoicesByAccount(accountId),
+			UnpaidInvoices: totalUnpaidInvoicesByAccount(accountId),
+			ActiveTickets:  tickets,
 		}
 
 		err = tmplt.Execute(w, data)

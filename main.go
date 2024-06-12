@@ -58,7 +58,9 @@ func init() {
 		lxql.RegisterModel(DocPayShipInfo{})
 		lxql.RegisterModel(Subscription{})
 		lxql.RegisterModel(Item{})
-		lxql.RegisterModel(Event{}) //StripeEvent
+		lxql.RegisterModel(Event{})          //StripeEvent
+		lxql.RegisterModel(Ticket{})         //
+		lxql.RegisterModel(TicketResponse{}) //
 	}
 
 	dataSourceName := fmt.Sprintf("http://%s:%s@%s:%s", DBUSER, DBPASS, SERVERIP, DBPORT)
@@ -313,7 +315,7 @@ func main() {
 	r.HandleFunc("/signin", signin)                 //login ***
 	r.HandleFunc("/resetpass", resetpass)           //reset
 	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
-	r.HandleFunc("/dashboard", dashboard)           //dashboard
+	r.HandleFunc("/dashboard", dashboard)           //dashboard *
 	r.HandleFunc("/profile", profile)               //profile
 	r.HandleFunc("/security", security)             //security
 	r.HandleFunc("/ticket", ticket)                 //ticket
