@@ -2000,13 +2000,13 @@ func security(w http.ResponseWriter, r *http.Request) {
 
 func tickets(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
+	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2069,23 +2069,54 @@ func tickets(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 
+	} else if r.Method == http.MethodPost {
+
+		todo := parseMultipartTodo(r)
+		var rmessage string = "Invalid request"
+		if strings.ToUpper(todo) == "TICKET_REPLY" { //ticekt_reply
+
+			loginId, _ := smap["id"].(string)
+
+			ticketId := r.FormValue("tid")
+			message := r.FormValue("message")
+			ipAddress := cleanIp(r.RemoteAddr)
+			addTicketResponse(ticketId, message, loginId, ipAddress)
+
+			reference := xidToNumber(ticketId)
+			fmt.Println(reference)
+			rmessage = fmt.Sprintf("Ticket #%d response updated", reference)
+
+			for _, mfh := range r.MultipartForm.File {
+				for _, fh := range mfh {
+
+					counter := xid.New().Counter()
+					fileName := fmt.Sprintf("%d%s", counter, filepath.Ext(fh.Filename))
+					fileAbsPath := filepath.Join("data", "ticket", fmt.Sprint(reference), fileName)
+					err := saveFile(fh, fileAbsPath)
+					logError("saveFile", err)
+					_, err = addFileStore("ticket", ticketId, "", fileAbsPath, "")
+					logError("addFileStore", err)
+				}
+			}
+		}
+		fmt.Fprintln(w, rmessage)
 	}
 }
 
 func ticketDetails(w http.ResponseWriter, r *http.Request) {
 
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
+
 	if r.Method == http.MethodGet {
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
-
 		ticketId := chi.URLParam(r, "tid")
-		fmt.Println("ticketId:", ticketId)
+		//fmt.Println("ticketId:", ticketId)
 
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
@@ -2100,6 +2131,44 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		sql := fmt.Sprintf("SELECT department,subject,message,reference,login_id,ticket_status,ip_address,create_date,update_date FROM %s WHERE id=%q;", tableToBucket("ticket"), ticketId)
+		row, err := singleRow(sql)
+		if err != nil {
+			return
+		}
+		ticketOwner, _ := row["login_id"].(string)
+		message := row["message"]
+		ipAddress := row["ip_address"]
+		createDate := row["create_date"]
+		//info, _ := loginToAccountRow(fmt.Sprint(ticketOwner))
+		//accountName := info["account_name"]
+		loginId, _ := smap["id"].(string)
+		accountName, _ := smap["account_name"].(string)
+
+		qs := `SELECT r.respond_by,r.message,r.ip_address,r.create_date,a.account_name FROM lxroot._default.ticket_response r LEFT JOIN lxroot._default.login l ON r.respond_by=l.id LEFT JOIN lxroot._default.account a ON a.id=l.account_id WHERE r.ticket_id=%q;`
+		sql = fmt.Sprintf(qs, ticketId)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			log.Println(err, sql)
+			return
+		}
+
+		var nrows = make([]map[string]interface{}, 0)
+		if ticketOwner == loginId {
+			trow := make(map[string]interface{})
+			trow["respond_by"] = ticketOwner
+			trow["message"] = message
+			trow["ip_address"] = ipAddress
+			trow["create_date"] = createDate
+			trow["account_name"] = accountName
+			nrows = append(nrows, trow)
+		}
+		nrows = append(nrows, rows...)
+		//ptime, _ := time.Parse(DATE_TIME_FORMAT, "2024-06-12 07:47:00")
+		//datetime = ptime.Format(outputFormat)
+		//min := time.Since(ptime).Minutes()
+		//hour := time.Since(ptime).Hours()
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -2107,14 +2176,20 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			TicketId     string
 			SessionMap   map[string]interface{}
+			TicketInfo   map[string]interface{}
+			Responses    []map[string]interface{}
 		}{
-			Title:        "LxRoot Ticket-121212",
+			Title:        fmt.Sprintf("LxRoot Ticket-%s", ticketId),
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			TicketId:     ticketId,
 			SessionMap:   smap,
+			TicketInfo:   row,
+			Responses:    nrows,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2465,7 +2540,6 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 
 		parseMultipartTodo(r)
-
 		var message string = "OK"
 		tokenPullNSet(r)
 

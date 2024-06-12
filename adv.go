@@ -43,6 +43,14 @@ var FuncMap = template.FuncMap{
 	"toTitle":          toTitle,
 	"toUpper":          toUpper,
 	"paymentIcon":      paymentIcon,
+	"niceDate":         niceDate,
+}
+
+const DATE_TIME_FORMAT = "2006-01-02 15:04:05"
+const NICE_DATE_FORMAT = "January 02, 2006"
+
+func niceDate(createDateTime string) string {
+	return mtool.DateTimeParser(createDateTime, DATE_TIME_FORMAT, NICE_DATE_FORMAT)
 }
 
 func paymentIcon(paymentStatus string) string {

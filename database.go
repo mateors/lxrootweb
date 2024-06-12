@@ -599,7 +599,7 @@ func addFileStore(ownerTable, reference, fileType, filepath, remarks string) (id
 	table := customTableName(modelName)
 	var form = make(map[string]interface{})
 	id = xid.New().String()
-	
+
 	form["id"] = id
 	form["type"] = table
 	form["cid"] = COMPANY_ID
@@ -609,6 +609,26 @@ func addFileStore(ownerTable, reference, fileType, filepath, remarks string) (id
 	form["file_type"] = fileType     //pdf
 	form["filepath"] = filepath      //
 	form["remarks"] = remarks        //stripe.invoice.id => evt_3PQ9PsJFUQv2NTJs0BEhJIyn
+	form["create_date"] = mtool.TimeNow()
+	form["status"] = 1
+	err = lxql.InsertUpdateMap(form, database.DB)
+	return id, err
+}
+
+func addTicketResponse(ticketId, message, loginId, ipAddress string) (id string, err error) {
+
+	modelName := structName(TicketResponse{})
+	table := customTableName(modelName)
+	var form = make(map[string]interface{})
+	id = xid.New().String()
+	form["id"] = id
+	form["type"] = table
+	form["cid"] = COMPANY_ID
+	form["table"] = modelName
+	form["ticket_id"] = ticketId
+	form["respond_by"] = loginId
+	form["message"] = message
+	form["ip_address"] = ipAddress
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 1
 	err = lxql.InsertUpdateMap(form, database.DB)

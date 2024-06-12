@@ -22,17 +22,42 @@
 
                             <div class="p-6">
 
+                                {{$ticketStatus := index .TicketInfo "ticket_status"}}
                                 <dl class="text-slate-500 !text-[15px]">
-                                    <dt class="border-b py-2">Status </dt>  <dd class="border-b py-2"><span class="md:ml-8 "><label class="px-2 py-2 rounded-lg bg-label-muted text-white label-text">Closed</label></span></dd> 
-                                    <dt class="border-b py-2">Department</dt>  <dd class="border-b py-2"><span class="md:ml-8">Billing</span></dd>
+                                    <dt class="border-b py-2">Status </dt>  
+                                    <dd class="border-b py-2">
+                                        <span class="md:ml-8 ">
+                                            {{if eq $ticketStatus "closed"}}
+                                            <label class="px-2 py-1 rounded-lg bg-label-muted text-white label-text">Closed</label>
+                                            {{end}}
+                                            {{if eq $ticketStatus "open"}}
+                                            <label class="px-2 py-1 rounded-lg bg-sky-500 text-white label-text">Open</label>
+                                            {{end}}
+                                        </span>
+                                    </dd> 
 
-                                    <dt class="border-b py-2">Reference</dt>  <dd class="border-b py-2"><span class="md:ml-8">ABCD-2323-4</span></dd> 
-                                    <dt class="py-2">Closed</dt>  <dd class="py-2"><span class="md:ml-8">Feb 16th, 2024</span></dd>
+                                    <dt class="border-b py-2">Department</dt>  <dd class="border-b py-2"><span class="md:ml-8">{{index .TicketInfo "department"}}</span></dd>
+
+                                    <dt class="border-b py-2">Reference</dt>  <dd class="border-b py-2"><span class="md:ml-8">{{ index .TicketInfo "reference"}}</span></dd>
+
+                                    {{if eq $ticketStatus "closed"}}
+                                    <dt class="py-2">Closed</dt>  <dd class="py-2"><span class="md:ml-8">{{ index .TicketInfo "update_date"}}</span></dd>
+                                    {{end}}
+                                    {{if eq $ticketStatus "open"}}
+                                    <dt class="py-2">Opened</dt>  <dd class="py-2"><span class="md:ml-8">{{ index .TicketInfo "create_date"}}</span></dd>
+                                    {{end}}
+
                                 </dl>
 
                             </div>
 
+                            {{if eq $ticketStatus "closed"}}
                             <div class="flex justify-center p-6"><button class="w-full p-2 border hover:!border-slate-400">Re-open ticket</button></div>
+                            {{end}}
+
+                            {{if eq $ticketStatus "open"}}
+                            <div class="flex justify-center p-6"><button class="w-full p-2 border hover:!border-slate-400">Close ticket</button></div>
+                            {{end}}
                            
                            
                         </div>
@@ -49,16 +74,32 @@
                     <div class="p-6 bg-white rounded-lg">
 
                         <div class="flex justify-between items-center">
-                            <h3 class="head-3 !fs32px !font-light text-slate-700">Ticket subject goes here</h3>
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">{{index .TicketInfo "subject"}}</h3>
                             <a href="/ticket" class="border rounded-full px-4 py-2 text-slate-700 hover:!border-slate-400">< My Tickets</a>
                         </div>
 
-                        <div class="mt-4 border-b">
+                        <div class="mt-4 border-bs">
                             <div class="wrapper flex gap-6 justify-end">
-                                <!--<div class="text-slate-700 p-2 border-b-2 !border-b-secondary"><a href="#">All</a></div>
-                                <div class="text-slate-700 p-2"><a href="#">Attachments</a></div>-->
-                                <p class="px-1 text-slate-500 !font-light">Created on June 30, 2024</p>
+                                <p class="px-1 text-slate-500 !font-light">Created on {{niceDate (index .TicketInfo "create_date")}}</p>
                             </div>
+                        </div>
+
+                        <div class="w-full border borders rounded p-2s">
+                            <form id="mForm">
+                            <input type="hidden" name="tid" value="{{.TicketId}}">
+                            <div class="px-4 py-2"><textarea name="message" class="w-full !h-auto mt-2 mh:3rem" placeholder="Message" required></textarea></div>
+
+                            <div class="px-4 flex items-start justify-between mb-1">
+                                <label class="flex items-center relative">
+                                    <span class="rounded hover:bg-slate-200 flex justify-center items-center py-2 px-2 gap-x-2 cursor-pointer">
+                                        <span class="material-icon text-slate-800">attachment</span> 
+                                        <span class="text-slate-800">Attach file(s)</span>
+                                    </span>
+                                    <input class="top-0 left-0 opacity-0" type="file" multiple="multiple">
+                                </label>
+                                <button type="submit" class="border bottom-0 right-0 flex items-center justify-center gap-x-2 bg-primary text-white py-2 px-4 rounded hover:shadow">Post reply <span class="material-icon">send</span></button>
+                            </div>
+                            </form>
                         </div>
 
                         <!----ticket response goes here----->
@@ -69,25 +110,27 @@
 
                             <div class="wrapper">
 
-                                <div class="flex justify-start">
+                                <!--<div class="flex justify-start">
                                     <div class=""><span class="material-iconp">sync</span></div>
                                     <div class="w-full"><p class="text-slate-500 !font-light">Status set to closed</p></div>
-                                </div>
+                                </div>-->
 
+                                {{range $row := .Responses}}
                                 <div class="flex justify-start mt-6 relative">
 
                                     <div class="ticket-message-group-tracks"><span class="material-iconp !fs:38px">account_circle</span></div>
 
                                     <div class="w-full px-4">
-                                        <p class="text-slate-700 mb-1">Adam</p>
+                                        <p class="text-slate-700 mb-1">{{index $row "account_name"}}</p>
                                         <div class="w-full bg-gray p-4 rounded">
-                                            <p class="text-slate-700">Cancelled and refunded</p>
-                                            <p class="text-slate-500 caption-text">3 months ago</p>
+                                            <p class="text-slate-700">{{index $row "message"}}</p>
+                                            <p class="text-slate-500 caption-text">{{index $row "create_date"}}</p>
                                         </div>
                                     </div>
                                 </div>
+                                {{end}}
 
-                                <div class="flex relative justify-start mt-6">
+                                <!--<div class="flex relative justify-start mt-6">
 
                                     <div class=""><span class="material-iconp !fs:38px">account_circle</span></div>
 
@@ -105,7 +148,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
 
      
 
@@ -142,7 +185,47 @@
 
   <script>
 
+    $('#mForm').submit((e)=>{
 
+        e.preventDefault();
+        let submitBtn=$('#mForm').find('button[type="submit"]');
+        let btnText=submitBtn.text();
+        submitBtn.empty();
+        submitBtn.addChild(elmDivSpinner());
+        submitBtn.prop('disabled', true);
+
+        const fData = new FormData();
+        $('#mForm').find('input,textarea,select').each((e,index) => {
+            if (e.name.length>2){fData.append(e.name,e.value);}
+        });
+        var input = document.querySelector('input[type="file"]');
+        for (let i = 0; i < input.files.length; i++) {
+            let file = input.files.item(i)
+            console.log(file)
+            fData.append(`file-${i}`, input.files[i]);
+        }
+        //fData.append('ftoken',ftoken);
+        fData.append("todo","ticket_reply");
+
+        $.ajax({
+            async: true,
+            type: "POST",
+            dataType: "text",
+            url: "/ticket",
+            data: fData,
+        
+        }).then( resp => {
+
+            console.log(resp);
+            //showToastMessage(resp);
+            //setTimeout(() => location.reload(),5000);
+
+        }).catch(err => {
+            console.log('ERR:'+err);
+        });
+        
+        return false;
+    });
 
   </script>
 
