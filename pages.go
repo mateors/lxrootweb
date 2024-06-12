@@ -1883,13 +1883,10 @@ func profile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
+			"templates/profile_left.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/profile.gohtml", //
 		)
@@ -1902,6 +1899,12 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		//fmt.Println(smap)
+		accountId, _ := smap["account_id"].(string)
+		row := profileInfo(accountId)
+		clientSince, _ := row["client_since"].(string)
+		lastLoginDate, _ := row["last_login"].(string)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -1909,12 +1912,22 @@ func profile(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
+			LastLogin    string
+			ClientSince  string
+			ProfileInfo  map[string]interface{}
+			AddressList  []map[string]interface{}
 		}{
 			Title:        "LxRoot Profile",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			LastLogin:    lastLoginDate,
+			ClientSince:  clientSince,
+			ProfileInfo:  row,
+			AddressList:  addressList(accountId),
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1935,13 +1948,10 @@ func security(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
+			"templates/profile_left.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/security.gohtml", //
 		)
@@ -1954,6 +1964,9 @@ func security(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		loginId, _ := smap["id"].(string)
+		lastLoginDate, clientSince := profileLastLogin(loginId)
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -1961,12 +1974,18 @@ func security(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
+			LastLogin    string
+			ClientSince  string
 		}{
 			Title:        "LxRoot Security",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			LastLogin:    lastLoginDate,
+			ClientSince:  clientSince,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -1986,10 +2005,6 @@ func ticket(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/logout", http.StatusSeeOther)
 			return
 		}
-
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2013,12 +2028,14 @@ func ticket(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
 		}{
 			Title:        "LxRoot Active Ticket",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2040,9 +2057,7 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ticketId := chi.URLParam(r, "tid")
-		fmt.Println("smap:", smap, ticketId)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
+		fmt.Println("ticketId:", ticketId)
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2066,12 +2081,14 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
 		}{
 			Title:        "LxRoot Ticket-121212",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2092,7 +2109,6 @@ func orders(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//fmt.Println("smap:", smap)
 		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
@@ -2146,19 +2162,13 @@ func orders(w http.ResponseWriter, r *http.Request) {
 
 func orderDetails(w http.ResponseWriter, r *http.Request) {
 
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
+
 	if r.Method == http.MethodGet {
-
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
-
-		//fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
-		docId := chi.URLParam(r, "oid") //orderId
 
 		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
@@ -2170,11 +2180,11 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			return
 		}
-
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
+		docId := chi.URLParam(r, "oid") //orderId
 		accountId, _ := smap["account_id"].(string)
 		//loginId, _ := smap["id"].(string)
 
@@ -2204,7 +2214,7 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 			Order        map[string]interface{}
 			Items        []map[string]interface{}
 		}{
-			Title:        "LxRoot Order#1212",
+			Title:        fmt.Sprintf("LxRoot #%s", toUpper(docNumber)),
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
@@ -2224,19 +2234,15 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 
 func invoices(w http.ResponseWriter, r *http.Request) {
 
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
+
 	if r.Method == http.MethodGet {
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
-
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
@@ -2246,10 +2252,24 @@ func invoices(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			return
 		}
-
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
+		//fmt.Println("smap:", smap)
+
+		accountId, _ := smap["account_id"].(string)
+		//loginId, _ := smap["id"].(string)
+
+		qs := `SELECT d.id, d.doc_status,d.doc_number,d.posting_date,d.receipt_url,d.payment_status,d.doc_name,d.doc_description,d.doc_ref,d.create_date,d.total_payable,t.item_info,t.price 
+				FROM lxroot._default.doc_keeper d 
+				LEFT JOIN  lxroot._default.transaction_record t ON d.doc_number=t.doc_number
+				WHERE d.account_id="%s" AND d.doc_type='sales' AND d.doc_status IN ['pending','complete'] AND d.status=1;`
+		sql := fmt.Sprintf(qs, accountId)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2258,12 +2278,18 @@ func invoices(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
+			Rows         []map[string]interface{}
+			Count        int
 		}{
 			Title:        "LxRoot Invoices",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			Rows:         rows,
+			Count:        len(rows),
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2283,11 +2309,6 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/logout", http.StatusSeeOther)
 			return
 		}
-
-		//ticketId := chi.URLParam(r, "tid")
-		//fmt.Println("smap:", smap, ticketId)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2311,7 +2332,6 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			log.Println(err)
 		}
-		fmt.Println(row)
 		licenseKey, _ := row["license_key"].(string)
 		paymentStatus, _ := row["payment_status"].(string)
 		billing, _ := row["billing"].(string)
@@ -2369,10 +2389,6 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Println("smap:", smap)
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
@@ -2395,12 +2411,14 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			CsrfToken    string
+			SessionMap   map[string]interface{}
 		}{
 			Title:        "LxRoot New Ticket",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
+			SessionMap:   smap,
 		}
 
 		err = tmplt.Execute(w, data)

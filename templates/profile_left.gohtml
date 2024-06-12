@@ -1,0 +1,21 @@
+{{define "profile_left"}}
+
+    <div class="relative">
+
+        <div class="bg-white rounded-lg">
+            <div class="absolute border border-transparent w-24 h-24 rounded-full top:60px left:20px flex items-center justify-center bg-yellow-50">MB</div>
+            <div class="bg-primary mh-7.5rem border-t rounded-t-lg"></div>
+
+            <div class="bg-white mt-8 p-6 rounded-lg">
+                <p class="text-slate-700 font-semibold">{{index .SessionMap "account_name"}}</p>
+                <p class="text-slate-500">{{index .SessionMap "username"}}</p>
+                <dl class="gap-2s text-slate-500">
+                    <dt class="border-b py-1">Last login  </dt>  <dd class="border-b py-1"><span class="px-4">{{.LastLogin}}</span></dd> 
+                    <dt class="py-1">Client since</dt>  <dd class="py-1"><span class="px-4">{{.ClientSince}}</span></dd>
+                </dl>
+            </div>
+        </div>
+
+    </div>
+
+{{end}}

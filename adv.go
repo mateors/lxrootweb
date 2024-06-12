@@ -42,6 +42,18 @@ var FuncMap = template.FuncMap{
 	"checkoutDisabled": checkoutDisabled,
 	"toTitle":          toTitle,
 	"toUpper":          toUpper,
+	"paymentIcon":      paymentIcon,
+}
+
+func paymentIcon(paymentStatus string) string {
+
+	if paymentStatus == "paid" {
+		return "paid"
+	} else if paymentStatus == "refunded" {
+		return "restore"
+	}
+
+	return "info"
 }
 
 func toUpper(text string) string {

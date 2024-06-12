@@ -811,3 +811,39 @@ LEFT JOIN  lxroot._default.transaction_record t ON d.doc_number=t.doc_number
 WHERE d.account_id="%s" AND d.doc_type='cart' AND d.doc_status='complete' AND d.status=1;`, accountId)
 	return lxql.GetRows(sql, database.DB)
 }
+
+func profileLastLogin(loginId string) (lastLoginDate, clientSince string) {
+
+	sql := fmt.Sprintf("SELECT id,create_date,last_login FROM %s WHERE id=%q;", tableToBucket("login"), loginId)
+	row, err := singleRow(sql)
+	if err != nil {
+		return
+	}
+	lastLoginDate = row["last_login"].(string)
+	joinDate := row["create_date"].(string)
+	clientSince = mtool.DateTimeParser(joinDate, "2006-01-02 15:04:05", "January 02, 2006")
+	return
+}
+
+func profileInfo(accountId string) map[string]interface{} {
+
+	sql := fmt.Sprintf("SELECT a.first_name,a.last_name,a.email,l.create_date,l.last_login,l.username FROM lxroot._default.account a LEFT JOIN lxroot._default.login l ON l.account_id=a.id WHERE a.id=%q;", accountId)
+	//fmt.Println(sql)
+	row, err := singleRow(sql)
+	if err != nil {
+		return nil
+	}
+	row["client_since"] = mtool.DateTimeParser(row["create_date"].(string), "2006-01-02 15:04:05", "January 02, 2006")
+	return row
+}
+
+func addressList(accountId string) []map[string]interface{} {
+
+	sql := fmt.Sprintf("SELECT address1,city,state,zip,country,address_type FROM lxroot._default.address WHERE account_id=%q;", accountId)
+	rows, err := lxql.GetRows(sql, database.DB)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+	return rows
+}

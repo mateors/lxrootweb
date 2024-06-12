@@ -31,7 +31,7 @@
                                 <div data-dropdown-btn>
                                     <div data-dropdown-btn class="flex gap-4 items-center justify-between">
                                         <div><span data-dropdown-btn class="material-icons">person_outline</span></div>
-                                        <div data-dropdown-btn>billahmdmostain@gmail.com</div>
+                                        <div data-dropdown-btn>{{index .SessionMap "username"}}</div>
                                     </div>
                                     <button class="body-text1 !font-medium menu-btn flex items-center justify-center p-1 rounded-full bg-whites text-sm" data-dropdown-btn><span class="material-icons">expand_more</span></button>
                                 </div>
@@ -40,7 +40,7 @@
                                 <div class="container mx-autos">
                                     <div class="px-4 py-2 flex flex-col items-center border-b border-slate-200">
                                         <!--<p class="body-text2 mb-1 text-slate-500">Currently Logged in as:</p>-->
-                                        <p class="body-text2 !font-medium">billahmdmostain@gmail.com</p>
+                                        <p class="body-text2 !font-medium">{{index .SessionMap "username"}}</p>
                                     </div>
                                     <a href="/profile" class="px-4 py-2 flex gap-3 items-center justify-centers text-primary hover:bg-slate-100 hover:text-secondary transition border-bs border-slate-200">
                                         <span class="material-icons">account_circle</span>

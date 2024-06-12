@@ -54,10 +54,16 @@
 
                             <div class="w-full">
 
+                                {{if eq .Count 0}}
+                                    <div class="w-full border px-4 py-2">No record found</div>
+                                {{end}}
+
+                                {{range $row := .Rows}}
+
                                 <a href="#" class="w-full shadow-md hover:bg-slate-100 border-t flex items-center justify-between px-4 py-2 gap-x-4 gap-y-2 mb-2">
 
                                     <div class="flex items-center">
-                                        <span class="material-icons text-sky-500">restore</span>
+                                        <span class="material-icons text-sky-500">{{paymentIcon (index $row "payment_status")}}</span>
                                         <div class="w:2px h:80px br:2px ml-4 bg-sky-500"></div>
                                     </div>
 
@@ -66,19 +72,19 @@
                                         <div class="borders">
 
                                             <div class="flex justify-between items-center gap-x-5">
-                                                <p class="text-slate-700 font-semibold">LX-3030303</p>
-                                                <p class="text-slate-700 font-semibold">$20.00</p>
+                                                <p class="text-slate-700 font-semibold">{{index $row "doc_number"}}</p>
+                                                <p class="text-slate-700 font-semibold">${{index $row "total_payable"}}</p>
                                             </div>
 
                                             <div class="flex justify-between items-center">
-                                                <p class="text-slate-600">Item(s): License Key</p>
-                                                <p class="text-sky-500 font-semibold">REFUNDED</p>
+                                                <p class="text-slate-600">Item(s): {{index $row "item_info"}}</p>
+                                                <p class="text-sky-500 font-semibold">{{index $row "payment_status"}}</p>
                                             </div>
 
 
                                             <div class="flex justify-between items-center">
-                                                <p class="caption-text text-slate-400">Issued: Feb 16th</p>
-                                                <p class="caption-text text-sky-500 font-semibold">Refunded Mar 7th</p>
+                                                <p class="caption-text text-slate-400">Issued: {{index $row "posting_date"}}</p>
+                                                <p class="caption-text text-sky-500 font-semibold">{{toTitle (index $row "payment_status")}} {{index $row "posting_date"}}</p>
                                             </div>
 
                                         </div>
@@ -91,42 +97,9 @@
 
                                 </a>
 
-                                <a href="#" class="w-full shadow-md hover:bg-slate-100 border-t flex items-center justify-between px-4 py-2 gap-x-4 gap-y-2">
-
-                                    <div class="flex items-center">
-                                        <span class="material-icons text-sky-500">paid</span>
-                                        <div class="w:2px h:80px br:2px ml-4 bg-sky-500"></div>
-                                    </div>
-
-                                    <div class="w-full">
-
-                                        <div class="borders">
-
-                                            <div class="flex justify-between items-center gap-x-5">
-                                                <p class="text-slate-700 font-semibold">LX-3030303</p>
-                                                <p class="text-slate-700 font-semibold">$20.00</p>
-                                            </div>
-
-                                            <div class="flex justify-between items-center">
-                                                <p class="text-slate-600">Item(s): License Key</p>
-                                                <p class="text-sky-500 font-semibold">PAID</p>
-                                            </div>
+                                {{end}}
 
 
-                                            <div class="flex justify-between items-center">
-                                                <p class="caption-text text-slate-400">Issued: Feb 16th</p>
-                                                <p class="caption-text text-sky-500 font-semibold">Paid Mar 7th</p>
-                                            </div>
-
-                                        </div>
-                                    
-                                    </div>
-
-                                    <div class="">
-                                        <div><span class="material-icons">highlight_alt</span></div>
-                                    </div>
-
-                                </a>
 
                             </div>
 

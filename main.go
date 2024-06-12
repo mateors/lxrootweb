@@ -316,13 +316,13 @@ func main() {
 	r.HandleFunc("/resetpass", resetpass)           //reset
 	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
 	r.HandleFunc("/dashboard", dashboard)           //dashboard OK
-	r.HandleFunc("/profile", profile)               //profile
-	r.HandleFunc("/security", security)             //security
-	r.HandleFunc("/ticket", ticket)                 //ticket
+	r.HandleFunc("/profile", profile)               //profile **
+	r.HandleFunc("/security", security)             //security **
+	r.HandleFunc("/ticket", ticket)                 //ticket **
 	r.HandleFunc("/ticket/{tid}", ticketDetails)    //ticket/details
 	r.HandleFunc("/orders", orders)                 //Billing > My orders OK
-	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails
-	r.HandleFunc("/invoices", invoices)             //invoice
+	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails OK
+	r.HandleFunc("/invoices", invoices)             //invoice ** OK
 	r.HandleFunc("/license", licenseKey)            //license OK
 	r.HandleFunc("/ticketnew", ticketNew)           //ticketnew
 	r.HandleFunc("/logout", logout)                 //logout
