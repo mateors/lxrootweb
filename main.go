@@ -317,7 +317,7 @@ func main() {
 	r.HandleFunc("/privacy", privacy)
 	r.HandleFunc("/shop", shop)                     //store page
 	r.HandleFunc("/complete", complete)             //complete shopping
-	r.HandleFunc("/product", product)               //product_details
+	r.HandleFunc("/getstarted", product)            //product_details
 	r.HandleFunc("/checkout", checkout)             //checkout + ***
 	r.HandleFunc("/faqs", faqs)                     //
 	r.HandleFunc("/about", about)                   //

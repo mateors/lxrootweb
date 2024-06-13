@@ -9,7 +9,6 @@
                 <!---left--->
                 <div class="w-full md:w-25% bg-slate-200 text-slate-700 p-4 gap-4 ">
 
-                    <!---template--->
                     {{template "profile_left" .}}
 
                     <!---menu--->
@@ -25,7 +24,6 @@
 
                     </div>
                     
-
                 </div>
 
                 <!---right--->
@@ -42,11 +40,6 @@
                         <form id="mForm" method="post">
                             <input type="hidden" name="ftoken" value="" />
 
-                            <!--<div class="field flex flex-col mb-4">
-                                <label for="aname">Account Name <span class="required-spot">*</span></label>
-                                <input type="text" id="aname" name="account_name" placeholder="Account name here"  required />
-                            </div>-->
-
                             <div class="md:grid grid-cols-2 gap-3">
                                 <div class="field flex flex-col mb-4">
                                     <label for="fname-field">First Name <span class="required-spot">*</span></label>
@@ -55,16 +48,23 @@
                                         <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
                                     </div>
                                 </div>
-                            <div class="field flex flex-col mb-4">
-                                <label for="lname-field">Last Name <span class="required-spot">*</span></label>
-                                <div class="relative w-full">
-                                    <input type="text" id="lname" class="w-full" name="last_name" placeholder="Last name here" value="{{$lastName}}" required />
-                                    <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
+                                <div class="field flex flex-col mb-4">
+                                    <label for="lname-field">Last Name <span class="required-spot">*</span></label>
+                                    <div class="relative w-full">
+                                        <input type="text" id="lname" class="w-full" name="last_name" placeholder="Last name here" value="{{$lastName}}" required />
+                                        <span class="material-iconp error-icon absolute right-3 bottom-1/2 translate-y-1/2 pointer-events-none hidden">error</span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="flex justify-end items-center">
+                                <div class="hidden flex gap-2">
+                                    <button cancelnames type="button" class="py-3 px-6 border border-slate-300 text-secondary rounded-md font-medium bg-transparent hover:!border-slate-400">Cancel</button>
+                                    <button type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Save</button>
+                                </div>
+                                <button id="changeNames" type="button" class="flex px-4 py-2 hover:bg-slate-100 text-slate-700"><span class="material-iconp">drive_file_rename_outline</span>Change</button>
                             </div>
-                            
-                            <button type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Save</button>
+
                         </form>
                     </div>
 
@@ -81,7 +81,7 @@
                             </div>
                             <div class="flex justify-end items-center">
                                 <div class="hidden flex gap-2">
-                                    <button cancel type="button" class="py-3 px-6 border border-slate-300 text-secondary rounded-md font-medium bg-transparent hover:!border-slate-400">Cancel</button>
+                                    <button cancelemail type="button" class="py-3 px-6 border border-slate-300 text-secondary rounded-md font-medium bg-transparent hover:!border-slate-400">Cancel</button>
                                     <button type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Save</button>
                                 </div>
                                 <button id="changeEmail" type="button" class="flex px-4 py-2 hover:bg-slate-100 text-slate-700"><span class="material-iconp">drive_file_rename_outline</span>Change</button>
@@ -98,7 +98,6 @@
 
                             <div class="relative grid md:grid-cols-A gap-4">
 
-                                <!---address list-->
                                 {{range $row := .AddressList}}
                                     {{$address1 := index $row "address1"}}
                                     {{$city := index $row "city"}}
@@ -110,8 +109,6 @@
                                         <p class="text-slate-500 mt-1">{{$address1}}, {{$city}}, {{$zip}}, {{$state}}, {{$country}}</p>
                                     </div>
                                 {{end}}
-
-
                                 
                             </div>
                         </div>
@@ -133,6 +130,7 @@
 {{define "scriptsrc"}}
   <script src="resources/js/nlib.js"></script>
   <script src="resources/js/main.js"></script>
+  <script src="resources/js/navscript.js"></script>
 {{end}}
 
 
@@ -147,12 +145,23 @@
         $('#changeEmail').prev().removeClass("hidden");
     });
 
-    $('button[cancel]').on('click', (e) => {
+    $('#changeNames').on('click', (e) => {
 
+        $('#changeNames').prev().removeClass("hidden");
+        $('#changeNames').addClass("hidden");
+    });
+
+    $('button[cancelemail]').on('click', (e) => {
         $('#email').prop("disabled", true);
         $(this).closest("button").parent().addClass("hidden");
         $(this).closest("button").parent().next().removeClass("hidden");
-    })
+    });
+
+    $('button[cancelnames]').on('click', (e) => {
+
+        $(this).closest("button").parent().addClass("hidden");
+        $(this).closest("button").parent().next().removeClass("hidden");
+    });
 
   </script>
 

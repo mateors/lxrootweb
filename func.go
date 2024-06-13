@@ -921,7 +921,13 @@ func docFindDateTime() (startDate, endDate string) {
 	then := tnow.Add(-diff)
 	startDate = then.Format(DATE_TIME_FORMAT)
 	endDate = tnow.Format(DATE_TIME_FORMAT)
-	//fmt.Println("current time  :", tnow.Format(DATE_TIME_FORMAT))
-	//fmt.Println("30 sec earlier:", then.Format(DATE_TIME_FORMAT))
+	return
+}
+
+func nameLabel(firstName, lastName string) (label string) {
+
+	if firstName != "" && lastName != "" {
+		label = fmt.Sprintf("%c%c", firstName[0], lastName[0])
+	}
 	return
 }

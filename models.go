@@ -455,10 +455,10 @@ type FileStore struct {
 
 //DocKeeper keeps all document info
 type DocKeeper struct {
-	ID        string `json:"id"`
-	Type      string `json:"type"`
-	CompanyID string `json:"cid"` //foreign key
 	//WarehouseID    string  `json:"warehouse_id,omitempty"` //foreign key
+	ID             string  `json:"id"`
+	Type           string  `json:"type"`
+	CompanyID      string  `json:"cid"`             //foreign key
 	DocName        string  `json:"doc_name"`        //Shopping Cart
 	DocType        string  `json:"doc_type"`        //cart,purchase,sales,voucher
 	DocRef         string  `json:"doc_ref"`         //visitorSession or stripe reference
@@ -474,6 +474,7 @@ type DocKeeper struct {
 	PaymentStatus  string  `json:"payment_status"` //paid,unpaid,no_payment_required
 	ReceiptUrl     string  `json:"receipt_url"`    //
 	DocStatus      string  `json:"doc_status"`     //pending|open,checkout_session -> open,complete,expired
+	IpAddress      string  `json:"ip_address"`
 	CreateDate     string  `json:"create_date"`
 	UpdateDate     string  `json:"update_date"`
 	Status         int     `json:"status"`

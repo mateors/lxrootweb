@@ -792,7 +792,7 @@ func product(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		http.Redirect(w, r, "/product", http.StatusSeeOther)
+		http.Redirect(w, r, "/getstarted", http.StatusSeeOther)
 		return
 	}
 }
@@ -1964,6 +1964,9 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		row := profileInfo(accountId)
 		clientSince, _ := row["client_since"].(string)
 		lastLoginDate, _ := row["last_login"].(string)
+		firstName, _ := row["first_name"].(string)
+		lastName, _ := row["last_name"].(string)
+		label := nameLabel(firstName, lastName)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1977,6 +1980,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 			ClientSince  string
 			ProfileInfo  map[string]interface{}
 			AddressList  []map[string]interface{}
+			IconLabel    string
 		}{
 			Title:        "LxRoot Profile",
 			Base:         base,
@@ -1988,6 +1992,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 			ClientSince:  clientSince,
 			ProfileInfo:  row,
 			AddressList:  addressList(accountId),
+			IconLabel:    strings.ToUpper(label),
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2025,7 +2030,13 @@ func security(w http.ResponseWriter, r *http.Request) {
 		setCookie("ctoken", hashStr, 1800, w)
 
 		loginId, _ := smap["id"].(string)
+		accountId, _ := smap["account_id"].(string)
 		lastLoginDate, clientSince := profileLastLogin(loginId)
+
+		row := profileInfo(accountId)
+		firstName, _ := row["first_name"].(string)
+		lastName, _ := row["last_name"].(string)
+		label := nameLabel(firstName, lastName)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2037,6 +2048,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 			SessionMap   map[string]interface{}
 			LastLogin    string
 			ClientSince  string
+			IconLabel    string
 		}{
 			Title:        "LxRoot Security",
 			Base:         base,
@@ -2046,6 +2058,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 			SessionMap:   smap,
 			LastLogin:    lastLoginDate,
 			ClientSince:  clientSince,
+			IconLabel:    strings.ToUpper(label),
 		}
 
 		err = tmplt.Execute(w, data)
