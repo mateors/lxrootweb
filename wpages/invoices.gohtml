@@ -78,7 +78,7 @@
 
                                             <div class="flex justify-between items-center">
                                                 <p class="text-slate-600">Item(s): {{index $row "item_info"}}</p>
-                                                <p class="text-sky-500 font-semibold">{{index $row "payment_status"}}</p>
+                                                <p class="text-sky-500 font-semibold">{{toUpper (index $row "payment_status")}}</p>
                                             </div>
 
 
