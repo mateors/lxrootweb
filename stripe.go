@@ -236,7 +236,7 @@ func customerParser(evtData map[string]interface{}) (*Customer, error) {
 	return cus, err
 }
 
-func subscriptionParser(evtData map[string]interface{}) (*Subscription, error) {
+func subscriptionParser(evtData map[string]interface{}) (*Subscription2, error) {
 
 	obj, isOk := evtData["object"]
 	if !isOk {
@@ -247,7 +247,7 @@ func subscriptionParser(evtData map[string]interface{}) (*Subscription, error) {
 		log.Println(err)
 		return nil, err
 	}
-	var subs = &Subscription{}
+	var subs = &Subscription2{}
 	err = json.Unmarshal(jsonBytes, subs)
 	return subs, err
 }

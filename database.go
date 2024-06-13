@@ -600,7 +600,6 @@ func addFileStore(ownerTable, reference, fileType, filepath, remarks string) (id
 	table := customTableName(modelName)
 	var form = make(map[string]interface{})
 	id = xid.New().String()
-
 	form["id"] = id
 	form["type"] = table
 	form["cid"] = COMPANY_ID

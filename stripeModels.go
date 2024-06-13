@@ -109,21 +109,21 @@ type PaymentIntent struct {
 }
 
 type Subscription2 struct {
-	ID                     string `json:"id"`
-	Cancel_at_period_end   bool   `json:"cancel_at_period_end"`
-	Current_period_start   int64  `json:"current_period_start"`
-	Current_period_end     int64  `json:"current_period_end"`
-	Canceled_at            int64  `json:"canceled_at"`
-	Customer               string `json:"customer"`
-	Default_payment_method string `json:"default_payment_method"`
-	Latest_invoice         string `json:"latest_invoice"`
-	Start_date             int64  `json:"start_date"`
-	Ended_at               int64  `json:"ended_at"`
-	Collection_method      string `json:"collection_method"`
-	Created                int64  `json:"created"`
-	Livemode               bool   `json:"livemode"`
-	Items                  List   `json:"items"`
-	Status                 string `json:"status"`
+	ID                   string `json:"id"`
+	CancelAtPeriodEnd    bool   `json:"cancel_at_period_end"`
+	CurrentPeriodStart   int64  `json:"current_period_start"`
+	CurrentPeriodEnd     int64  `json:"current_period_end"`
+	CanceledAt           int64  `json:"canceled_at"`
+	Customer             string `json:"customer"`
+	DefaultPaymentMethod string `json:"default_payment_method"`
+	LatestInvoice        string `json:"latest_invoice"`
+	StartDate            int64  `json:"start_date"`
+	EndedAt              int64  `json:"ended_at"`
+	CollectionMethod     string `json:"collection_method"`
+	Created              int64  `json:"created"`
+	Livemode             bool   `json:"livemode"`
+	Items                List   `json:"items"`
+	Status               string `json:"status"`
 }
 
 type CheckoutCustomerDetails struct {

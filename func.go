@@ -812,7 +812,7 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId, ipAddress str
 	var docUpdate bool = true
 	if docNumber == "" {
 		docUpdate = false
-		docId, err = addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId,ipAddress)
+		docId, err = addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId, ipAddress)
 		if err != nil {
 			return
 		}
@@ -916,10 +916,47 @@ func docFindDateTime() (startDate, endDate string) {
 	return
 }
 
+func subscriptionStartEnd() (startDate, endDate string) {
+
+	tnow := time.Now()
+	then := tnow.AddDate(0, 1, 0)
+	startDate = tnow.Format(DATE_TIME_FORMAT)
+	endDate = then.Format(DATE_TIME_FORMAT)
+	return
+}
+
 func nameLabel(firstName, lastName string) (label string) {
 
 	if firstName != "" && lastName != "" {
 		label = fmt.Sprintf("%c%c", firstName[0], lastName[0])
 	}
 	return
+}
+
+// in_1PR7ZOJFUQv2NTJsHQ1dHZS0
+func stripeInvoiceReceiptUrl(invoice string) string {
+
+	//qs := "SELECT data.`object`.id,data.`object`.invoice,data.`object`.client_reference_id,data.`object`.customer,data.`object`.customer_email,data.`object`.`object` FROM lxroot._default.event WHERE type='checkout.session.completed';"
+	qs := "SELECT data.`object`.invoice,data.`object`.receipt_url,`object`.`number`,data.`object`.`object` FROM lxroot._default.event WHERE type='charge.succeeded' AND data.`object`.invoice=%q;"
+	sql := fmt.Sprintf(qs, invoice)
+	row, err := singleRow(sql)
+	if err != nil {
+		return ""
+	}
+	rurl, _ := row["receipt_url"].(string)
+	return rurl
+
+}
+
+// in_1PR7ZOJFUQv2NTJsHQ1dHZS0
+func stripeInvoiceToNumber(invoice string) string {
+
+	qs := "SELECT data.`object`.subscription,data.`object`.`number`,data.`object`.`object` FROM lxroot._default.event WHERE type='invoice.payment_succeeded' AND data.`object`.id=%q;"
+	sql := fmt.Sprintf(qs, invoice)
+	row, err := singleRow(sql)
+	if err != nil {
+		return ""
+	}
+	invoiceNumber, _ := row["number"].(string)
+	return invoiceNumber
 }
