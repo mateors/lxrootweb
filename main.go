@@ -297,6 +297,8 @@ func init() {
 	//start, end := subscriptionStartEnd()
 	//fmt.Println(start, end)
 	//dataClean()
+	//rurl := invoiceToReceiptUrl("C90FC4CC-0001")
+	//fmt.Println(rurl)
 	//os.Exit(1)
 }
 
@@ -345,7 +347,7 @@ func main() {
 	r.HandleFunc("/license", licenseKey)            //license OK
 	r.HandleFunc("/ticketnew", ticketNew)           //ticketnew
 	r.HandleFunc("/logout", logout)                 //logout
-	r.HandleFunc("/invoice/{inv}", invoice)         //
+	r.HandleFunc("/invoice/{order}", invoice)       //
 
 	r.HandleFunc("/payhook", paymentHook)
 	//r.HandleFunc("/webhook", webhookHandler)

@@ -949,6 +949,63 @@ func docNumberToAccountInfo(docNumber string) map[string]interface{} {
 	return row
 }
 
+// in_1PR7ZOJFUQv2NTJsHQ1dHZS0
+func stripeInvoiceReceiptUrl(invoice string) string {
+
+	//qs := "SELECT data.`object`.id,data.`object`.invoice,data.`object`.client_reference_id,data.`object`.customer,data.`object`.customer_email,data.`object`.`object` FROM lxroot._default.event WHERE type='checkout.session.completed';"
+	qs := "SELECT data.`object`.invoice,data.`object`.receipt_url,`object`.`number`,data.`object`.`object` FROM lxroot._default.event WHERE type='charge.succeeded' AND data.`object`.invoice=%q;"
+	sql := fmt.Sprintf(qs, invoice)
+	row, err := singleRow(sql)
+	if err != nil {
+		log.Println("stripeInvoiceReceiptUrlERR>", err, sql)
+		return ""
+	}
+	rurl, _ := row["receipt_url"].(string)
+	return rurl
+}
+
+// in_1PR7ZOJFUQv2NTJsHQ1dHZS0
+func stripeInvoiceToNumber(invoice string) string {
+
+	qs := "SELECT data.`object`.subscription,data.`object`.`number`,data.`object`.`object` FROM lxroot._default.event WHERE type='invoice.payment_succeeded' AND data.`object`.id=%q;"
+	sql := fmt.Sprintf(qs, invoice)
+	row, err := singleRow(sql)
+	if err != nil {
+		log.Println("stripeInvoiceToNumberERR>", err, sql)
+		return ""
+	}
+	invoiceNumber, _ := row["number"].(string)
+	return invoiceNumber
+}
+
+func orderToInvoiceFile(docNumber string) (invoice, filename string) {
+
+	qs := `SELECT d.doc_number as invoice,d.doc_name,f.filepath FROM lxroot._default.doc_keeper d 
+			LEFT JOIN  lxroot._default.file_store f ON f.reference=d.doc_number WHERE d.doc_ref="%s";`
+	sql := fmt.Sprintf(qs, docNumber)
+	row, err := singleRow(sql)
+	if err != nil {
+		return
+	}
+	invoice, _ = row["invoice"].(string)
+	filename, _ = row["filepath"].(string)
+	return
+}
+
+func invoiceToReceiptUrl(invoice string) (receiptUrl string) {
+
+	qs := `SELECT d.receipt_url FROM lxroot._default.doc_keeper i
+			LEFT JOIN lxroot._default.doc_keeper d ON i.doc_ref=d.doc_number
+			WHERE i.doc_number=%q;`
+	sql := fmt.Sprintf(qs, invoice)
+	row, err := singleRow(sql)
+	if err != nil {
+		return
+	}
+	receiptUrl, _ = row["receipt_url"].(string)
+	return
+}
+
 func dataClean() {
 
 	lxql.RawSQL("DELETE FROM lxroot._default.doc_keeper;", database.DB)

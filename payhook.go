@@ -115,7 +115,9 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 				addSubscription(accountId, pSession.Customer, licenseKey, "monthly", totalPayable, pSession.PaymentStatus, subscriptionStart, subscriptionEnd, "")
 
 				docNumber := stripeInvoiceToNumber(pSession.Invoice)
-				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId, ipAddress)
+				id, _ := addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId, ipAddress)
+				sql = fmt.Sprintf("UPDATE %s SET payment_status=%q,receipt_url=%q WHERE id=%q;", tableToBucket("doc_keeper"), pSession.PaymentStatus, iurl, id)
+				database.DB.Exec(sql)
 
 				sql = fmt.Sprintf("UPDATE %s SET reference=%q WHERE owner_table='doc_keeper' AND reference=%q;", tableToBucket("file_store"), docNumber, pSession.Invoice)
 				database.DB.Exec(sql)

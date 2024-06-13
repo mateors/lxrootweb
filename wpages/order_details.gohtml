@@ -35,6 +35,8 @@
                     <div class="p-6 bg-white border rounded-lg">
 
                         {{$row := .Order}}
+                            {{$docNumber := index $row "doc_number"}}
+                            {{$rurl := index $row "receipt_url"}}
 
                         <div class="flex justify-between items-center">
                             <h3 class="head-3 !fs32px !font-light text-slate-700">Order #{{toUpper (index $row "doc_number")}}</h3>
@@ -48,13 +50,18 @@
                                 <tr>
                                     <th width="100" class="ta:left text-slate-700 font-semibold">Order #</th>
                                     <td class="text-slate-700 ta:left">
-                                        <p class="flex justify-between gap-2">
+                                        <div class="flex justify-between gap-2">
                                             <span>
                                                 <span class="px-2">{{toUpper (index $row "doc_number")}}</span>
                                                 <label class="px-2 py-1 rounded bg-sky-500 text-white label-text">{{toUpper (index $row "payment_status")}}</label>
                                             </span>
-                                            <a href="#" class="px-4 underline">View invoice</a>
-                                        </p> 
+                                            
+                                                <div class="relative inline-flex">
+                                                <a href="/invoice/{{$docNumber}}" target="_blank" class="px-4 underline">PDF Invoice</a>
+                                                <a href="{{$rurl}}" target="_blank" class="px-4 underline">HTML</a>
+                                                </div>
+                                           
+                                        </div> 
                                     </td>
                                 </tr>
 

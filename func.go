@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
@@ -932,33 +931,4 @@ func nameLabel(firstName, lastName string) (label string) {
 		label = fmt.Sprintf("%c%c", firstName[0], lastName[0])
 	}
 	return
-}
-
-// in_1PR7ZOJFUQv2NTJsHQ1dHZS0
-func stripeInvoiceReceiptUrl(invoice string) string {
-
-	//qs := "SELECT data.`object`.id,data.`object`.invoice,data.`object`.client_reference_id,data.`object`.customer,data.`object`.customer_email,data.`object`.`object` FROM lxroot._default.event WHERE type='checkout.session.completed';"
-	qs := "SELECT data.`object`.invoice,data.`object`.receipt_url,`object`.`number`,data.`object`.`object` FROM lxroot._default.event WHERE type='charge.succeeded' AND data.`object`.invoice=%q;"
-	sql := fmt.Sprintf(qs, invoice)
-	row, err := singleRow(sql)
-	if err != nil {
-		log.Println("stripeInvoiceReceiptUrlERR>", err, sql)
-		return ""
-	}
-	rurl, _ := row["receipt_url"].(string)
-	return rurl
-}
-
-// in_1PR7ZOJFUQv2NTJsHQ1dHZS0
-func stripeInvoiceToNumber(invoice string) string {
-
-	qs := "SELECT data.`object`.subscription,data.`object`.`number`,data.`object`.`object` FROM lxroot._default.event WHERE type='invoice.payment_succeeded' AND data.`object`.id=%q;"
-	sql := fmt.Sprintf(qs, invoice)
-	row, err := singleRow(sql)
-	if err != nil {
-		log.Println("stripeInvoiceToNumberERR>", err, sql)
-		return ""
-	}
-	invoiceNumber, _ := row["number"].(string)
-	return invoiceNumber
 }

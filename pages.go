@@ -2383,7 +2383,9 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 		rows, err := lxql.GetRows(sql, database.DB)
 		logError("itemRows", err)
 
-		fmt.Println(row["receipt_url"])
+		//fmt.Println(row["receipt_url"])
+		//invoiceUrl, _ := row["receipt_url"].(string)
+		invoice, pdfFile := orderToInvoiceFile(docNumber)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2395,6 +2397,10 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 			SessionMap   map[string]interface{}
 			Order        map[string]interface{}
 			Items        []map[string]interface{}
+			DocNumber    string
+			// InvoiceUrl   string
+			Invoice    string
+			InvoicePdf string
 		}{
 			Title:        fmt.Sprintf("LxRoot #%s", toUpper(docNumber)),
 			Base:         base,
@@ -2404,6 +2410,10 @@ func orderDetails(w http.ResponseWriter, r *http.Request) {
 			SessionMap:   smap,
 			Order:        row,
 			Items:        rows,
+			DocNumber:    docId,
+			// InvoiceUrl:   invoiceUrl,
+			Invoice:    invoice,
+			InvoicePdf: pdfFile,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2444,7 +2454,7 @@ func invoices(w http.ResponseWriter, r *http.Request) {
 
 		qs := `SELECT d.id, d.doc_status,d.doc_number,d.posting_date,d.receipt_url,d.payment_status,d.doc_name,d.doc_description,d.doc_ref,d.create_date,d.total_payable,t.item_info,t.price 
 				FROM lxroot._default.doc_keeper d 
-				LEFT JOIN  lxroot._default.transaction_record t ON d.doc_number=t.doc_number
+				LEFT JOIN  lxroot._default.transaction_record t ON d.doc_ref=t.doc_number
 				WHERE d.account_id="%s" AND d.doc_type='sales' AND d.doc_status IN ['pending','complete'] AND d.status=1;`
 		sql := fmt.Sprintf(qs, accountId)
 		rows, err := lxql.GetRows(sql, database.DB)
@@ -2452,6 +2462,9 @@ func invoices(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 			return
 		}
+
+		//fmt.Println(sql)
+		//invoiceToReceiptUrl("C90FC4CC-0001")
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2672,13 +2685,13 @@ func ticketNew(w http.ResponseWriter, r *http.Request) {
 
 func invoice(w http.ResponseWriter, r *http.Request) {
 
-	smap, err := getSessionInfo(r)
-	if err != nil {
-		http.Redirect(w, r, "/logout", http.StatusSeeOther)
-		return
-	}
-	inv := chi.URLParam(r, "inv")
-	fmt.Println(inv, smap)
-
-	http.ServeFile(w, r, "data/invoice/Receipt-2082-6216.pdf")
+	// _, err := getSessionInfo(r)
+	// if err != nil {
+	// 	http.Redirect(w, r, "/logout", http.StatusSeeOther)
+	// 	return
+	// }
+	docNumber := chi.URLParam(r, "order")
+	_, pdfFile := orderToInvoiceFile(docNumber)
+	fmt.Println("invoice", docNumber, pdfFile)
+	http.ServeFile(w, r, pdfFile)
 }
