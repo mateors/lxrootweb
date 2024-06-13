@@ -2415,13 +2415,13 @@ func invoices(w http.ResponseWriter, r *http.Request) {
 
 func licenseKey(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
+	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2439,7 +2439,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		setCookie("ctoken", hashStr, 1800, w)
 
 		accountId, _ := smap["account_id"].(string)
-		//loginId, _ := smap["id"].(string)
+		loginId, _ := smap["id"].(string)
 
 		row, err := subscriptionDetailsByAccount(accountId)
 		if err == nil {
@@ -2455,6 +2455,12 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		dateFormat := "January 02, 2006"
 		purchaseDate = mtool.DateTimeParser(purchaseDate, "2006-01-02 15:04:05", dateFormat)
 
+		var licenseFound bool
+		count := lxql.CheckCount("subscription", fmt.Sprintf("login_id=%q", loginId), database.DB)
+		if count > 0 {
+			licenseFound = true
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title         string
@@ -2469,6 +2475,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 			Price         string
 			PurchaseDate  string
 			ExpireDate    string
+			LicenseFound  bool
 		}{
 			Title:         "LxRoot License Key",
 			Base:          base,
@@ -2482,6 +2489,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 			Price:         price,
 			PurchaseDate:  purchaseDate,
 			ExpireDate:    toTime(subscription_end).Format(dateFormat),
+			LicenseFound:  licenseFound,
 		}
 
 		err = tmplt.Execute(w, data)
