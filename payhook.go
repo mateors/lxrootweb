@@ -57,11 +57,12 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 		} else if evt.Type == CHARGE_SUCCEEDED { //4
 
 			pCharge, err := chargeParser(evt.Data)
-			fmt.Println("4-->", CHARGE_SUCCEEDED, err)
+			fmt.Println("4-->", CHARGE_SUCCEEDED, err, evt.ID)
 			if err == nil {
 
 				//pCharge.BillingDetails.Address.Country
 				//checkout_session
+				fmt.Println(pCharge.ReceiptUrl)
 				durl, err := stripeReceiptToPdfUrl(pCharge.ReceiptUrl)
 				if err == nil {
 					//fmt.Println(err, durl)
@@ -71,9 +72,11 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 						//pCharge.ReceiptUrl
 						//fmt.Println(pCharge.BillingDetails.Email, filename)
 						docNumber, err := emailToDocNumber(pCharge.BillingDetails.Email)
+						fmt.Println(err, docNumber, pCharge.BillingDetails.Email, pCharge.BillingDetails.Name, pCharge.Customer, pCharge.ID)
 						if err == nil {
 							sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, update_date=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), pCharge.ReceiptUrl, mtool.TimeNow(), docNumber)
-							lxql.RawSQL(sql, database.DB)
+							err = lxql.RawSQL(sql, database.DB)
+							logError("docKeeperUpdERR", err)
 
 							remarks := evt.ID
 							addFileStore("doc_keeper", docNumber, "pdf", filename, remarks)
@@ -97,11 +100,11 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			//inv.PeriodStart
 
 		} else if evt.Type == INVOICE_PAYMENT_SUCCEEDED { //8
-			fmt.Println("8-->", INVOICE_PAYMENT_SUCCEEDED)
+			fmt.Println("8-->", INVOICE_PAYMENT_SUCCEEDED, evt.ID)
 
 		} else if evt.Type == CHECKOUT_SESSION_COMPLETED {
 
-			fmt.Println("9-->", CHECKOUT_SESSION_COMPLETED)
+			fmt.Println("9-->", CHECKOUT_SESSION_COMPLETED, evt.ID)
 			pSession, err := checkoutSessionParser(evt.Data)
 			if err == nil {
 

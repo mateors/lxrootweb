@@ -820,6 +820,7 @@ func emailToDocNumber(email string) (docNumber string, err error) {
 		log.Println(sql)
 		return "", err
 	}
+	fmt.Println(sql)
 	docNumber, _ = row["doc_number"].(string)
 	return
 }
