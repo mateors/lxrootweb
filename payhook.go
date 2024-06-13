@@ -62,24 +62,26 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 				//pCharge.BillingDetails.Address.Country
 				//checkout_session
-				fmt.Println(pCharge.ReceiptUrl)
+				fmt.Println("4-->", pCharge.ReceiptUrl)
 				durl, err := stripeReceiptToPdfUrl(pCharge.ReceiptUrl)
 				if err == nil {
 					//fmt.Println(err, durl)
 					filename, err := DownloadFile("data/invoice", durl)
 					logError("unableToDownloadInv", err)
 					if err == nil {
+
+						//addFileStore("doc_keeper", docNumber, "pdf", filename, remarks)
 						//pCharge.ReceiptUrl
 						//fmt.Println(pCharge.BillingDetails.Email, filename)
 						docNumber, err := emailToDocNumber(pCharge.BillingDetails.Email)
-						fmt.Println(err, docNumber, pCharge.BillingDetails.Email, pCharge.BillingDetails.Name, pCharge.Customer, pCharge.ID)
+						fmt.Println("4-->", err, docNumber, pCharge.BillingDetails.Email, pCharge.BillingDetails.Name, pCharge.Customer, pCharge.ID)
 						if err == nil {
 							sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, update_date=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), pCharge.ReceiptUrl, mtool.TimeNow(), docNumber)
 							err = lxql.RawSQL(sql, database.DB)
 							logError("docKeeperUpdERR", err)
-
 							remarks := evt.ID
 							addFileStore("doc_keeper", docNumber, "pdf", filename, remarks)
+							fmt.Println("4--> done", sql)
 						}
 					}
 				}

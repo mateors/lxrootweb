@@ -882,6 +882,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			docId := r.FormValue("docid")
 			docNumber, err := getCookie("docid", r)
 			logError("checkoutGetCookieERR", err)
+			fmt.Println(loginId, accountId)
 
 			if err == nil {
 
@@ -895,6 +896,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 					lxql.RawSQL(sql, database.DB)
 					rurl, isOk := row["url"].(string)
 					if isOk {
+						fmt.Println("checkoutSQL>", sql)
 						delCookie("docid", r, w)
 						http.Redirect(w, r, rurl, http.StatusSeeOther)
 					}
@@ -2439,7 +2441,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		setCookie("ctoken", hashStr, 1800, w)
 
 		accountId, _ := smap["account_id"].(string)
-		loginId, _ := smap["id"].(string)
+		//loginId, _ := smap["id"].(string)
 
 		row, err := subscriptionDetailsByAccount(accountId)
 		if err == nil {
@@ -2456,7 +2458,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		purchaseDate = mtool.DateTimeParser(purchaseDate, "2006-01-02 15:04:05", dateFormat)
 
 		var licenseFound bool
-		count := lxql.CheckCount("subscription", fmt.Sprintf("login_id=%q", loginId), database.DB)
+		count := lxql.CheckCount("subscription", fmt.Sprintf("account_id=%q", accountId), database.DB)
 		if count > 0 {
 			licenseFound = true
 		}

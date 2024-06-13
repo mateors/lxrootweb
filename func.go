@@ -913,3 +913,15 @@ func parseMultipartTodo(r *http.Request) (todo string) {
 	}
 	return
 }
+
+func docFindDateTime() (startDate, endDate string) {
+
+	tnow := time.Now()
+	diff := 1 * time.Minute
+	then := tnow.Add(-diff)
+	startDate = then.Format(DATE_TIME_FORMAT)
+	endDate = tnow.Format(DATE_TIME_FORMAT)
+	//fmt.Println("current time  :", tnow.Format(DATE_TIME_FORMAT))
+	//fmt.Println("30 sec earlier:", then.Format(DATE_TIME_FORMAT))
+	return
+}

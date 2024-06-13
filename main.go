@@ -292,7 +292,6 @@ func init() {
 	// sql := `SELECT d.doc_number FROM lxroot._default.login l LEFT JOIN lxroot._default.doc_keeper d ON d.login_id=l.id WHERE d.doc_status='complete' AND l.username="billahmdmostain@gmail.com" ORDER BY d.id DESC LIMIT 1;`
 	// row, err := singleRow(sql)
 	// fmt.Println(err, row)
-	// os.Exit(1)
 }
 
 func main() {
