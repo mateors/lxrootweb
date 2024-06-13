@@ -294,9 +294,9 @@ func init() {
 
 	//iurl := stripeInvoiceReceiptUrl("in_1PR7ZOJFUQv2NTJsHQ1dHZS0")
 	//inumber := stripeInvoiceToNumber("in_1PR7ZOJFUQv2NTJsHQ1dHZS0")
-	start, end := subscriptionStartEnd()
-	fmt.Println(start, end)
-	os.Exit(1)
+	//start, end := subscriptionStartEnd()
+	//fmt.Println(start, end)
+	//os.Exit(1)
 }
 
 func main() {
