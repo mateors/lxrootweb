@@ -7,6 +7,7 @@ import (
 	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"net/http"
+	"time"
 
 	"github.com/mateors/mtool"
 	uuid "github.com/satori/go.uuid"
@@ -94,6 +95,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 
 				fmt.Println("8.2->", pSession.Invoice, pSession.CancelUrl, pSession.Subscription2)
+				time.Sleep(time.Millisecond * 1500)
 				iurl := stripeInvoiceReceiptUrl(pSession.Invoice)
 				sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, payment_status=%q, doc_status=%q,update_date=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), iurl, pSession.PaymentStatus, pSession.Status, mtool.TimeNow(), pSession.ClentReferenceId)
 				err = lxql.RawSQL(sql, database.DB)
