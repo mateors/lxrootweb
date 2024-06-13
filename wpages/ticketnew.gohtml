@@ -77,9 +77,9 @@
                                         <span class="material-icon text-slate-800">attachment</span> 
                                         <span class="text-slate-800">Attach file(s)</span>
                                     </span>
-                                    <input class="absolute top-0 left-0 opacity-0" type="file" multiple="multiple">
+                                    <input id="tfile" class="absolute top-0 left-0 opacity-0" type="file" accept="image/png, image/jpg, image/jpeg" multiple="multiple">
                                    </label>
-                                   <div class="">2 files</div>
+                                   <div id="fcount">0 files</div>
                                 </div>
                                 <button disabled type="submit" class="mt-4 py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Create ticket</button>
                             </form>
@@ -130,6 +130,9 @@
         submitEnabler();
     });
 
+    $('#tfile').on('change', (e) => {
+        $('#fcount').text(`${e.target.files.length} files`);
+    });
 
     $('#mForm').submit((e)=>{
 

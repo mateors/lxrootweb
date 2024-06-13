@@ -28,6 +28,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 
+		ipAddress := cleanIp(r.RemoteAddr)
 		//var eMap = make(map[string]interface{})
 		//err := json.NewDecoder(r.Body).Decode(&eMap)
 		var evt Event //StripeEvent
@@ -126,7 +127,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 				addSubscription(accountId, pSession.Customer, licenseKey, "monthly", totalPayable, pSession.PaymentStatus, subscriptionStart, subscriptionEnd, "")
 
 				docNumber := pSession.Invoice
-				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId)
+				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId, ipAddress)
 
 				//pSession.ClentReferenceId == doc_number
 				invoice := pSession.ClentReferenceId

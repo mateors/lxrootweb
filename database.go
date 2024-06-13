@@ -406,7 +406,7 @@ func addAuthc(loginId, token, ipAddress, expireDate string) (id string, err erro
 	return id, err
 }
 
-func addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId string) (id string, err error) {
+func addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId, ipAddress string) (id string, err error) {
 
 	modelName := structName(DocKeeper{})
 	table := customTableName(modelName)
@@ -433,6 +433,7 @@ func addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, t
 	form["total_tax"] = totalTax
 	form["total_payable"] = totalPayable
 	form["doc_status"] = docStatus
+	form["ip_address"] = ipAddress
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 1
 	err = lxql.InsertUpdateMap(form, database.DB)

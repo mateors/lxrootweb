@@ -789,11 +789,10 @@ func decrypt(encryptedString string, keyString string) (decryptedString string) 
 	return fmt.Sprintf("%s", plaintext)
 }
 
-func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId string, err error) {
+func addToCart(itemId, qty, docRef, docNumber, loginId, accountId, ipAddress string) (docId string, err error) {
 
 	docName := "shopping cart"
 	docType := "cart"
-	//docNumber := "" //fmt.Sprintf("TMP-%s", utility.GeneratePassword(6, true, false))
 	postingDate := ""
 	docStatus := "pending"
 	docId = docNumber
@@ -811,26 +810,19 @@ func addToCart(itemId, qty, docRef, docNumber, loginId, accountId string) (docId
 	totalPayable := fmt.Sprint(str2int(qty) * str2int(price))
 
 	var docUpdate bool = true
-
 	if docNumber == "" {
 		docUpdate = false
-		docId, err = addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId)
+		docId, err = addDocKeeper(docName, docType, docRef, docNumber, postingDate, docStatus, totalDiscount, totalTax, totalPayable, loginId, accountId,ipAddress)
 		if err != nil {
 			return
 		}
 	}
 
 	addTransactionRecord(docType, docId, itemId, itemInfo, itemSerial, stripePriceId, qty, price)
-
 	if docUpdate {
 		sql = fmt.Sprintf("UPDATE %s SET total_payable=total_payable+%s WHERE doc_number=%q;", tableToBucket("doc_keeper"), totalPayable, docId)
 		lxql.RawSQL(sql, database.DB)
 	}
-	// oldDocNumber := lxql.FieldByValue("doc_keeper", "doc_number", fmt.Sprintf("doc_ref='%s' AND doc_type='cart' AND status=1", docRef), database.DB)
-	// sql = fmt.Sprintf("UPDATE %s SET status=9 WHERE id='%s';", tableToBucket("doc_keeper"), oldDocNumber)
-	// lxql.RawSQL(sql, database.DB)
-	// sql = fmt.Sprintf("UPDATE %s SET status=9 WHERE doc_number='%s';", tableToBucket("transaction_record"), oldDocNumber)
-	// lxql.RawSQL(sql, database.DB)
 	return
 }
 

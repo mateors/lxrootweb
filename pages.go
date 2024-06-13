@@ -564,7 +564,7 @@ func shop(w http.ResponseWriter, r *http.Request) {
 		var errNo int = 1
 		var errMsg string
 		commonDataSet(r)
-		//fmt.Println("##", r.Form)
+		ipAddress := cleanIp(r.RemoteAddr)
 
 		funcsMap := map[string]interface{}{
 			"validCSRF": validCSRF,
@@ -586,7 +586,7 @@ func shop(w http.ResponseWriter, r *http.Request) {
 
 			qty := "1"
 			docRef := visitorInfo(r, w)
-			docId, err := addToCart(itemId, qty, docRef, docNumber, "", "")
+			docId, err := addToCart(itemId, qty, docRef, docNumber, "", "", ipAddress)
 			if err == nil {
 				errNo = 0
 				errMsg = "OK"
@@ -655,7 +655,7 @@ func complete(w http.ResponseWriter, r *http.Request) {
 		paidDate := row["create_date"].(string)
 		accountName, _ := smap["account_name"].(string)
 		ptime, _ := time.Parse(DATE_TIME_FORMAT, paidDate)
-		paidDate = ptime.Format("Jan 2nd, 2006 03:04 PM")
+		paidDate = ptime.Format("Jan 2, 2006 03:04 PM")
 		//fmt.Println(t.Format("Jan 2nd, 2006 03:04 PM"))
 		invoiceUrl, _ := row["receipt_url"].(string)
 		totalPayable, _ := row["total_payable"].(string)
@@ -668,6 +668,7 @@ func complete(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		delCookie("processing", r, w)
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -782,10 +783,11 @@ func product(w http.ResponseWriter, r *http.Request) {
 		if err == nil {
 			fmt.Println("update doc_keeper table", docNumber)
 		}
+		ipAddress := cleanIp(r.RemoteAddr)
 
 		qty := "1"
 		docRef := visitorInfo(r, w)
-		docId, err := addToCart(itemId, qty, docRef, docNumber, "", "")
+		docId, err := addToCart(itemId, qty, docRef, docNumber, "", "", ipAddress)
 		if err == nil {
 			setCookie("docid", docId, 24*86400, w)
 			http.Redirect(w, r, "/checkout", http.StatusSeeOther)
