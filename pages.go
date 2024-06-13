@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/mateors/mtool"
@@ -617,6 +618,12 @@ func shop(w http.ResponseWriter, r *http.Request) {
 
 func complete(w http.ResponseWriter, r *http.Request) {
 
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
+
 	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
@@ -630,6 +637,35 @@ func complete(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		//delCookie("processing", r, w)
+		var errorExist bool
+		docNumber, err := getCookie("processing", r)
+		if err != nil {
+			errorExist = true
+			log.Println("processingDocNumberERR:", err)
+		}
+
+		sql := fmt.Sprintf("SELECT receipt_url,total_tax,total_payable,create_date FROM %s WHERE doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
+		row, err := singleRow(sql)
+		if err != nil {
+			return
+		}
+
+		paidDate := row["create_date"].(string)
+		accountName, _ := smap["account_name"].(string)
+		ptime, _ := time.Parse(DATE_TIME_FORMAT, paidDate)
+		paidDate = ptime.Format("Jan 2nd, 2006 03:04 PM")
+		//fmt.Println(t.Format("Jan 2nd, 2006 03:04 PM"))
+		invoiceUrl, _ := row["receipt_url"].(string)
+		totalPayable, _ := row["total_payable"].(string)
+		totalTax, _ := row["total_tax"].(string)
+
+		sql = fmt.Sprintf("SELECT item_info,quantity,price,payable_amount FROM %s WHERE doc_number=%q;", tableToBucket("transaction_recrod"), docNumber)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			return
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -637,12 +673,28 @@ func complete(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 			Yourname     string
+			DocNumber    string
+			ErrorExist   bool
+			SessionMap   map[string]interface{}
+			PaidDate     string
+			Items        []map[string]interface{}
+			InvoiceUrl   string
+			TotalTax     string
+			TotalPayable string
 		}{
 			Title:        "LxRoot order complete",
 			Base:         base,
 			BodyClass:    "bg-white text-slate-700",
 			MainDivClass: "main min-h-[calc(100vh-52px)]",
-			Yourname:     "Sign In", //need to change
+			Yourname:     accountName,
+			DocNumber:    docNumber,
+			ErrorExist:   errorExist,
+			SessionMap:   smap,
+			PaidDate:     paidDate,
+			Items:        rows,
+			InvoiceUrl:   invoiceUrl,
+			TotalTax:     totalTax,
+			TotalPayable: totalPayable,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -898,6 +950,8 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 					if isOk {
 						fmt.Println("checkoutSQL>", sql)
 						delCookie("docid", r, w)
+						delCookie("processing", r, w)
+						setCookie("processing", docNumber, 86400, w)
 						http.Redirect(w, r, rurl, http.StatusSeeOther)
 					}
 				}
@@ -2174,10 +2228,6 @@ func ticketDetails(w http.ResponseWriter, r *http.Request) {
 			nrows = append(nrows, trow)
 		}
 		nrows = append(nrows, rows...)
-		//ptime, _ := time.Parse(DATE_TIME_FORMAT, "2024-06-12 07:47:00")
-		//datetime = ptime.Format(outputFormat)
-		//min := time.Since(ptime).Minutes()
-		//hour := time.Since(ptime).Hours()
 
 		base := GetBaseURL(r)
 		data := struct {

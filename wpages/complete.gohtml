@@ -13,117 +13,132 @@
         <section class="container max-w-[960px] mx-auto">
             <div class="mt-8 p-4"> 
 
-                <div class="border relative flex justify-between items-center bg-primary rounded-lg p-8">
-                    <div class="">
-                        <p class="head-5 text-white">Order complete</p>
-                        <p class="text-gray-200 !font-light">Thank you for your order #LXR-000-000-0000</p>
-                    </div>
-                    <div class="text-white"> <span class="material-icons !fs:38px">check_circle</span> </div>
-                </div>
+                {{if .ErrorExist}}
 
-                <div class="summary mt-8">
-
-                    <p class="text-slate-600 font-semibold border-b py-2 uppercase">Order Summary</p>
-
-                    <div class="mt-4 w-full flex flex-col md:flex-row items-center gap-3 px-5 py-4 bg-light-green justify-between rounded-md border-l-4 border-green">
+                    <div class="flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-error justify-between rounded-md border-l-4 border-error">
                         <div class="flex gap-3">
-                            <span class="material-iconp text-green">check_circle</span>
-                            <h4 class="text-slate-700">Full payment for this order was received on Feb 16th, 2024 16:10 PM.</h4>
+                            <span class="material-iconp text-red-700">error</span>
+                            <p class="text-body1 text-red-700">Sorry We could not find any procssing documents!!!</p>
                         </div>
                     </div>
 
+                {{else}}
 
-                    <div class="mt-8 flex justify-between items-center gap-x-5 flex-wrap xlg:flex-nowrap">
+                    <div class="border relative flex justify-between items-center bg-primary rounded-lg p-8">
+                        <div class="">
+                            <p class="head-5 text-white">Order complete</p>
+                            <p class="text-gray-200 !font-light">Thank you for your order #{{.DocNumber}}</p>
+                        </div>
+                        <div class="text-white"> <span class="material-icons !fs:38px">check_circle</span> </div>
+                    </div>
 
-                        <div class="mb-6 w-full border rounded-lg p-4 max-w-[620px]s">
-                            <table class="w-full table">
-                                
-                                <tr>
-                                    <th width="100" class="ta:left text-slate-700 font-semibold">Order #</th>
-                                    <td class="text-slate-700 ta:left">
-                                        <p class="flex justify-between gap-2">
-                                            <span>
-                                                <span class="px-2">LXR-0013938</span>
-                                                <label class="px-2 py-1 rounded bg-green text-white label-text">Paid</label>
-                                            </span>
-                                            <a href="#" class="px-4 underline">View invoice</a>
-                                        </p> 
-                                    </td>
-                                </tr>
+                    <div class="summary mt-8">
 
-                                <tr>
-                                    <th class="ta:left text-slate-700 font-semibold">Paid</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">Feb 16th, 2024 11:24 AM</p></td>
-                                </tr>
-                              
-                                <tr>
-                                    <th class="ta:left text-slate-700 font-semibold">Note</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">--</p></td>
-                                </tr>
+                        <p class="text-slate-600 font-semibold border-b py-2 uppercase">Order Summary</p>
 
-                                <tr>
-                                    <th class="ta:left text-slate-700 font-semibold">Fields</th>
-                                    <td class="text-slate-700 ta:left"><p class="px-2">--</p></td>
-                                </tr>
-                               
-                            </table>
-                            <a href="/shop" class="mt-2 flex justify-center items-center gap-x-2 p-1 border hover:border-primary">
-                                <span class="material-icon">shopping_cart</span>
-                                <span class="text-slate-600">Continue shopping</span>
-                            </a>
+                        <div class="mt-4 w-full flex flex-col md:flex-row items-center gap-3 px-5 py-4 bg-light-green justify-between rounded-md border-l-4 border-green">
+                            <div class="flex gap-3">
+                                <span class="material-iconp text-green">check_circle</span>
+                                <h4 class="text-slate-700">Full payment for this order was received on {{.PaidDate}}.</h4>
+                            </div>
                         </div>
 
-                        <div class="mb-6 w-full border rounded-lg p-4">
-                            <table class="w-full table">
+
+                        <div class="mt-8 flex justify-between items-center gap-x-5 flex-wrap xlg:flex-nowrap">
+
+                            <div class="mb-6 w-full border rounded-lg p-4 max-w-[620px]s">
+                                <table class="w-full table">
+                                    
+                                    <tr>
+                                        <th width="100" class="ta:left text-slate-700 font-semibold">Order #</th>
+                                        <td class="text-slate-700 ta:left">
+                                            <p class="flex justify-between gap-2">
+                                                <span>
+                                                    <span class="px-2">{{.DocNumber}}</span>
+                                                    <label class="px-2 py-1 rounded bg-green text-white label-text">Paid</label>
+                                                </span>
+                                                <a href="{{.InvoiceUrl}}" class="px-4 underline">View invoice</a>
+                                            </p> 
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th class="ta:left text-slate-700 font-semibold">Paid</th>
+                                        <td class="text-slate-700 ta:left"><p class="px-2">{{.PaidDate}}</p></td>
+                                    </tr>
                                 
-                                <thead>
                                     <tr>
-                                        <th class="ta:left text-slate-700 font-semibold">Items</th>
-                                        <th class="ta:left text-slate-700 font-semibold">Price</th>
-                                        <th class="ta:left text-slate-700 font-semibold">Qty</th>
-                                        <th class="ta:left text-slate-700 font-semibold">Total</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-
-                                    <tr>
-                                        <td class="ta:left align-middle"><p class="text-slate-500">LxRoot</p><p class="underline">License key - Monthly</p></td>
-                                        <td class="ta:left align-middle text-slate-700">$20</td>
-                                        <td class="ta:left align-middle text-slate-700">1</td>
-                                        <td class="ta:left align-middle text-slate-700">$20.00</td>
-                                    </tr>
-
-                                </tbody>
-
-                                <tfoot class="b:0">
-                                    <tr>
-                                        <td rowspan="6" colspan="2" class="ta:right b:0"></td>
+                                        <th class="ta:left text-slate-700 font-semibold">Note</th>
+                                        <td class="text-slate-700 ta:left"><p class="px-2">--</p></td>
                                     </tr>
 
                                     <tr>
-                                        <th class="ta:right b:0 !p-1 !pt-6">Subtotal</th>
-                                        <td class="b:0 !p-1 !pt-6 text-slate-700">&nbsp;&nbsp;$20.00</td>
+                                        <th class="ta:left text-slate-700 font-semibold">Fields</th>
+                                        <td class="text-slate-700 ta:left"><p class="px-2">--</p></td>
                                     </tr>
+                                
+                                </table>
+                                <a href="/shop" class="mt-2 flex justify-center items-center gap-x-2 p-1 border hover:border-primary">
+                                    <span class="material-icon">shopping_cart</span>
+                                    <span class="text-slate-600">Continue shopping</span>
+                                </a>
+                            </div>
 
-                                    <tr>
-                                        <th class="ta:right b:0 !p-1">VAT (0%)</th>
-                                        <td class="b:0 !p-1 text-slate-700">&nbsp;&nbsp;$0.00</td>
-                                    </tr>
+                            <div class="mb-6 w-full border rounded-lg p-4">
+                                <table class="w-full table">
+                                    
+                                    <thead>
+                                        <tr>
+                                            <th class="ta:left text-slate-700 font-semibold">Items</th>
+                                            <th class="ta:left text-slate-700 font-semibold">Price</th>
+                                            <th class="ta:left text-slate-700 font-semibold">Qty</th>
+                                            <th class="ta:left text-slate-700 font-semibold">Total</th>
+                                        </tr>
+                                    </thead>
 
-                                    <tr>
-                                        <th class="ta:right b:0 !p-1">Total</th>
-                                        <td class="b:0 !p-1 text-slate-700">&nbsp;&nbsp;$20.00</td>
-                                    </tr>
-                                   
-                                </tfoot>
-                               
-                            </table>
+                                    <tbody>
+
+                                        {{range $row := .Items}}
+                                        <tr>
+                                            <td class="ta:left align-middle"><p class="text-slate-500">LxRoot</p><p class="underline">{{index $row "item_info"}}</p></td>
+                                            <td class="ta:left align-middle text-slate-700">{{index $row "price"}}</td>
+                                            <td class="ta:left align-middle text-slate-700">{{index $row "quantity"}}</td>
+                                            <td class="ta:left align-middle text-slate-700">${{index $row "payable_amount"}}</td>
+                                        </tr>
+                                        {{end}}
+
+                                    </tbody>
+
+                                    <tfoot class="b:0">
+                                        <tr>
+                                            <td rowspan="6" colspan="2" class="ta:right b:0"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="ta:right b:0 !p-1 !pt-6">Subtotal</th>
+                                            <td class="b:0 !p-1 !pt-6 text-slate-700">&nbsp;&nbsp;${{.TotalPayable}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="ta:right b:0 !p-1">VAT (0%)</th>
+                                            <td class="b:0 !p-1 text-slate-700">&nbsp;&nbsp;${{.TotalTax}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="ta:right b:0 !p-1">Total</th>
+                                            <td class="b:0 !p-1 text-slate-700">&nbsp;&nbsp;${{.TotalPayable}}</td>
+                                        </tr>
+                                    
+                                    </tfoot>
+                                
+                                </table>
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                {{end}}
 
             </div>
         </section>
