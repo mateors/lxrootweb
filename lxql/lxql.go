@@ -195,25 +195,26 @@ func upsertQueryBuilder(bucketName, docID, bytesTxt string) (nqlStatement string
 
 func RawSQL(sql string, db *sql.DB) error {
 
-	stmt, err := db.Prepare(sql)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
+	_, err := db.Exec(sql)
+	// stmt, err := db.Prepare(sql)
+	// if err != nil {
+	// 	return err
+	// }
+	// defer stmt.Close()
 
-	r, err := stmt.Exec()
-	if err != nil {
-		return err
-	}
+	// r, err := stmt.Exec()
+	// if err != nil {
+	// 	return err
+	// }
 
-	n, err := r.RowsAffected()
-	if err != nil {
-		return err
-	}
+	// n, err := r.RowsAffected()
+	// if err != nil {
+	// 	return err
+	// }
 
-	if n > 0 {
-		return nil
-	}
+	// if n > 0 {
+	// 	return nil
+	// }
 	return err
 }
 

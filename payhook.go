@@ -98,7 +98,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 				time.Sleep(time.Millisecond * 1500)
 				iurl := stripeInvoiceReceiptUrl(pSession.Invoice)
 				sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, payment_status=%q, doc_status=%q,update_date=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), iurl, pSession.PaymentStatus, pSession.Status, mtool.TimeNow(), pSession.ClentReferenceId)
-				err = lxql.RawSQL(sql, database.DB)
+				_, err = database.DB.Exec(sql)
 				logError("checkoutSessionSuccessERR", err)
 				if err != nil {
 					log.Println(sql)
@@ -118,8 +118,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId, ipAddress)
 
 				sql = fmt.Sprintf("UPDATE %s SET reference=%q WHERE owner_table='doc_keeper' AND reference=%q;", tableToBucket("file_store"), docNumber, pSession.Invoice)
-				lxql.RawSQL(sql, database.DB)
-				fmt.Println(sql)
+				database.DB.Exec(sql)
 
 				//pSession.ClentReferenceId == doc_number
 				invoice := pSession.ClentReferenceId
@@ -135,10 +134,9 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			}
 
 		} else {
-			fmt.Println("--> Unknown event.Type")
+			log.Println("--> Unknown event.Type")
 		}
 
-		//_, err = addEvent() //lxql.InsertUpdateMap(eMap, database.DB)
 		err = lxql.InsertUpdateObject("event", evt.ID, &evt, database.DB)
 		logError("eventInsertERR", err)
 		w.WriteHeader(http.StatusOK)

@@ -942,11 +942,10 @@ func stripeInvoiceReceiptUrl(invoice string) string {
 	sql := fmt.Sprintf(qs, invoice)
 	row, err := singleRow(sql)
 	if err != nil {
-		log.Println("stripeInvoiceReceiptUrl>", err, sql)
+		log.Println("stripeInvoiceReceiptUrlERR>", err, sql)
 		return ""
 	}
 	rurl, _ := row["receipt_url"].(string)
-	fmt.Println("stripeInvoiceReceiptUrl->", sql)
 	return rurl
 }
 
@@ -957,10 +956,9 @@ func stripeInvoiceToNumber(invoice string) string {
 	sql := fmt.Sprintf(qs, invoice)
 	row, err := singleRow(sql)
 	if err != nil {
-		log.Println("stripeInvoiceToNumber>", err, sql)
+		log.Println("stripeInvoiceToNumberERR>", err, sql)
 		return ""
 	}
 	invoiceNumber, _ := row["number"].(string)
-	fmt.Println("stripeInvoiceToNumber->", sql)
 	return invoiceNumber
 }
