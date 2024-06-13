@@ -648,6 +648,7 @@ func complete(w http.ResponseWriter, r *http.Request) {
 		sql := fmt.Sprintf("SELECT receipt_url,total_tax,total_payable,create_date FROM %s WHERE doc_number=%q;", tableToBucket("doc_keeper"), docNumber)
 		row, err := singleRow(sql)
 		if err != nil {
+			log.Println(err, sql)
 			return
 		}
 
@@ -660,9 +661,10 @@ func complete(w http.ResponseWriter, r *http.Request) {
 		totalPayable, _ := row["total_payable"].(string)
 		totalTax, _ := row["total_tax"].(string)
 
-		sql = fmt.Sprintf("SELECT item_info,quantity,price,payable_amount FROM %s WHERE doc_number=%q;", tableToBucket("transaction_recrod"), docNumber)
+		sql = fmt.Sprintf("SELECT item_info,quantity,price,payable_amount FROM %s WHERE doc_number=%q;", tableToBucket("transaction_record"), docNumber)
 		rows, err := lxql.GetRows(sql, database.DB)
 		if err != nil {
+			log.Println(err, sql)
 			return
 		}
 
