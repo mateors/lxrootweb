@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"lxrootweb/database"
 	"lxrootweb/lxql"
 	"lxrootweb/utility"
@@ -941,11 +942,12 @@ func stripeInvoiceReceiptUrl(invoice string) string {
 	sql := fmt.Sprintf(qs, invoice)
 	row, err := singleRow(sql)
 	if err != nil {
+		log.Println("stripeInvoiceReceiptUrl>", err, sql)
 		return ""
 	}
 	rurl, _ := row["receipt_url"].(string)
+	fmt.Println("stripeInvoiceReceiptUrl->", sql)
 	return rurl
-
 }
 
 // in_1PR7ZOJFUQv2NTJsHQ1dHZS0
@@ -955,8 +957,10 @@ func stripeInvoiceToNumber(invoice string) string {
 	sql := fmt.Sprintf(qs, invoice)
 	row, err := singleRow(sql)
 	if err != nil {
+		log.Println("stripeInvoiceToNumber>", err, sql)
 		return ""
 	}
 	invoiceNumber, _ := row["number"].(string)
+	fmt.Println("stripeInvoiceToNumber->", sql)
 	return invoiceNumber
 }

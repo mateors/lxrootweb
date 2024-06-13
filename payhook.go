@@ -89,10 +89,11 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 		} else if evt.Type == CHECKOUT_SESSION_COMPLETED {
 
-			fmt.Println("8-->", CHECKOUT_SESSION_COMPLETED, evt.ID)
+			fmt.Println("8.1-->", CHECKOUT_SESSION_COMPLETED, evt.ID)
 			pSession, err := checkoutSessionParser(evt.Data)
 			if err == nil {
 
+				fmt.Println("8.2->", pSession.Invoice, pSession.CancelUrl, pSession.Subscription2)
 				iurl := stripeInvoiceReceiptUrl(pSession.Invoice)
 				sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, payment_status=%q, doc_status=%q,update_date=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), iurl, pSession.PaymentStatus, pSession.Status, mtool.TimeNow(), pSession.ClentReferenceId)
 				err = lxql.RawSQL(sql, database.DB)
@@ -116,6 +117,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 				sql = fmt.Sprintf("UPDATE %s SET reference=%q WHERE owner_table='doc_keeper' AND reference=%q;", tableToBucket("file_store"), docNumber, pSession.Invoice)
 				lxql.RawSQL(sql, database.DB)
+				fmt.Println(sql)
 
 				//pSession.ClentReferenceId == doc_number
 				invoice := pSession.ClentReferenceId
