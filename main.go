@@ -296,6 +296,7 @@ func init() {
 	//inumber := stripeInvoiceToNumber("in_1PR7ZOJFUQv2NTJsHQ1dHZS0")
 	//start, end := subscriptionStartEnd()
 	//fmt.Println(start, end)
+	//dataClean()
 	//os.Exit(1)
 }
 

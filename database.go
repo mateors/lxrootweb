@@ -948,3 +948,14 @@ func docNumberToAccountInfo(docNumber string) map[string]interface{} {
 	}
 	return row
 }
+
+func dataClean() {
+
+	lxql.RawSQL("DELETE FROM lxroot._default.doc_keeper;", database.DB)
+	lxql.RawSQL("DELETE FROM lxroot._default.transaction_record;", database.DB)
+	lxql.RawSQL("DELETE FROM lxroot._default.event;", database.DB)
+	lxql.RawSQL("DELETE FROM lxroot._default.subscription;", database.DB)
+	lxql.RawSQL("DELETE FROM lxroot._default.file_store;", database.DB)
+	lxql.RawSQL("DELETE FROM lxroot._default.ticket;", database.DB)
+	lxql.RawSQL("DELETE FROM lxroot._default.ticket_response;", database.DB)
+}

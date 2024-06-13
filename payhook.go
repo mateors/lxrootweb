@@ -81,11 +81,8 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 		} else if evt.Type == INVOICE_PAID { //7
 
-			fmt.Println("6-->", INVOICE_PAID)
 			inv, err := invoiceParser(evt.Data)
-			fmt.Println(err, inv.Customer, inv.AmountPaid, inv.Subscription2, inv.PaymentIntent, inv.CustomerEmail, inv.CustomerName, inv.Number, inv.CustomerPhone)
-			//fmt.Println(inv.InvoicePdf, inv.HostedInvoiceUrl)
-			//inv.PeriodStart
+			fmt.Println("6-->", INVOICE_PAID, err, inv.Customer, inv.AmountPaid, inv.Subscription2, inv.PaymentIntent, inv.CustomerEmail, inv.CustomerName, inv.Number, inv.CustomerPhone)
 
 		} else if evt.Type == INVOICE_PAYMENT_SUCCEEDED { //8
 			fmt.Println("7-->", INVOICE_PAYMENT_SUCCEEDED, evt.ID)
@@ -97,9 +94,12 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 
 				iurl := stripeInvoiceReceiptUrl(pSession.Invoice)
-				sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, payment_status=%q, doc_status=%q,update_date=%s WHERE doc_number=%q;", tableToBucket("doc_keeper"), iurl, pSession.PaymentStatus, pSession.Status, mtool.TimeNow(), pSession.ClentReferenceId)
+				sql := fmt.Sprintf("UPDATE %s SET receipt_url=%q, payment_status=%q, doc_status=%q,update_date=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), iurl, pSession.PaymentStatus, pSession.Status, mtool.TimeNow(), pSession.ClentReferenceId)
 				err = lxql.RawSQL(sql, database.DB)
 				logError("checkoutSessionSuccessERR", err)
+				if err != nil {
+					log.Println(sql)
+				}
 
 				sql = fmt.Sprintf("SELECT login_id,account_id,total_payable FROM %s WHERE doc_number=%q;", tableToBucket("doc_keeper"), pSession.ClentReferenceId)
 				row, _ := singleRow(sql)
@@ -113,6 +113,9 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 				docNumber := stripeInvoiceToNumber(pSession.Invoice)
 				addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId, ipAddress)
+
+				sql = fmt.Sprintf("UPDATE %s SET reference=%q WHERE owner_table='doc_keeper' AND reference=%q;", tableToBucket("file_store"), docNumber, pSession.Invoice)
+				lxql.RawSQL(sql, database.DB)
 
 				//pSession.ClentReferenceId == doc_number
 				invoice := pSession.ClentReferenceId
