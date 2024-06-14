@@ -14,7 +14,7 @@
     <link rel="icon" type="image/x-icon" href="resources/icon/favicon_32x32.ico">
     <title>{{.Title}}</title>
     {{block "link" .}}
-    <link rel="stylesheet" href="resources/css/main.css" />
+    <link rel="stylesheet" href="resources/css/main_min.css" />
     {{end}}
     {{block "style" .}}
     
@@ -42,8 +42,8 @@
   </body>
 
   {{block "scriptsrc" .}}
-  <script src="resources/js/nlib.js"></script>
-  <script src="resources/js/main.js"></script>
+  <script src="resources/js/nlib_min.js"></script>
+  <script src="resources/js/main_min.js"></script>
   {{end}}
 
   {{block "script" .}}
