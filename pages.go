@@ -1679,7 +1679,9 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 			errNo = 0
-			errMsg = "CSRF validation failed!"
+			referer := r.Referer()
+			location := getLocationWithinSec(ipAddress)
+			errMsg = fmt.Sprintf("CSRF validation failed! from %s, referer %s", location, referer)
 		}
 
 		logMsg := errMsg
