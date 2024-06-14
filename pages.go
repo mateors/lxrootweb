@@ -1253,7 +1253,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 			parentId := ""
 			accountType := accessName
 			accountName := fmt.Sprintf("%s %s", firstName, lastName)
-			accountId, err := addAccount(parentId, accountType, email, accountName, firstName, lastName)
+			accountId, err := addAccount(parentId, accountType, email, accountName, firstName, lastName, ipAddress)
 			if err != nil {
 				errNo = 3
 				errMsg = err.Error()

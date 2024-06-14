@@ -243,7 +243,7 @@ func addAccess(accessName string) error {
 	return lxql.InsertUpdateMap(form, database.DB)
 }
 
-func addAccount(parentId, accountType, email, accountName, firstName, lastName string) (id string, err error) {
+func addAccount(parentId, accountType, email, accountName, firstName, lastName, ipAddress string) (id string, err error) {
 
 	modelName := structName(Account{})
 	table := customTableName(modelName)
@@ -260,6 +260,7 @@ func addAccount(parentId, accountType, email, accountName, firstName, lastName s
 	form["first_name"] = firstName
 	form["last_name"] = lastName
 	form["email"] = email
+	form["ip_address"] = ipAddress
 	form["create_date"] = mtool.TimeNow()
 	form["status"] = 0 //in active by default
 	err = lxql.InsertUpdateMap(form, database.DB)
@@ -305,7 +306,12 @@ func addLogin(accountId, accessId, accessName, username, plainPassword string) (
 	form["username"] = username
 	form["passw"] = mtool.HashBcrypt(plainPassword)
 	form["tfa_status"] = 0
+	form["tfa_medium"] = ""
+	form["tfa_setupkey"] = ""
+	form["ip_address"] = ""
+	form["ipcount"] = 0
 	form["create_date"] = mtool.TimeNow()
+	form["update_date"] = ""
 	form["status"] = 0 //inactive by default
 	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err
