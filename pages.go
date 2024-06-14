@@ -1588,19 +1588,6 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		// smap, err := getSessionInfo(r)
-		// if err == nil {
-		// 	if access, isOk := smap["access_name"].(string); isOk {
-		// 		vacc := []string{"superadmin", "admin", "client"}
-		// 		if mtool.ArrayValueExist(vacc, access) {
-		// 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		// 		}
-		// 	}
-		// }
-
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header2.gohtml",
@@ -1615,6 +1602,7 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
+		visitorInfo(r, w)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1642,9 +1630,11 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 
 		r.ParseForm()
 		var errNo int = 1
-		var errMsg string
+		var errMsg, loginId, username string
 		commonDataSet(r)
-		//fmt.Println("post", r.Form)
+
+		sessionCode := visitorInfo(r, w)
+		ipAddress := cleanIp(r.RemoteAddr)
 
 		funcsMap := map[string]interface{}{
 			"validCSRF": validCSRF,
@@ -1657,32 +1647,31 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 
 		if response == "OKAY" {
 
-			username := r.FormValue("email")
-			ipAddress := cleanIp(mtool.ReadUserIP(r))
+			username = r.FormValue("email")
 			userAgent := r.UserAgent()
 
-			//location := getLocationWithinSec(ipAddress)
-			//fmt.Println(username, ipAddress, location)
-			count := lxql.CheckCount("login", fmt.Sprintf(`username="%s"`, username), database.DB)
-			if count == 1 {
-
+			loginId = lxql.FieldByValue("login", "id", fmt.Sprintf("username=%q AND status=1", username), database.DB)
+			if loginId != "" {
 				//generate a reset password email
 				errNo = 0
 				errMsg = "OK"
 				_, _, browser := userAgntDetails(userAgent)
 				resetPassNotificationEmail(username, ipAddress, browser)
 
-			} else if count == 0 {
-
+			} else {
 				errNo = 0
-				fmt.Println("DO NOTHING - INVALID REQUEST")
+				errMsg = "DO NOTHING - INVALID REQUEST"
 			}
 
 		} else {
 			errNo = 0
-			errMsg = "Validation error!"
-			log.Println(response)
+			errMsg = "CSRF validation failed!"
 		}
+
+		logMsg := errMsg
+		ownerTable := sessionCode
+		parameter := username //fmt.Sprintf("%s,%s", username, sessionCode) //visitor_session.session_code
+		addActiviyLog(loginId, FORGET_PASS, ownerTable, parameter, logMsg, ipAddress)
 
 		var row = make(map[string]interface{})
 		row["error"] = errNo

@@ -650,7 +650,7 @@ func FieldByValue(table, fieldName, where string, db *sql.DB) string {
 	var jsonBytes []uint8
 	err := rows.Scan(&jsonBytes)
 	if err != nil {
-		log.Println("CheckCount:", err.Error())
+		//log.Println("FieldByValue:", err.Error())
 		return ""
 	}
 	cmap := scanMap(jsonBytes)

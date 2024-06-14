@@ -450,7 +450,7 @@ func userAgntDetails(uagentStr string) (device, osVersion, browserVersion string
 
 func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 
-	ip := cleanIp(mtool.ReadUserIP(r))
+	ip := cleanIp(r.RemoteAddr)
 	charger := r.FormValue("charger") //
 	screen := r.FormValue("screen")
 	uagentStr := r.UserAgent()
@@ -476,8 +476,17 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 	//fmt.Println("todo:", todo)
 	if todo == "insert" {
 
+		var city, country string
+		location := getLocationWithinSec(ip)
+		slc := strings.Split(location, ",")
+		if len(slc) == 2 {
+			city = slc[0]
+			country = slc[1]
+		}
 		row["id"] = xid.New().String()
 		row["cid"] = COMPANY_ID
+		row["city"] = city
+		row["country"] = country
 		row["session_code"] = sessionCode
 		row["device"] = device
 		row["screen_size"] = screen
@@ -496,15 +505,15 @@ func visitorInfo(r *http.Request, w http.ResponseWriter) (sessionCode string) {
 
 	} else if todo == "update" {
 
-		sql := fmt.Sprintf("UPDATE %s SET ip_address='%s',vcount=vcount+1, update_date='%s' WHERE session_code ='%s';", tableToBucket("visitor_session"), ip, mtool.TimeNow(), sessionCode)
-		lxql.RawSQL(sql, database.DB)
+		sql := fmt.Sprintf("UPDATE %s SET ip_address=%q, vcount=vcount+1, update_date=%q WHERE session_code=%q;", tableToBucket("visitor_session"), ip, mtool.TimeNow(), sessionCode)
+		database.DB.Exec(sql)
 		if screen != "" {
-			sql := fmt.Sprintf("UPDATE %s SET screen_size='%s' WHERE session_code ='%s';", tableToBucket("visitor_session"), screen, sessionCode)
-			lxql.RawSQL(sql, database.DB)
+			sql := fmt.Sprintf("UPDATE %s SET screen_size=%q, update_date=%q WHERE session_code=%q;", tableToBucket("visitor_session"), screen, mtool.TimeNow(), sessionCode)
+			database.DB.Exec(sql)
 		}
 		if ip != "" {
-			sql := fmt.Sprintf("UPDATE %s SET ip_address='%s' WHERE session_code ='%s';", tableToBucket("visitor_session"), ip, sessionCode)
-			lxql.RawSQL(sql, database.DB)
+			sql := fmt.Sprintf("UPDATE %s SET ip_address=%q, update_date=%q WHERE session_code =%q;", tableToBucket("visitor_session"), ip, mtool.TimeNow(), sessionCode)
+			database.DB.Exec(sql)
 		}
 	}
 	return
