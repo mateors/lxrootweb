@@ -3,6 +3,8 @@ module lxrootweb
 go 1.22.2
 
 require (
+	github.com/CAFxX/httpcompression v0.0.9 // indirect
+	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/avct/uasurfer v0.0.0-20191028135549-26b5daa857f1 // indirect
 	github.com/couchbase/go-couchbase v0.1.1 // indirect
 	github.com/couchbase/go_n1ql v0.0.0-20220303011133-0ed4bf93e31d // indirect
@@ -12,6 +14,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
+	github.com/klauspost/compress v1.17.9 // indirect
 	github.com/mateors/money v0.0.0-20200823090156-43894c563246 // indirect
 	github.com/mateors/mtool v0.0.0-20231012123045-6c5b47ebeb4d // indirect
 	github.com/mileusna/useragent v1.3.4 // indirect

@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/CAFxX/httpcompression"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -314,6 +315,8 @@ func main() {
 	//r.Handle("/vdata/*", http.StripPrefix("/vdata/", http.FileServer(http.Dir(filepath.Join(workingDirectory, "data")))))
 	//fmt.Println("Allahuakbar", utility.WPORT)
 
+	compress, _ := httpcompression.DefaultAdapter()
+
 	r.HandleFunc("/", homePage)
 	r.HandleFunc("/support", support)
 	r.HandleFunc("/features/{slug}", features)
@@ -353,6 +356,6 @@ func main() {
 	//r.HandleFunc("/webhook", webhookHandler)
 
 	addr := fmt.Sprintf(":%s", utility.WPORT)
-	err := http.ListenAndServe(addr, r)
+	err := http.ListenAndServe(addr, compress(r))
 	fmt.Println(err)
 }
