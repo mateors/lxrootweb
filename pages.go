@@ -57,7 +57,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			BodyClass    string
 			MainDivClass string
 		}{
-			Title:        "Application Hosting Platform | LxRoot",
+			Title:        "Application Hosting Platform for Developers | LxRoot",
 			Base:         base,
 			BodyClass:    "",
 			MainDivClass: "main min-h-[calc(100vh-312px)]",
