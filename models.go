@@ -113,20 +113,23 @@ type Address struct {
 
 //Login #4  all user account login table
 type Login struct {
-	ID          string `json:"id"`
-	Type        string `json:"type"`
-	CompanyID   string `json:"cid"`          //foreign key
-	AccountID   string `json:"account_id"`   //foreign key
-	AccessID    string `json:"access_id"`    //foreign key
-	AccessName  string `json:"access_name"`  //customer type
-	UserName    string `json:"username"`     //email or mobile as username
-	Password    string `json:"passw"`        //password
-	TfaStatus   int    `json:"tfa_status"`   //TFA = 0,1
-	TfaMedium   string `json:"tfa_medium"`   //TFA
-	TfaSetupkey string `json:"tfa_setupkey"` //TFA
-	CreateDate  string `json:"create_date"`
-	LastLogin   string `json:"last_login,omitempty"` //update date
-	Status      int    `json:"status"`
+	ID                 string `json:"id"`
+	Type               string `json:"type"`
+	CompanyID          string `json:"cid"`          //foreign key
+	AccountID          string `json:"account_id"`   //foreign key
+	AccessID           string `json:"access_id"`    //foreign key
+	AccessName         string `json:"access_name"`  //customer type
+	UserName           string `json:"username"`     //email or mobile as username
+	Password           string `json:"passw"`        //password
+	TfaStatus          int    `json:"tfa_status"`   //TFA = 0,1
+	TfaMedium          string `json:"tfa_medium"`   //TFA
+	TfaSetupkey        string `json:"tfa_setupkey"` //TFA
+	IpAddress          string `json:"ip_address"`   //last login ip
+	IncorrectPassCount int    `json:"ipcount"`      //the number of sign-in attempts with incorrect passwords.
+	CreateDate         string `json:"create_date"`
+	UpdateDate         string `json:"update_date"`
+	LastLogin          string `json:"last_login,omitempty"` //update date
+	Status             int    `json:"status"`
 }
 
 //ActivityLog ***

@@ -1275,7 +1275,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 				err = signupEmail(email, accountName, location, verfyUrl)
 				logError("signupEmail", err)
 
-				logDetails := fmt.Sprintf("username %s signup", email)
+				logDetails := fmt.Sprintf("a user %s signup from %s", email, location)
 				addActiviyLog(loginId, "INSERT", "account", "", logDetails, ipAddress)
 
 				errNo = 0
@@ -1329,8 +1329,9 @@ func verify(w http.ResponseWriter, r *http.Request) {
 				sql = fmt.Sprintf("UPDATE %s SET status=1 WHERE id=%q;", tableToBucket("login"), loginId)
 				database.DB.Exec(sql)
 
-				ipAddress := cleanIp(mtool.ReadUserIP(r))
-				logDetails := fmt.Sprintf("username %s verified", email)
+				ipAddress := cleanIp(r.RemoteAddr)
+				location := getLocationWithinSec(ipAddress)
+				logDetails := fmt.Sprintf("user %s verified from %s", email, location)
 				addActiviyLog(loginId, "UPDATE", "account", "", logDetails, ipAddress)
 				message = "You have been verified."
 			}
@@ -1416,7 +1417,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			referer = purl.Path
 			setCookie("redirect", referer, 120, w)
 		}
-		fmt.Println("referer:", referer)
+		//fmt.Println("referer:", referer)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1459,21 +1460,23 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		}
 		response := CheckMultipleConditionTrue(rmap, funcsMap)
 		//fmt.Println("checkMultipleConditionTakes:", time.Since(sTime).Seconds(), "sec") //0.379260886 sec
+		var loginId, ipAddress, username, txtpass, location, sessionCode string
 
 		if response == "OKAY" {
 
 			//sTime = time.Now()
-			username := r.FormValue("email")
-			txtpass := r.FormValue("passwd")
-			ipAddress := cleanIp(mtool.ReadUserIP(r))
+			username = r.FormValue("email")
+			txtpass = r.FormValue("passwd")
+			ipAddress = cleanIp(mtool.ReadUserIP(r))
 			userAgent := r.UserAgent()
-			location := getLocationWithinSec(ipAddress)
+			location = getLocationWithinSec(ipAddress)
 
 			visitorSessionID, err := getCookie("visitor_session", r)
 			if err != nil {
 				visitorSessionID = visitorInfo(r, w)
 				log.Println("visitorSession must required", err, visitorSessionID)
 			}
+			sessionCode = visitorSessionID
 			//fmt.Println("getLocationTakes:", time.Since(sTime).Seconds(), "sec") //0.405114986 sec
 
 			//sTime = time.Now()
@@ -1492,7 +1495,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 					//fmt.Println("hashCompareTakes:", time.Since(sTime).Seconds(), "sec") //1.601463995 sec
 					//sTime = time.Now()
-					loginId := rows[0]["id"].(string)
+					loginId = rows[0]["id"].(string)
 					accessName := rows[0]["access_name"].(string)
 					accountId := rows[0]["access_name"].(string)
 					token, err := vAuthToken(loginId, accountId, username, accessName, ipAddress) //takes 0.8 seconds to process
@@ -1568,15 +1571,22 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 				} else {
 					rurl = "/signin?error=Invalid username or password"
+					//wrong password
+					sql := fmt.Sprintf("UPDATE %s SET ip_address=%q,ipcount=ipcount+1,update_date=%q WHERE id=%q;", tableToBucket("login"), ipAddress, mtool.TimeNow(), loginId)
+					database.DB.Exec(sql)
 				}
 			}
 			if len(rows) == 0 {
 				rurl = "/signin?error=invalid username or password"
+				//wrong username
 			}
 
 		} else {
+
 			rurl = "/signin?error=invalid username or password."
-			log.Println(response)
+			location := getLocationWithinSec(ipAddress)
+			logMsg := fmt.Sprintf("invalid username %s or password %s try from %s", username, txtpass, location)
+			addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
 		}
 
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
