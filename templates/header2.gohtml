@@ -45,30 +45,26 @@
                 </div>
                 <div class="flex-none text-primary">
                     <ul class="menu menu-horizontal px-1 items-center">
-                        <a href="#" class="filled-button text-primary !bg-cyan-100 !h-12 !text-[15px] !pt-0 hover:text-secondary md:ml-8 hover:!bg-cyan-200">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 21V19H19V5H12V3H19C19.55 3 20.021 3.196 20.413 3.588C20.805 3.98 21.0007 4.45067 21 5V19C21 19.55 20.8043 20.021 20.413 20.413C20.0217 20.805 19.5507 21.0007 19 21H12ZM10 17L8.625 15.55L11.175 13H3V11H11.175L8.625 8.45L10 7L15 12L10 17Z" fill="black" />
-                            </svg>
-                        </a>
+
                         <div class="dropdown h-full flex items-center !relative ml-4" data-dropdown>
 
                             <li>
-                                <button class="body-text1 !font-medium menu-btn w-12 h-12 flex gap-[2px] items-center justify-center p-1 rounded-full group/btn bg-primary text-white text-sm hover:bg-secondary transition" data-dropdown-btn>Mob</button>
+                                <button class="body-text1 !font-medium menu-btn w-12 h-12 flex gap-[2px] items-center justify-center p-1 rounded-full group/btn bg-primary text-white text-sm hover:bg-secondary transition" data-dropdown-btn>LXR</button>
                             </li>
 
                             <div class="dropdown-content py-1 w-80 absolute top-16 -right-4 bg-white text-primary z-50">
                                 <div class="container mx-auto">
                                     <div class="px-4 py-4 flex flex-col items-center border-b border-slate-200">
                                         <p class="body-text2 mb-1 text-slate-500">Currently Logged in as:</p>
-                                        <p class="body-text2 !font-medium">mateors (admin@mateors.com)</p>
+                                        <p class="body-text2 !font-medium">{{.Yourname}}</p>
                                     </div>
-                                    <a href="#" class="px-4 py-4 flex gap-2 items-center justify-center text-primary hover:text-secondary transition border-b border-slate-200">
+                                    <a href="/profile" class="px-4 py-4 flex gap-2 items-center justify-center text-primary hover:text-secondary transition border-b border-slate-200">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 6C13.93 6 15.5 7.57 15.5 9.5C15.5 11.43 13.93 13 12 13C10.07 13 8.5 11.43 8.5 9.5C8.5 7.57 10.07 6 12 6ZM12 20C9.97 20 7.57 19.18 5.86 17.12C7.6116 15.7457 9.77362 14.9988 12 14.9988C14.2264 14.9988 16.3884 15.7457 18.14 17.12C16.43 19.18 14.03 20 12 20Z" fill="black"/>
                                         </svg>
                                         <span class="body-text2 ">Account</span>
                                     </a>
-                                    <a href="#" class="px-4 py-4 flex gap-2 items-center justify-center text-primary hover:text-secondary transition">
+                                    <a href="/logout" class="px-4 py-4 flex gap-2 items-center justify-center text-primary hover:text-secondary transition">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z" fill="#E74C4C"/>
                                         </svg>
