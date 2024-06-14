@@ -1459,18 +1459,18 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			rmap[key] = r.FormValue(key)
 		}
 		response := CheckMultipleConditionTrue(rmap, funcsMap)
+
 		//fmt.Println("checkMultipleConditionTakes:", time.Since(sTime).Seconds(), "sec") //0.379260886 sec
 		var loginId, ipAddress, username, txtpass, location, sessionCode string
+		ipAddress = cleanIp(mtool.ReadUserIP(r))
+		userAgent := r.UserAgent()
+		location = getLocationWithinSec(ipAddress)
 
 		if response == "OKAY" {
 
 			//sTime = time.Now()
 			username = r.FormValue("email")
 			txtpass = r.FormValue("passwd")
-			ipAddress = cleanIp(mtool.ReadUserIP(r))
-			userAgent := r.UserAgent()
-			location = getLocationWithinSec(ipAddress)
-
 			visitorSessionID, err := getCookie("visitor_session", r)
 			if err != nil {
 				visitorSessionID = visitorInfo(r, w)
@@ -1489,13 +1489,15 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			//fmt.Println("loginQueryTakes:", time.Since(sTime).Seconds(), "sec") //0.365913886 sec
 			if len(rows) > 0 {
 
+				log.Println(">", rows)
 				//sTime = time.Now()
+				loginId = rows[0]["id"].(string)
 				hashpass := rows[0]["passw"].(string) //
 				if mtool.HashCompare(txtpass, hashpass) {
 
 					//fmt.Println("hashCompareTakes:", time.Since(sTime).Seconds(), "sec") //1.601463995 sec
 					//sTime = time.Now()
-					loginId = rows[0]["id"].(string)
+					//loginId = rows[0]["id"].(string)
 					accessName := rows[0]["access_name"].(string)
 					accountId := rows[0]["access_name"].(string)
 					token, err := vAuthToken(loginId, accountId, username, accessName, ipAddress) //takes 0.8 seconds to process
@@ -1570,8 +1572,8 @@ func signin(w http.ResponseWriter, r *http.Request) {
 					}
 
 				} else {
-					rurl = "/signin?error=Invalid username or password"
 					//wrong password
+					rurl = "/signin?error=Invalid username or password"
 					sql := fmt.Sprintf("UPDATE %s SET ip_address=%q,ipcount=ipcount+1,update_date=%q WHERE id=%q;", tableToBucket("login"), ipAddress, mtool.TimeNow(), loginId)
 					_, err = database.DB.Exec(sql)
 					log.Println(err, sql)
@@ -1580,15 +1582,14 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			if len(rows) == 0 {
 				rurl = "/signin?error=invalid username or password"
 				//wrong username
+				logMsg := fmt.Sprintf("invalid username %s, password %s tried from %s", username, txtpass, location)
+				addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
 			}
 
 		} else {
-
 			rurl = "/signin?error=invalid username or password."
-			location := getLocationWithinSec(ipAddress)
 			logMsg := fmt.Sprintf("invalid username %s or password %s try from %s", username, txtpass, location)
-			id, err := addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
-			log.Println(err, id)
+			addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
 		}
 
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
