@@ -1451,8 +1451,8 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		commonDataSet(r)
 
 		funcsMap := map[string]interface{}{
-			"validCSRF":    validCSRF,
-			"validUsernme": validUsernme,
+			"validCSRF":     validCSRF,
+			"validUserName": validUserName,
 		}
 		rmap := make(map[string]interface{})
 		for key := range r.Form {
@@ -1462,6 +1462,8 @@ func signin(w http.ResponseWriter, r *http.Request) {
 
 		//fmt.Println("checkMultipleConditionTakes:", time.Since(sTime).Seconds(), "sec") //0.379260886 sec
 		var loginId, ipAddress, username, txtpass, location, sessionCode string
+		username = r.FormValue("email")
+		txtpass = r.FormValue("passwd")
 		ipAddress = cleanIp(mtool.ReadUserIP(r))
 		userAgent := r.UserAgent()
 		location = getLocationWithinSec(ipAddress)
@@ -1469,8 +1471,6 @@ func signin(w http.ResponseWriter, r *http.Request) {
 		if response == "OKAY" {
 
 			//sTime = time.Now()
-			username = r.FormValue("email")
-			txtpass = r.FormValue("passwd")
 			visitorSessionID, err := getCookie("visitor_session", r)
 			if err != nil {
 				visitorSessionID = visitorInfo(r, w)
@@ -1489,7 +1489,6 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			//fmt.Println("loginQueryTakes:", time.Since(sTime).Seconds(), "sec") //0.365913886 sec
 			if len(rows) > 0 {
 
-				log.Println(">", rows)
 				//sTime = time.Now()
 				loginId = rows[0]["id"].(string)
 				hashpass := rows[0]["passw"].(string) //
@@ -1535,7 +1534,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 						row["ip"] = ipAddress
 						jwtstr, err := utility.JWTEncode(row, utility.JWTSECRET) //takes 3 seconds to process
 						if err != nil {
-							log.Println(err)
+							log.Println("JWTEncodeERRWhenSignIn", err)
 							return
 						}
 						//fmt.Println("JWTEncodeTokenTakes:", time.Since(sTime).Seconds(), "sec")
@@ -1575,8 +1574,9 @@ func signin(w http.ResponseWriter, r *http.Request) {
 					//wrong password
 					rurl = "/signin?error=Invalid username or password"
 					sql := fmt.Sprintf("UPDATE %s SET ip_address=%q,ipcount=ipcount+1,update_date=%q WHERE id=%q;", tableToBucket("login"), ipAddress, mtool.TimeNow(), loginId)
-					_, err = database.DB.Exec(sql)
-					log.Println(err, sql)
+					database.DB.Exec(sql)
+					logMsg := fmt.Sprintf("invalid password %s tried from %s", txtpass, location)
+					addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
 				}
 			}
 			if len(rows) == 0 {

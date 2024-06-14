@@ -344,7 +344,7 @@ func validEmail(args map[string]interface{}) string {
 	return "valid"
 }
 
-func validUsernme(args map[string]interface{}) string {
+func validUserName(args map[string]interface{}) string {
 
 	username, isOk := args["email"].(string)
 	if !isOk {
