@@ -1660,7 +1660,8 @@ func resetpass(w http.ResponseWriter, r *http.Request) {
 
 			} else {
 				errNo = 0
-				errMsg = "DO NOTHING - INVALID REQUEST"
+				location := getLocationWithinSec(ipAddress)
+				errMsg = fmt.Sprintf("INVALID REQUEST FROM %s", location)
 			}
 
 		} else {
