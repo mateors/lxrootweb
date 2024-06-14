@@ -1573,7 +1573,8 @@ func signin(w http.ResponseWriter, r *http.Request) {
 					rurl = "/signin?error=Invalid username or password"
 					//wrong password
 					sql := fmt.Sprintf("UPDATE %s SET ip_address=%q,ipcount=ipcount+1,update_date=%q WHERE id=%q;", tableToBucket("login"), ipAddress, mtool.TimeNow(), loginId)
-					database.DB.Exec(sql)
+					_, err = database.DB.Exec(sql)
+					log.Println(err, sql)
 				}
 			}
 			if len(rows) == 0 {
@@ -1586,7 +1587,8 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			rurl = "/signin?error=invalid username or password."
 			location := getLocationWithinSec(ipAddress)
 			logMsg := fmt.Sprintf("invalid username %s or password %s try from %s", username, txtpass, location)
-			addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
+			id, err := addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
+			log.Println(err, id)
 		}
 
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
