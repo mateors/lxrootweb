@@ -15,15 +15,15 @@ import (
 )
 
 const (
-	CUSTOMER_CREATED              = "customer.created"              //1
-	CUSTOMER_SUBSCRIPTION_CREATED = "customer.subscription.created" //2
-	INVOICE_CREATED               = "invoice.created"               //2 ok
-	CHARGE_SUCCEEDED              = "charge.succeeded"              //4 ok
-	INVOICE_UPDATED               = "invoice.updated"               //6 ok
-	INVOICE_PAID                  = "invoice.paid"                  //7 ok
-	INVOICE_PAYMENT_SUCCEEDED     = "invoice.payment_succeeded"     //8 ok
-	CHECKOUT_SESSION_COMPLETED    = "checkout.session.completed"    //
-
+	CUSTOMER_CREATED              = "customer.created"              //OK
+	CUSTOMER_SUBSCRIPTION_CREATED = "customer.subscription.created" //OK
+	INVOICE_CREATED               = "invoice.created"               //OK
+	CHARGE_SUCCEEDED              = "charge.succeeded"              //OK
+	INVOICE_UPDATED               = "invoice.updated"               //OK
+	INVOICE_PAID                  = "invoice.paid"                  //OK
+	INVOICE_PAYMENT_SUCCEEDED     = "invoice.payment_succeeded"     //OK
+	CHECKOUT_SESSION_COMPLETED    = "checkout.session.completed"    //OK
+	CHECKOUT_SESSION_EXPIRED      = "checkout.session.expired"      //
 )
 
 func paymentHook(w http.ResponseWriter, r *http.Request) {
