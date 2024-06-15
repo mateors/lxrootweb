@@ -28,6 +28,10 @@ github.com/klauspost/compress v1.16.7/go.mod h1:ntbaceVETuRiXiv4DpjP66DpAtAGkEQs
 github.com/klauspost/compress v1.17.9 h1:6KIumPrER1LHsvBVuDa0r5xaG0Es51mhhB9BQB2qeMA=
 github.com/klauspost/compress v1.17.9/go.mod h1:Di0epgTjJY877eYKx5yC51cX2A2Vl2ibi7bDH9ttBbw=
 github.com/klauspost/pgzip v1.2.6/go.mod h1:Ch1tH69qFZu15pkjo5kYi6mth2Zzwzt50oCQKQE9RUs=
+github.com/mateors/lxcb v0.0.0-20240615012925-e933604056fe h1:ZQ5Pxc6bBoUgr8uut8lYp1dCbdZOLn0HOSCKafH9nnQ=
+github.com/mateors/lxcb v0.0.0-20240615012925-e933604056fe/go.mod h1:bY0ydF9SO9ix1XTarPdft0KLir34e6eglpFaBLgNoh0=
+github.com/mateors/lxql v0.0.0-20240615012548-c18af5df134e h1:RHvUMIqLClD28XnO6O6j0X7gVPLbl3NJovFLZaF68Jw=
+github.com/mateors/lxql v0.0.0-20240615012548-c18af5df134e/go.mod h1:o6bHyTPQ03LIQJmSBF3ZgjdwM0igSh9qj+R/leIuBpQ=
 github.com/mateors/money v0.0.0-20200823090156-43894c563246 h1:iQt1CuKUUO3cSs5yJXRBYNIvO/azMXoQh1qfan6KkM4=
 github.com/mateors/money v0.0.0-20200823090156-43894c563246/go.mod h1:CSGzDsfDsD5vwmFBCm57fTzRvzKAQRth4fqH8NvorP0=
 github.com/mateors/mtool v0.0.0-20231012123045-6c5b47ebeb4d h1:6hT7bnlU7AVl3admGtdSVD64QrInCHwSptYqbWPqt00=

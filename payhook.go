@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
-	"lxrootweb/lxql"
+	"github.com/mateors/lxql"
 	"net/http"
 	"time"
 

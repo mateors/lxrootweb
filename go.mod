@@ -15,6 +15,8 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
+	github.com/mateors/lxcb v0.0.0-20240615012925-e933604056fe // indirect
+	github.com/mateors/lxql v0.0.0-20240615012548-c18af5df134e // indirect
 	github.com/mateors/money v0.0.0-20200823090156-43894c563246 // indirect
 	github.com/mateors/mtool v0.0.0-20231012123045-6c5b47ebeb4d // indirect
 	github.com/mileusna/useragent v1.3.4 // indirect

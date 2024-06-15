@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
-	_ "lxrootweb/lxcb"
-	"lxrootweb/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	_ "github.com/mateors/lxcb"
+	"github.com/mateors/lxql"
 
 	"github.com/CAFxX/httpcompression"
 	"github.com/go-chi/chi/v5"
@@ -300,6 +301,13 @@ func init() {
 	//dataClean()
 	//rurl := invoiceToReceiptUrl("C90FC4CC-0001")
 	//fmt.Println(rurl)
+
+	//utility.LicenseEncDec()
+	//aesEncDecTest()
+	//key, err := genKey()
+	//fmt.Println(err, key)
+	//row, err := getInterfaces()
+	//fmt.Println(err, row)
 	//os.Exit(1)
 }
 

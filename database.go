@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
-	"lxrootweb/lxql"
+	"github.com/mateors/lxql"
 	"lxrootweb/utility"
 	"net/url"
 	"strconv"

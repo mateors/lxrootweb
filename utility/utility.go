@@ -1,7 +1,10 @@
 package utility
 
 import (
+	"crypto/aes"
+	"encoding/hex"
 	"errors"
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -102,4 +105,57 @@ func JWTDecode(tokenStr, signKey string) (map[string]interface{}, error) {
 		return nil, errors.New("unable to parse")
 	}
 	return claims, nil
+}
+
+
+
+func EncryptAES(key []byte, plaintext string) string {
+
+	c, err := aes.NewCipher(key)
+	CheckError(err)
+
+	out := make([]byte, len(plaintext))
+
+	c.Encrypt(out, []byte(plaintext))
+
+	return hex.EncodeToString(out)
+}
+
+func DecryptAES(key []byte, ct string) {
+	ciphertext, _ := hex.DecodeString(ct)
+
+	c, err := aes.NewCipher(key)
+	CheckError(err)
+
+	pt := make([]byte, len(ciphertext))
+	c.Decrypt(pt, ciphertext)
+
+	s := string(pt[:])
+	fmt.Println("DECRYPTED:", s)
+}
+
+func CheckError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func LicenseEncDec() {
+
+	// cipher key
+	key := "thisis32bitlongpassphraseimusing"
+
+	// plaintext
+	pt := "-LXROOT LXROOT LXROOT-"
+
+	c := EncryptAES([]byte(key), pt)
+
+	// plaintext
+	fmt.Println(pt)
+
+	// ciphertext
+	fmt.Println(c)
+
+	// decrypt
+	DecryptAES([]byte(key), c)
 }

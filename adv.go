@@ -3,8 +3,12 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/hmac"
+	"crypto/rand"
 	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,7 +16,6 @@ import (
 	"io"
 	"log"
 	"lxrootweb/database"
-	"lxrootweb/lxql"
 	"net"
 	"net/http"
 	"net/url"
@@ -21,6 +24,9 @@ import (
 	"strings"
 	"time"
 	"unicode"
+
+	_ "github.com/mateors/lxcb"
+	"github.com/mateors/lxql"
 
 	"github.com/mateors/money"
 	"github.com/mateors/mtool"
@@ -48,6 +54,120 @@ var FuncMap = template.FuncMap{
 
 const DATE_TIME_FORMAT = "2006-01-02 15:04:05"
 const NICE_DATE_FORMAT = "January 02, 2006"
+
+const EDKEY = "dfeea6217ffe139e0a28544c950bda4e537ab7ca59642690e782d3e01e35db63"
+
+func getInterfaces() (map[string][]string, error) {
+
+	var row = make(map[string][]string)
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		return nil, err
+	}
+	for _, i := range interfaces {
+		byNameInterface, err := net.InterfaceByName(i.Name)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		alist := []string{}
+		addresses, err := byNameInterface.Addrs()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		for _, v := range addresses {
+			alist = append(alist, v.String())
+		}
+		row[i.Name] = alist
+	}
+	return row, nil
+}
+
+func genKey() (string, error) {
+
+	bytes := make([]byte, 32) //generate a random 32 byte key for AES-256
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+	fmt.Printf("%c", bytes)
+	key := hex.EncodeToString(bytes) //encode key in bytes to string and keep as secret, put in a vault
+	//fmt.Printf("key to encrypt/decrypt : %s\n", key)
+	return key, nil
+}
+
+func aesEncDecTest() {
+
+	encrypted := encrypt("LXROOT", EDKEY)
+	fmt.Printf("encrypted : %s\n", encrypted)
+
+	decrypted := decrypt(encrypted, EDKEY)
+	fmt.Printf("decrypted : %s\n", decrypted)
+}
+
+func encrypt(stringToEncrypt string, keyString string) (encryptedString string) {
+
+	//Since the key is in string, we need to convert decode it to bytes
+	key, _ := hex.DecodeString(keyString)
+	plaintext := []byte(stringToEncrypt)
+
+	//Create a new Cipher Block from the key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Create a new GCM - https://en.wikipedia.org/wiki/Galois/Counter_Mode
+	//https://golang.org/pkg/crypto/cipher/#NewGCM
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Create a nonce. Nonce should be from GCM
+	nonce := make([]byte, aesGCM.NonceSize())
+	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
+		panic(err.Error())
+	}
+
+	//Encrypt the data using aesGCM.Seal
+	//Since we don't want to save the nonce somewhere else in this case, we add it as a prefix to the encrypted data. The first nonce argument in Seal is the prefix.
+	ciphertext := aesGCM.Seal(nonce, nonce, plaintext, nil)
+	return fmt.Sprintf("%x", ciphertext)
+}
+
+func decrypt(encryptedString string, keyString string) (decryptedString string) {
+
+	key, _ := hex.DecodeString(keyString)
+	enc, _ := hex.DecodeString(encryptedString)
+
+	//Create a new Cipher Block from the key
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Create a new GCM
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Get the nonce size
+	nonceSize := aesGCM.NonceSize()
+
+	//Extract the nonce from the encrypted data
+	nonce, ciphertext := enc[:nonceSize], enc[nonceSize:]
+
+	//Decrypt the data
+	plaintext, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return fmt.Sprintf("%s", plaintext)
+}
 
 func niceDate(createDateTime string) string {
 	return mtool.DateTimeParser(createDateTime, DATE_TIME_FORMAT, NICE_DATE_FORMAT)
