@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
-	"github.com/mateors/lxql"
 	"lxrootweb/utility"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mateors/lxql"
 
 	"github.com/mateors/mtool"
 	"github.com/rs/xid"
@@ -574,7 +575,7 @@ func addEvent(id string) (string, error) {
 	return id, err
 }
 
-func addSubscription(accountId, stripeCustomer, licenseKey, billing, price, paymentStatus, subscriptionStart, subscriptionEnd, remarks string) (id string, err error) {
+func addSubscription(accountId, email, stripeCustomer, licenseKey, billing, price, paymentStatus, subscriptionStart, subscriptionEnd, remarks string) (id string, err error) {
 
 	modelName := structName(Subscription{})
 	table := customTableName(modelName)
@@ -585,6 +586,7 @@ func addSubscription(accountId, stripeCustomer, licenseKey, billing, price, paym
 	form["cid"] = COMPANY_ID
 	form["table"] = modelName
 	form["account_id"] = accountId
+	form["email"] = email
 	form["subscriber"] = stripeCustomer //stripe.customer
 	form["license_key"] = licenseKey    //
 	//form["domain"] = domain

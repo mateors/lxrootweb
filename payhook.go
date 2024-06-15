@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
-	"github.com/mateors/lxql"
 	"net/http"
 	"time"
+
+	"github.com/mateors/lxql"
 
 	"github.com/mateors/mtool"
 	uuid "github.com/satori/go.uuid"
@@ -112,7 +113,7 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 				licenseKey := uuid.NewV1().String()
 				subscriptionStart, subscriptionEnd := subscriptionStartEnd()
-				addSubscription(accountId, pSession.Customer, licenseKey, "monthly", totalPayable, pSession.PaymentStatus, subscriptionStart, subscriptionEnd, "")
+				addSubscription(accountId, pSession.CustomerEmail, pSession.Customer, licenseKey, "monthly", totalPayable, pSession.PaymentStatus, subscriptionStart, subscriptionEnd, "")
 
 				docNumber := stripeInvoiceToNumber(pSession.Invoice)
 				id, _ := addDocKeeper("invoice", "sales", pSession.ClentReferenceId, docNumber, "", pSession.Status, "", "", totalPayable, loginId, accountId, ipAddress)
