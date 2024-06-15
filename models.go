@@ -672,6 +672,8 @@ type Subscription struct {
 	CompanyID         string `json:"cid"`                //foreign key
 	ItemId            string `json:"item_id"`            //foreign key
 	Name              string `json:"name"`               //Lxroot License
+	Email             string `json:"email"`              // NEW
+	Encdeckey         string `json:"encdeckey"`          // NEW
 	AccountId         string `json:"account_id"`         //foreign key
 	Subscriber        string `json:"subscriber"`         //stripe subscriber < login_id
 	LicenseKey        string `json:"license_key"`        //lxroot license

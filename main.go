@@ -298,7 +298,7 @@ func init() {
 	//inumber := stripeInvoiceToNumber("in_1PR7ZOJFUQv2NTJsHQ1dHZS0")
 	//start, end := subscriptionStartEnd()
 	//fmt.Println(start, end)
-	//dataClean()
+
 	//rurl := invoiceToReceiptUrl("C90FC4CC-0001")
 	//fmt.Println(rurl)
 
@@ -308,6 +308,7 @@ func init() {
 	//fmt.Println(err, key)
 	//row, err := getInterfaces()
 	//fmt.Println(err, row)
+	//dataClean()
 	//os.Exit(1)
 }
 
