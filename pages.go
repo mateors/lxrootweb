@@ -940,7 +940,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			docId := r.FormValue("docid")
 			docNumber, err := getCookie("docid", r)
 			logError("checkoutGetCookieERR", err)
-			fmt.Println(loginId, accountId)
+			fmt.Println("logac:", loginId, accountId)
 
 			if err == nil {
 
@@ -951,19 +951,22 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 				if err == nil {
 					sessionId, _ := row["id"].(string) //checkout.session.id
 					sql := fmt.Sprintf("UPDATE %s SET login_id=%q, account_id=%q, doc_status=%q, doc_description=%q WHERE doc_number=%q;", tableToBucket("doc_keeper"), loginId, accountId, "checkout_session", sessionId, docId)
-					lxql.RawSQL(sql, database.DB)
+					database.DB.Exec(sql)
 					rurl, isOk := row["url"].(string)
 					if isOk {
 						fmt.Println("checkoutSQL>>", sql)
 						delCookie("docid", r, w)
 						delCookie("processing", r, w)
 						setCookie("processing", docNumber, 86400, w)
+						rurl = strings.TrimSpace(rurl)
 						fmt.Println("rurl>", rurl)
 						http.Redirect(w, r, rurl, http.StatusSeeOther)
+						return
 					}
 				}
 			}
 		}
+		log.Println("should not be here...")
 		http.Redirect(w, r, "/checkout", http.StatusSeeOther)
 		return
 	}
