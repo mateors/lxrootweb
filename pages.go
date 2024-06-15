@@ -940,7 +940,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 			docId := r.FormValue("docid")
 			docNumber, err := getCookie("docid", r)
 			logError("checkoutGetCookieERR", err)
-			fmt.Println("logac:", loginId, accountId)
+			//fmt.Println("logac:", loginId, accountId)
 
 			if err == nil {
 
@@ -954,19 +954,19 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 					database.DB.Exec(sql)
 					rurl, isOk := row["url"].(string)
 					if isOk {
-						fmt.Println("checkoutSQL>>", sql)
+						//fmt.Println("checkoutSQL>>", sql)
 						delCookie("docid", r, w)
 						delCookie("processing", r, w)
 						setCookie("processing", docNumber, 86400, w)
 						rurl = strings.TrimSpace(rurl)
-						fmt.Println("rurl>", rurl)
+						//fmt.Println("rurl>", rurl)
 						http.Redirect(w, r, rurl, http.StatusSeeOther)
 						return
 					}
 				}
 			}
 		}
-		log.Println("should not be here...")
+		//log.Println("should not be here...")
 		http.Redirect(w, r, "/checkout", http.StatusSeeOther)
 		return
 	}

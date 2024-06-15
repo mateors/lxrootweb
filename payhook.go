@@ -91,8 +91,8 @@ func paymentHook(w http.ResponseWriter, r *http.Request) {
 
 		} else if evt.Type == CHECKOUT_SESSION_COMPLETED {
 
-			fmt.Println("8.1-->", CHECKOUT_SESSION_COMPLETED, evt.ID)
 			pSession, err := checkoutSessionParser(evt.Data)
+			fmt.Println("8.1-->", CHECKOUT_SESSION_COMPLETED, pSession.CustomerEmail, evt.ID)
 			if err == nil {
 
 				fmt.Println("8.2->", pSession.Invoice, pSession.CancelUrl, pSession.Subscription2)
