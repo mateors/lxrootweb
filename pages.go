@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"lxrootweb/database"
-	"github.com/mateors/lxql"
 	"lxrootweb/utility"
 	"net/http"
 	"net/url"
@@ -13,6 +12,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/mateors/lxql"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/mateors/mtool"
@@ -803,6 +804,7 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 
 	var loginRequired bool = true
 	smap, err := getSessionInfo(r)
+	logError("checkoutGetSessionInfoERR", err)
 	if err == nil {
 		loginRequired = false
 	}
@@ -952,10 +954,11 @@ func checkout(w http.ResponseWriter, r *http.Request) {
 					lxql.RawSQL(sql, database.DB)
 					rurl, isOk := row["url"].(string)
 					if isOk {
-						fmt.Println("checkoutSQL>", sql)
+						fmt.Println("checkoutSQL>>", sql)
 						delCookie("docid", r, w)
 						delCookie("processing", r, w)
 						setCookie("processing", docNumber, 86400, w)
+						fmt.Println("rurl>", rurl)
 						http.Redirect(w, r, rurl, http.StatusSeeOther)
 					}
 				}
