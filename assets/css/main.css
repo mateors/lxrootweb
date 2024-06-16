@@ -841,12 +841,6 @@ html {
   }
 }
 
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-}
-
 .avatar.placeholder > div {
   display: flex;
   align-items: center;
@@ -3761,6 +3755,16 @@ body {
   .container {
     max-width: 1368px;
   }
+  .xxlg\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .xxlg\:pr-24 {
+    padding-right: 6rem;
+  }
+  .xxlg-grid-cols-\[1fr\2c minmax\(auto\2c calc\(1408px-36rem\)\)\2c 32rem\2c 1fr\] {
+    grid-template-columns: 1fr minmax(auto,calc(1408px - 36rem)) 32rem 1fr;
+  }
 }
 
 /** scrollbar **/
@@ -3949,68 +3953,57 @@ p {
 }
 
 @media (max-width: 768px) {
-  h1,
-  .head-1 {
+
+  h1,.head-1 {
     font-size: 46px;
   }
 
-  h2,
-  .head-2 {
+  h2,.head-2 {
     font-size: 38px;
   }
 
-  h3,
-  .head-3 {
+  h3,.head-3 {
     font-size: 30px;
   }
 
-  h4,
-  .head-4 {
+  h4,.head-4 {
     font-size: 20px;
   }
 
-  h5,
-  .head-5 {
+  h5,.head-5 {
     font-size: 16px;
   }
 
-  p,
-  .body-text1 {
+  p,.body-text1 {
     font-size: 16px;
   }
 }
 
 @media (max-width: 480px) {
-  h1,
-  .head-1,
-  h2,
-  .head-2 {
+
+  h1,.head-1,
+  h2,.head-2 {
     font-size: 36px;
   }
 
-  h3,
-  .head-3 {
+  h3,.head-3 {
     font-size: 24px;
   }
 
-  h4,
-  .head-4 {
+  h4,.head-4 {
     font-size: 18px;
   }
 
-  h5,
-  .head-5 {
+  h5,.head-5 {
     font-size: 16px;
   }
 
-  p,
-  .body-text1 {
+  p,.body-text1 {
     font-size: 16px;
   }
 }
 
-.btn,
-button {
+.btn,button {
   cursor: pointer;
 }
 
@@ -4155,8 +4148,7 @@ button.active-function:hover svg path {
   fill: var(--clr-white);
 }
 
-input,
-textarea {
+input,textarea {
   resize: vertical;
 }
 
