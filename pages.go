@@ -2139,7 +2139,7 @@ func tickets(w http.ResponseWriter, r *http.Request) {
 			Count        int
 			TicketStatus string
 		}{
-			Title:        "LxRoot Closed Tickets",
+			Title:        "LxRoot Tickets",
 			Base:         base,
 			BodyClass:    "bg-slate-200",
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
@@ -2707,4 +2707,120 @@ func invoice(w http.ResponseWriter, r *http.Request) {
 	_, pdfFile := orderToInvoiceFile(docNumber)
 	fmt.Println("invoice", docNumber, pdfFile)
 	http.ServeFile(w, r, pdfFile)
+}
+
+func payMethods(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		smap, err := getSessionInfo(r)
+		if err != nil {
+			http.Redirect(w, r, "/logout", http.StatusSeeOther)
+			return
+		}
+
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header3.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/paymethods.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
+		//purl, err := url.Parse(r.RequestURI)
+		//fmt.Println(err, purl.Path)
+		//accountId, _ := smap["account_id"].(string)
+		//loginId, _ := smap["id"].(string)
+		//fmt.Println(rows)
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+			CsrfToken    string
+			SessionMap   map[string]interface{}
+			Rows         []map[string]interface{}
+		}{
+			Title:        "LxRoot Payment methods",
+			Base:         base,
+			BodyClass:    "bg-slate-200",
+			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
+			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			Rows:         nil,
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
+}
+
+func activityLog(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		smap, err := getSessionInfo(r)
+		if err != nil {
+			http.Redirect(w, r, "/logout", http.StatusSeeOther)
+			return
+		}
+
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header3.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/activity.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+
+		//purl, err := url.Parse(r.RequestURI)
+		//fmt.Println(err, purl.Path)
+		//accountId, _ := smap["account_id"].(string)
+		//loginId, _ := smap["id"].(string)
+		//fmt.Println(rows)
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+			CsrfToken    string
+			SessionMap   map[string]interface{}
+			Rows         []map[string]interface{}
+		}{
+			Title:        "LxRoot Profile activity",
+			Base:         base,
+			BodyClass:    "bg-slate-200",
+			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
+			CsrfToken:    ctoken,
+			SessionMap:   smap,
+			Rows:         nil,
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
 }

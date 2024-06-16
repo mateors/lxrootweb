@@ -125,6 +125,8 @@ func main() {
 	r.HandleFunc("/ticket", tickets)                //ticket **
 	r.HandleFunc("/ticket/{tid}", ticketDetails)    //ticket/details
 	r.HandleFunc("/orders", orders)                 //Billing > My orders OK
+	r.HandleFunc("/paymethods", payMethods)         //Billing > My orders OK
+	r.HandleFunc("/activity", activityLog)          //Profile > Activity
 	r.HandleFunc("/orders/{oid}", orderDetails)     //orderDetails OK
 	r.HandleFunc("/invoices", invoices)             //invoice ** OK
 	r.HandleFunc("/license", licenseKey)            //license OK

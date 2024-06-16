@@ -14,6 +14,8 @@ function arrayValueExist(findme, comparewithUrl){
       urls['/security']="/profile"
       urls['/ticketnew']="/tickets"
       urls['/ticket/']="/tickets"
+      urls['/paymethods']="/orders"
+      urls['/activity']="/profile"
 
   }
   let val=urls[findme];

@@ -1,0 +1,119 @@
+{{define "content"}}
+
+  <div class="content h-full md:h-full bg-slate-200 mb-10">
+      <section class="container mx-auto">
+
+        <div class="p-6s mt-8">    
+            <div class="flex bg-slate-200 overflow-hidden flex-wrap">
+
+                <!---left--->
+                <div class="w-full md:w-25% bg-slate-200 text-slate-700 p-4 gap-4 ">
+                    
+                    <!---menu--->
+                    <div class="mt-0">
+
+                        <div class="bg-white border border-slate-300 rounded-lg">
+                            <p class="px-5 mt-4 font-semibold shadow-sm">Menu</p>
+                            <ul class="p-6">
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/ticket">My orders</a></li>
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 hover:text-primary hover:bg-slate-100"><a href="/invoices">My invoices</a></li>
+                                <li class="mb-2 px-2 py-2 font-semibold text-slate-400 rounded bg-primary text-white"><a href="/paymethods">Payment methods</a></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!---right--->
+                <div class="w-full md:w-75% form-contents bg-slate-200 p-4 pb-10s md:p-10s">
+
+                    <!---ticket--->
+                    <div class="p-6 bg-white border rounded-lg">
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="head-3 !fs32px !font-light text-slate-700">Payment methods</h3>
+                            <a href="/paymethods" class="border rounded-full px-4 py-2 text-slate-700 hover:!border-slate-400">Add a payment method</a>
+                        </div>
+
+
+                        <div class="mt-8">
+
+                            <div class="field flex flex-col mb-4">
+                                <input type="text" id="sfield" name="sfield" placeholder="Quick search by brand name..."  />
+                            </div>
+
+                        </div>
+
+                        <div class="mt-6 mb-6 w-full">
+
+                            <!---list orders--->
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="uppercase bg-slate-200 text-slate-500">
+                                        <th class="py-2 px-3 ta:left">Type</th> 
+                                        <th class="py-2 px-3 ta:left">Brand</th> 
+                                        <th class="ta:left">Last four digit</th> 
+                                        <th class="ta:right px-4">Date created</th> 
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead> 
+
+                                <tbody>
+                                    
+                                    {{range $row := .Rows}}
+                                    {{$id:=index $row "id"}}
+                                    <tr class="hover:shadow-md">
+                                        <td class="p-4">
+                                           <label class="px-2 py-1 rounded-lg bg-sky-500 text-white label-text">{{toUpper (index $row "type")}}</label>
+                                        </td> 
+
+                                        <td class="ta:left">
+                                            <p class="text-slate-700"><strong>Order #{{toUpper (index $row "brand")}}</strong></p> 
+                                        </td> 
+                                
+                                        <td class="ta:right p-4">
+                                            <p class="text-slate-500 !font-light">{{index $row "last4"}}</p>
+                                        </td> 
+
+                                        <td class="ta:right p-4">
+                                            <p class="text-slate-500 !font-light">{{index $row "created"}}</p>
+                                        </td> 
+                                
+                                        <td width="1"><span class="material-icons text-slate-700">navigate_next</span></td>
+                                    </tr>
+                                    {{end}}
+                                    
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+      </section>
+  </div>
+
+{{end}}
+
+
+{{define "scriptsrc"}}
+  <script src="resources/js/nlib.js"></script>
+  <script src="resources/js/main.js"></script>
+  <script src="resources/js/navscript.js"></script>
+{{end}}
+
+
+{{define "script"}}
+
+  <script>
+
+  </script>
+
+{{end}}
