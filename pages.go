@@ -1981,6 +1981,7 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		firstName, _ := row["first_name"].(string)
 		lastName, _ := row["last_name"].(string)
 		label := nameLabel(firstName, lastName)
+		lastLoginDate = mtool.DateTimeParser(lastLoginDate, DATE_TIME_FORMAT, "Jan 02, 2006 15:04")
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2549,7 +2550,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		dateFormat := "January 02, 2006"
 		purchaseDate = mtool.DateTimeParser(purchaseDate, "2006-01-02 15:04:05", dateFormat)
 
-		var licenseFound bool
+		var licenseFound bool = true
 		count := lxql.CheckCount("subscription", fmt.Sprintf("account_id=%q", accountId), database.DB)
 		if count > 0 {
 			licenseFound = true

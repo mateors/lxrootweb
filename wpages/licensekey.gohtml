@@ -1,5 +1,5 @@
 {{define "content"}}
-
+  <div data-message-container class="toast-container top-center"></div>
   <div class="content h-full md:h-full bg-slate-200 mb-10">
       <section class="container mx-auto">
 
@@ -65,8 +65,6 @@
 
                         <div class="mt-4 border-b">
                             <div class="wrapper flex gap-6 justify-end">
-                                <!--<div class="text-slate-700 p-2 border-b-2 !border-b-secondary"><a href="#">All</a></div>
-                                <div class="text-slate-700 p-2"><a href="#">Attachments</a></div>-->
                                 <p class="px-1 text-slate-500 !font-light">Expires on {{.ExpireDate}}.</p>
                             </div>
                         </div>
@@ -75,10 +73,7 @@
                         <div class="mt-6 mb-6 w-full">
                             <div class="wrapper">
                                 <p class="text-slate-700 font-semibold">License details</p>
-                                <!--<p class="text-slate-500 !font-light">Use this license to install LxRoot Multi server application platform</p>-->
-
                                 <p class="text-slate-600 !font-light">One license key covers your entire cluster and includes all current features, unlimited servers, and technical support. </p>
-
                                 <p class="mt-2 text-slate-600 !font-light">
                                     You will be billed per-application or website with a $20 minimum. This will only increase when you add more than 100 websites. Your first month will be charged at $20, month 2 onwards will be invoiced based on your actual website usage.
                                 </p>
@@ -89,7 +84,7 @@
                                         <dd class="border-b py-2">
                                             <div class="flex items-center justify-start gap-x-4">
                                             <span class="md:ml-8 text-slate-600s text-primary">{{.LicenseKey}}</span> 
-                                            <span class="material-icon cursor-pointer hover:text-primary">content_copy</span>
+                                            <span copylic class="material-icon cursor-pointer hover:text-primary">content_copy</span>
                                             </div>
                                         </dd> 
                                     </dl>
@@ -104,12 +99,11 @@
 
                         <p class="text-slate-700 mb-6">To get started with LxRoot, run the following command on a blank <strong>Ubuntu 22.04 LTS</strong> server as a <strong>root</strong> user.</p>
 
-                        <pre class="scrollbar overflow-x-auto bg-code text-code whitespace-pre px-6 py-4 flex justify-between items-center"><code>wget -qO- lxr.sh | bash -s yourdomain.com</code> <span class="material-icon cursor-pointer hover:text-primary">content_copy</span></pre> 
+                        <pre class="scrollbar overflow-x-auto bg-code text-code whitespace-pre px-6 py-4 flex justify-between items-center"><code>wget -qO- lxr.sh | bash -s host.yourdomain.com</code> <span copycom class="material-icon cursor-pointer hover:text-primary">content_copy</span></pre> 
 
-                        <p class="mt-4 text-slate-700">Replace <strong>yourdomain.com</strong> with the domain you would like to be your <strong>LxRoot panel</strong> domain - the DNS should already be pointed to the primary IP of your server.</p>
+                        <p class="mt-4 text-slate-700">Replace <strong>host.yourdomain.com</strong> with the domain you would like to be your <strong>LxRoot panel</strong> domain - the DNS should already be pointed to the primary IP of your server.</p>
 
                         <p class="mt-4 text-slate-700 flex items-center mb-4">Further information available <a class="text-sky-500" href="http://docs.lxroot.com">&nbsp;here</a></p>
-
                         
                     </div>
 
@@ -153,9 +147,16 @@
 {{define "script"}}
 
   <script>
-
-
-
+    $('span[copylic]').on('click', (e)=> {
+        let text=$(e.target).prev().text();
+        copyToClp(text);
+        showToastMessage("License key copied!");
+    });
+    $('span[copycom]').on('click', (e)=> {
+        let text=$(e.target).prev().text();
+        copyToClp(text.trim());
+        showToastMessage("Command copied!");
+    });
   </script>
 
 {{end}}

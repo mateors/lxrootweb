@@ -114,7 +114,6 @@ func main() {
 	r.HandleFunc("/faqs", faqs)                     //
 	r.HandleFunc("/about", about)                   //
 	r.HandleFunc("/contact", contact)               //contact us
-	r.HandleFunc("/join-waitlist", joinWaitlist)    //WaitList
 	r.HandleFunc("/signup", signup)                 //signup + checkout
 	r.HandleFunc("/verify", verify)                 //verify
 	r.HandleFunc("/signin", signin)                 //login ***
@@ -134,6 +133,7 @@ func main() {
 	r.HandleFunc("/invoice/{order}", invoice)       //
 
 	r.HandleFunc("/payhook", paymentHook)
+	//r.HandleFunc("/join-waitlist", joinWaitlist)    //WaitList
 	//r.HandleFunc("/webhook", webhookHandler)
 
 	addr := fmt.Sprintf(":%s", utility.WPORT)
