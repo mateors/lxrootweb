@@ -23,8 +23,8 @@
 
                             <div class="py-2 px-6">
                                 <dl class="text-slate-500 !text-[15px]">
-                                    <dt class="border-b py-2">Status </dt>  <dd class="border-b py-2"><span class="md:ml-8 "><label class="px-2 py-2 rounded-lg bg-label-muted text-white label-text">{{.PaymentStatus}}</label></span></dd> 
-                                    <dt class="border-b py-2">Renews</dt>   <dd class="border-b py-2"><span class="md:ml-8">{{.Renews}}</span></dd>
+                                    <dt class="border-b py-2">Status </dt>  <dd class="border-b py-2"><span class="md:ml-8 "><label class="px-2 py-1 rounded-lg bg-label-muted text-white label-text">{{toTitle .PaymentStatus}}</label></span></dd> 
+                                    <dt class="border-b py-2">Renews</dt>   <dd class="border-b py-2"><span class="md:ml-8">{{toTitle .Renews}}</span></dd>
 
                                     <dt class="border-b py-2">Price</dt>    <dd class="border-b py-2"><span class="md:ml-8">${{.Price}}</span></dd> 
                                     <dt class="py-2">Purchased</dt>         <dd class="py-2"><span class="md:ml-8">{{.PurchaseDate}}</span></dd>

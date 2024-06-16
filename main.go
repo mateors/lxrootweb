@@ -81,7 +81,11 @@ func init() {
 	COMPANY_ID = companyId("lxroot.com") //company id need to be inserted before proceed
 
 	//dataClean()
-	//os.Exit(1)
+	// subscriptionStart, subscriptionEnd := subscriptionStartEnd()
+	// licenseKey := uuid.NewV1().String()
+	// id, err := addSubscription("accountId", "billahmdmostain@gmail.com", "stripeCustomer", licenseKey, "monthly", "20", "due", subscriptionStart, subscriptionEnd, "trial")
+	// fmt.Println(err, id)
+	// os.Exit(1)
 }
 
 func main() {

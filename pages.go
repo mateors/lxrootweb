@@ -2518,7 +2518,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
 			"templates/footer2.gohtml",
@@ -2537,9 +2537,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		//loginId, _ := smap["id"].(string)
 
 		row, err := subscriptionDetailsByAccount(accountId)
-		if err == nil {
-			log.Println(err)
-		}
+		logError("subscriptionDetailsByAccountERR:", err)
 		licenseKey, _ := row["license_key"].(string)
 		paymentStatus, _ := row["payment_status"].(string)
 		billing, _ := row["billing"].(string)
@@ -2555,6 +2553,9 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		if count > 0 {
 			licenseFound = true
 		}
+
+		subscription_end = mtool.DateTimeParser(subscription_end, "2006-01-02 15:04:05", dateFormat)
+		//fmt.Println(subscription_end)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2583,7 +2584,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 			Renews:        billing,
 			Price:         price,
 			PurchaseDate:  purchaseDate,
-			ExpireDate:    toTime(subscription_end).Format(dateFormat),
+			ExpireDate:    subscription_end,
 			LicenseFound:  licenseFound,
 		}
 
