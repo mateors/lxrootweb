@@ -489,6 +489,7 @@ function vForm(path, params, method) {
 }
 
 function copyToClp(txt){
+    
     var m = document;
     txt = m.createTextNode(txt);
     var w = window;
@@ -510,4 +511,5 @@ function copyToClp(txt){
         g().removeAllRanges();
     }
     txt.remove();
+
 }
