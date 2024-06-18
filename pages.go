@@ -638,7 +638,6 @@ func complete(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//delCookie("processing", r, w)
 		var errorExist bool
 		docNumber, err := getCookie("processing", r)
 		if err != nil {
@@ -657,7 +656,6 @@ func complete(w http.ResponseWriter, r *http.Request) {
 		accountName, _ := smap["account_name"].(string)
 		ptime, _ := time.Parse(DATE_TIME_FORMAT, paidDate)
 		paidDate = ptime.Format("Jan 2, 2006 03:04 PM")
-		//fmt.Println(t.Format("Jan 2nd, 2006 03:04 PM"))
 		invoiceUrl, _ := row["receipt_url"].(string)
 		totalPayable, _ := row["total_payable"].(string)
 		totalTax, _ := row["total_tax"].(string)
@@ -1713,19 +1711,6 @@ func resetPassForm(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 
-		// smap, err := getSessionInfo(r)
-		// if err == nil {
-		// 	if access, isOk := smap["access_name"].(string); isOk {
-		// 		vacc := []string{"superadmin", "admin", "client"}
-		// 		if mtool.ArrayValueExist(vacc, access) {
-		// 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		// 		}
-		// 	}
-		// }
-
-		//sessionCode := visitorInfo(r, w) //
-		//fmt.Println(sessionCode)
-
 		r.ParseForm()
 		var isValid bool
 		token := r.FormValue("token")
@@ -1880,9 +1865,7 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 
 		accountId, _ := smap["account_id"].(string)
 		loginId, _ := smap["id"].(string)
-
 		tickets := totalActiveTicketByUser(loginId)
-		//fmt.Println(tickets, loginId)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1926,8 +1909,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/signin", http.StatusSeeOther)
 		return
 	}
-	//fmt.Println("logout:", smap)
-	//sessionCode := smap["session_code"].(string)
+
 	loginID := smap["id"].(string)
 	qs := `UPDATE %s SET status=0,logout_time="%s" WHERE login_id="%s" AND status=1;`
 	sql := fmt.Sprintf(qs, tableToBucket("login_session"), mtool.TimeNow(), loginID)
@@ -1973,7 +1955,6 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		//fmt.Println(smap)
 		accountId, _ := smap["account_id"].(string)
 		row := profileInfo(accountId)
 		clientSince, _ := row["client_since"].(string)
@@ -2536,19 +2517,21 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 		accountId, _ := smap["account_id"].(string)
 		//loginId, _ := smap["id"].(string)
 
+		var licenseKey, paymentStatus, billing, price, purchaseDate, subscription_end string
 		row, err := subscriptionDetailsByAccount(accountId)
-		logError("subscriptionDetailsByAccountERR:", err)
-		licenseKey, _ := row["license_key"].(string)
-		paymentStatus, _ := row["payment_status"].(string)
-		billing, _ := row["billing"].(string)
-		price, _ := row["price"].(string)
-		purchaseDate, _ := row["create_date"].(string)
-		subscription_end, _ := row["subscription_end"].(string)
+		if err == nil {
+			licenseKey, _ = row["license_key"].(string)
+			paymentStatus, _ = row["payment_status"].(string)
+			billing, _ = row["billing"].(string)
+			price, _ = row["price"].(string)
+			purchaseDate, _ = row["create_date"].(string)
+			subscription_end, _ = row["subscription_end"].(string)
+		}
 
 		dateFormat := "January 02, 2006"
 		purchaseDate = mtool.DateTimeParser(purchaseDate, "2006-01-02 15:04:05", dateFormat)
 
-		var licenseFound bool = true
+		var licenseFound bool
 		count := lxql.CheckCount("subscription", fmt.Sprintf("account_id=%q", accountId), database.DB)
 		if count > 0 {
 			licenseFound = true
@@ -2556,6 +2539,7 @@ func licenseKey(w http.ResponseWriter, r *http.Request) {
 
 		subscription_end = mtool.DateTimeParser(subscription_end, "2006-01-02 15:04:05", dateFormat)
 		//fmt.Println(subscription_end)
+		//fmt.Println(">", accountId, licenseFound, row, count, len(row))
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2734,12 +2718,8 @@ func payMethods(w http.ResponseWriter, r *http.Request) {
 		ctoken := csrfToken()
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
-
-		//purl, err := url.Parse(r.RequestURI)
-		//fmt.Println(err, purl.Path)
 		//accountId, _ := smap["account_id"].(string)
 		//loginId, _ := smap["id"].(string)
-		//fmt.Println(rows)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2781,6 +2761,7 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 		tmplt, err := template.New("base.gohtml").Funcs(FuncMap).ParseFiles(
 			"templates/base.gohtml",
 			"templates/header3.gohtml",
+			"templates/profile_left.gohtml",
 			"templates/footer2.gohtml",
 			"wpages/activity.gohtml", //
 		)
@@ -2793,11 +2774,14 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
 		setCookie("ctoken", hashStr, 1800, w)
 
-		//purl, err := url.Parse(r.RequestURI)
-		//fmt.Println(err, purl.Path)
-		//accountId, _ := smap["account_id"].(string)
-		//loginId, _ := smap["id"].(string)
-		//fmt.Println(rows)
+		accountId, _ := smap["account_id"].(string)
+		loginId, _ := smap["id"].(string)
+		lastLoginDate, clientSince := profileLastLogin(loginId)
+
+		row := profileInfo(accountId)
+		firstName, _ := row["first_name"].(string)
+		lastName, _ := row["last_name"].(string)
+		label := nameLabel(firstName, lastName)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -2807,6 +2791,9 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 			MainDivClass string
 			CsrfToken    string
 			SessionMap   map[string]interface{}
+			LastLogin    string
+			ClientSince  string
+			IconLabel    string
 			Rows         []map[string]interface{}
 		}{
 			Title:        "LxRoot Profile activity",
@@ -2815,6 +2802,9 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 			MainDivClass: "main min-h-[calc(100vh-52px)] bg-slate-200",
 			CsrfToken:    ctoken,
 			SessionMap:   smap,
+			LastLogin:    lastLoginDate,
+			ClientSince:  clientSince,
+			IconLabel:    strings.ToUpper(label),
 			Rows:         nil,
 		}
 
