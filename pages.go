@@ -2093,6 +2093,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 
 		var todo string = parseMultipartTodo(r)
+		fmt.Println("post", todo)
 
 		if strings.ToUpper(todo) == "TFAENABLE" {
 
@@ -2197,6 +2198,41 @@ func security(w http.ResponseWriter, r *http.Request) {
 			}
 			http.Redirect(w, r, rurl, http.StatusSeeOther)
 			return
+		} else if strings.ToUpper(todo) == "CHANGEPASS" {
+
+			var message string
+			//fmt.Println(todo, r.Form) //changepass
+			tokenPullNSet(r)
+
+			funcsMap := map[string]interface{}{
+				"validCSRF":            validCSRF,
+				"validBothPassword":    validBothPassword,
+				"checkCurrentPassword": checkCurrentPassword,
+			}
+			rmap := make(map[string]interface{})
+			for key := range r.Form {
+				rmap[key] = r.FormValue(key)
+			}
+
+			loginId, _ := smap["id"].(string)
+			rmap["login_id"] = loginId
+			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			if response == "OKAY" {
+
+				fmt.Println("OK...")
+				message = "OK"
+				password := r.FormValue("pass1")
+				hashpass := mtool.HashBcrypt(password)
+				sql := fmt.Sprintf("UPDATE %s SET passw='%s',update_date=%q WHERE id='%s';", tableToBucket("login"), hashpass, mtool.TimeNow(), loginId)
+				_, err = database.DB.Exec(sql)
+				logError("changepass", err)
+				if err == nil {
+					message = "OK"
+					delCookie("login_session", r, w)
+					delCookie("token", r, w)
+				}
+			}
+			fmt.Fprintln(w, message)
 		}
 	}
 }

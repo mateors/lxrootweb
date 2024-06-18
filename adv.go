@@ -397,6 +397,32 @@ func validCSRF(args map[string]interface{}) string {
 	return "ERROR invalid ctoken"
 }
 
+func validBothPassword(args map[string]interface{}) string {
+
+	password1 := args["pass1"].(string)
+	password2 := args["pass2"].(string)
+	if password1 == password2 && len(password1) > 7 {
+		return "valid"
+	} else if password1 == password2 && len(password1) < 8 {
+		return "ERROR minimum password length is 8 character"
+	}
+	return "ERROR password does not matches"
+}
+
+func checkCurrentPassword(args map[string]interface{}) string {
+
+	cpassword := args["cpass"].(string)
+	loginId, isOk := args["login_id"].(string)
+	if !isOk {
+		return "ERROR invalid user"
+	}
+	hashpass := lxql.FieldByValue("login", "passw", fmt.Sprintf("id='%s'", loginId), database.DB)
+	if mtool.HashCompare(cpassword, hashpass) {
+		return "valid"
+	}
+	return "ERROR invalid current password"
+}
+
 func resetPassValidation(args map[string]interface{}) string {
 
 	pass1, _ := args["pass1"].(string)

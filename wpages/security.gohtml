@@ -35,11 +35,12 @@
                     <div class="p-6 bg-white border rounded-lg">
                         <h3 class="head-4 !font-light text-slate-700 mb-6">Change password</h3>
                         <form id="mForm" method="post">
-                            <input type="hidden" name="ftoken" value="" />
+                            <input type="hidden" name="ftoken" value="{{.CsrfToken}}" />
+                            <input type="hidden" name="todo" value="changepass" />
 
                             <div class="field flex flex-col mb-4">
-                                <label for="opass">Current Password <span class="required-spot">*</span></label>
-                                <input type="password" id="opass" name="email" placeholder="" required />
+                                <label for="cpass">Current Password <span class="required-spot">*</span></label>
+                                <input type="password" id="cpass" name="cpass" placeholder="" required />
                             </div>
 
                             <div class="md:grid grid-cols-2 gap-3">
@@ -57,12 +58,10 @@
                                 <div class="flex gap-2">
                                     <button disabled type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Change password</button>
                                 </div>
-
                                 <div class="borders p-0 block md:flex items-center justify-center gap-x-2">
                                     <label class="w-fulls mb-0 text-skin-muted">Very Strong</label>
                                     <progress class="accent-red" id="passtrength" max="100" value="75"></progress>
                                 </div>
-                                
                             </div>
                         </form>
                     </div>
@@ -208,6 +207,49 @@
             return false;
         });
     }
+
+    $('#pass2').on('keyup', (e) => {
+    
+        let pass1=$('#pass1').val();
+        let pass2=e.target.value;
+        console.log(pass1,pass2);
+
+        if (pass1.length>7 && pass2.length>7 && pass1==pass2){
+            $('#mForm').find('button[type="submit"]').prop("disabled",false);
+        }else{
+            $('#mForm').find('button[type="submit"]').prop("disabled",true);
+        }
+    
+    });
+
+    $('#mForm').submit( (e) => {
+    
+        e.preventDefault();
+        let submitBtn=$('#mForm').find('button[type="submit"]');
+        let btnText=submitBtn.text();
+
+        submitBtn.empty();
+        submitBtn.addChild(elmDivSpinner());
+        //submitBtn.addChild(document.createTextNode('Please wait'));
+        submitBtn.prop('disabled', true);
+
+        $.ajax({
+            async: true,
+            type: "POST",
+            dataType: "text", //text
+            url: "/security",
+            data: $(this).serialize(),
+
+        }).then( (resp) => {
+
+           console.log(resp);
+
+        }).catch( (err) => {
+            console.log('fail:',err);
+        });
+
+        return false;
+    });
 
   </script>
 
