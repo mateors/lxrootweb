@@ -8,6 +8,8 @@ import (
 	"lxrootweb/database"
 	"lxrootweb/utility"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -1023,4 +1025,41 @@ func dataClean() {
 	lxql.RawSQL("DELETE FROM lxroot._default.file_store;", database.DB)
 	lxql.RawSQL("DELETE FROM lxroot._default.ticket;", database.DB)
 	lxql.RawSQL("DELETE FROM lxroot._default.ticket_response;", database.DB)
+}
+
+func accountIdToQRcodeInfo(accountId string) (email, qrcodefilepath string) {
+	email = accountIdToEmail(accountId)
+	counter := idToNumber(accountId)
+	qrcodeFileName := fmt.Sprintf("%d.png", counter)
+	qrcodeDir := filepath.Join(workingDirectory, "data", "qrcode")
+	os.MkdirAll(qrcodeDir, 0750)
+	qrcodefilepath = filepath.Join(qrcodeDir, qrcodeFileName)
+	return
+}
+func accountIdToEmail(accountId string) string {
+	return lxql.FieldByValue("account", "email", fmt.Sprintf("id='%s'", accountId), database.DB)
+}
+func idToNumber(id string) int32 {
+	xxid, err := xid.FromString(id)
+	if err != nil {
+		return 0
+	}
+	return xxid.Counter()
+}
+
+func loginIdToFilePath(loginId string) string {
+
+	counter := idToNumber(loginId)
+	qrcodeFileName := fmt.Sprintf("%d.png", counter)
+	return filepath.Join(workingDirectory, "data", "qrcode", qrcodeFileName)
+}
+
+func loginToQRcodeInfo(loginId string) (qrcodefilepath string) {
+
+	// counter := idToNumber(loginId)
+	// qrcodeFileName := fmt.Sprintf("%d.png", counter)
+	// qrcodeDir := filepath.Join(workingDirectory, "data", "qrcode")
+	qrcodefilepath = loginIdToFilePath(loginId)
+	os.MkdirAll(filepath.Dir(qrcodefilepath), 0750)
+	return
 }

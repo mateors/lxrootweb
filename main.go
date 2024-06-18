@@ -137,6 +137,7 @@ func main() {
 	r.HandleFunc("/ticketnew", ticketNew)           //ticketnew
 	r.HandleFunc("/logout", logout)                 //logout
 	r.HandleFunc("/invoice/{order}", invoice)       //
+	r.HandleFunc("/qrcode/{id}", qrcodeimg)         //
 
 	r.HandleFunc("/payhook", paymentHook)
 	//r.HandleFunc("/join-waitlist", joinWaitlist)    //WaitList

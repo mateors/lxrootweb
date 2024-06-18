@@ -38,18 +38,29 @@
                             <input type="hidden" name="ftoken" value="" />
 
                             <div class="field flex flex-col mb-4">
-                                <label for="opass">Old Password <span class="required-spot">*</span></label>
+                                <label for="opass">Current Password <span class="required-spot">*</span></label>
                                 <input type="password" id="opass" name="email" placeholder="" required />
                             </div>
 
-                            <div class="field flex flex-col mb-4">
-                                <label for="npass">New Password <span class="required-spot">*</span></label>
-                                <input type="password" id="npass" name="npass" placeholder="8+ characters, consisting of both numbers and letters" required />
+                            <div class="md:grid grid-cols-2 gap-3">
+                                <div class="field flex flex-col mb-4">
+                                    <label for="pass1">New Password <span class="required-spot">*</span></label>
+                                    <input type="password" id="pass1" class="w-full" name="pass1" placeholder="8+ characters, consisting of both numbers and letters" required />
+                                </div>
+                                <div class="field flex flex-col mb-4">
+                                    <label for="pass2">New Password Again <span class="required-spot">*</span></label>
+                                    <input type="password" id="pass2" class="w-full" name="pass2" placeholder="Type the same password again" required />
+                                </div>
                             </div>
 
-                            <div class="flex justify-start items-center">
+                            <div class="flex justify-between items-center flex-wrap gap-y-2">
                                 <div class="flex gap-2">
                                     <button disabled type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Change password</button>
+                                </div>
+
+                                <div class="borders p-0 block md:flex items-center justify-center gap-x-2">
+                                    <label class="w-fulls mb-0 text-skin-muted">Very Strong</label>
+                                    <progress class="accent-red" id="passtrength" max="100" value="75"></progress>
                                 </div>
                                 
                             </div>
@@ -57,6 +68,59 @@
                     </div>
 
                     <!---TFA--->
+                    {{if .TfaSetupForm}}
+
+                    <div class="p-6 mt-6 bg-white border rounded-lg">
+                        
+                        <h3 class="head-4 !font-light text-slate-700 mb-6">Enable two-factor authentication</h3>
+                        <p class="text-slate-500 !font-light">Scan this QR code with your preferred Authenticator app and enter the generated code below. If scanning doesn't work and you're on a mobile device you can use <strong>{{.TfaSetupKey}}</strong> code instead.</p>
+
+                        <div class="mt-4">
+
+                            <div class="w-48 border border-skin-muted rounded mb-4 overflow-x-auto">
+                                <img id="qrcode" src="{{.QrcodeImg}}">
+                            </div>
+
+                            <div class="field flex flex-col mb-4">
+                                <label for="authc">Verify the code from the app <span class="required-spot">*</span></label>
+                                <input type="text" id="authc" name="authcode" placeholder="XXXXXX" required />
+                            </div>
+
+                            {{if ne .SetupErrMsg ""}}
+                            <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-warning rounded-md border-l-4 border-warning">
+                                <div class="flex">
+                                    <p class="text-slate-700">{{.SetupErrMsg}}</p>
+                                </div>
+                            </div>
+                            {{end}}
+
+                            <button type="button" id="btnTfaConfirm" data-secret="{{.TfaSetupKey}}" class="py-3 px-6 border border-slate-400 text-secondary rounded-md font-medium bg-transparent hover:text-white hover:!bg-secondary">Confirm</button>
+
+                        </div>
+                    </div>
+
+                    {{else if eq .TfaStatus "1"}}
+
+                    <div class="p-6 mt-6 bg-white border rounded-lg">
+                        
+                        <h3 class="head-4 !font-light text-slate-700 mb-6">Two-factor authentication</h3>
+                        <p class="text-slate-500 !font-light">Two-factor authentication (2FA) adds an additional layer of security to your account; once enabled, your account will be protected by both your password and a time-sensitive code, available via your preferred Authenticator app. We strongly recommend enabling 2FA on your account.</p>
+
+                        <div class="mt-4">
+
+                            <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-warning rounded-md border-l-4 border-warning">
+                                <div class="flex">
+                                    <p class="text-slate-700">Two-factor authentication has been configured on this account.</p>
+                                </div>
+                            </div>
+
+                            <button type="button" id="btnDisable" class="py-3 px-6 border border-slate-400 text-secondary rounded-md font-medium bg-transparent hover:text-white hover:!bg-secondary">Disable</button>
+
+                        </div>
+                    </div>
+
+                    {{else}}
+
                     <div class="p-6 mt-6 bg-white border rounded-lg">
                         
                         <h3 class="head-4 !font-light text-slate-700 mb-6">Two-factor authentication</h3>
@@ -69,10 +133,14 @@
                                     <p class="text-slate-700">Two-factor authentication has not been configured on this account.</p>
                                 </div>
                             </div>
-                            <button type="button" class="py-3 px-6 border border-slate-400 text-secondary rounded-md font-medium bg-transparent hover:text-white hover:!bg-secondary">Enable</button>
+
+                            <button type="button" id="btnEnable" class="py-3 px-6 border border-slate-400 text-secondary rounded-md font-medium bg-transparent hover:text-white hover:!bg-secondary">Enable</button>
 
                         </div>
                     </div>
+
+                    {{end}}
+
 
                 </div>
 
@@ -96,19 +164,50 @@
 
   <script>
 
-    $('#changeEmail').on('click', (e) => {
+    let ftoken= "{{.CsrfToken}}";
 
-        $('#email').prop("disabled", false);
-        $('#changeEmail').addClass("hidden");
-        $('#changeEmail').prev().removeClass("hidden");
+    $('#mForm').find('input[name="pass1"]').on('keyup', (e)=>{
+
+        let passv=$(this).val();
+        let passStrength=checkPasswordStrength(passv);
+        let percent=0;
+        if(passStrength=='Weak') percent=25;
+        if(passStrength=='Good') percent=50;
+        if(passStrength=='Strong') percent=75;
+        if(passStrength=='Very Strong') percent=100;
+        //console.log(passv,">>",passStrength, percent);
+        $('#passtrength').val(`${percent}`);
+        $('#passtrength').prev().textc(passStrength);
+
     });
 
-    $('button[cancel]').on('click', (e) => {
+    if ("{{.TfaSetupForm}}"=='false' && "{{.TfaStatus}}"=='0'){
 
-        $('#email').prop("disabled", true);
-        $(this).closest("button").parent().addClass("hidden");
-        $(this).closest("button").parent().next().removeClass("hidden");
-    })
+        $('#btnEnable').on('click', (e)=>{
+            console.log(location);
+            vForm(location.pathname, {todo:'tfaenable',ftoken}, 'post')
+            return false;
+        });
+    }
+
+    if ("{{.TfaSetupForm}}"=='true' && "{{.TfaStatus}}"=='0'){
+
+        $('#btnTfaConfirm').on('click', (e)=>{
+            //console.log(location);
+            let authcode=$('#authc').val();
+            let secret=$(this).attr('data-secret');
+            vForm(location.pathname, {todo:'tfaconfirm',ftoken,secret,authcode}, 'post')
+            return false;
+        });
+    }
+
+    if ("{{.TfaStatus}}"=='1'){
+
+        $('#btnDisable').on('click', (e)=>{
+            vForm(location.pathname, {todo:'tfadisable',ftoken}, 'post')
+            return false;
+        });
+    }
 
   </script>
 

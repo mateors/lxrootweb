@@ -6060,3 +6060,11 @@ select:read-only{
 .fs\:12px{
   font-size:12px;
 }
+
+.accent-red{
+accent-color:red;
+}
+
+progress::-moz-progress-bar { background: blue; }
+progress::-webkit-progress-value { background: blue; }
+progress { color: blue; }

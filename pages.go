@@ -8,6 +8,7 @@ import (
 	"lxrootweb/utility"
 	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strings"
 	"text/template"
@@ -2001,13 +2002,13 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 func security(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
+	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2034,6 +2035,23 @@ func security(w http.ResponseWriter, r *http.Request) {
 		lastName, _ := row["last_name"].(string)
 		label := nameLabel(firstName, lastName)
 
+		//setCookie("tfasetup", accountId, 180, w)
+		var setupForm bool
+		var qrcodeimg, setupErr string
+
+		setupErr = r.FormValue("error")
+		tfaStatus := lxql.FieldByValue("login", "tfa_status", fmt.Sprintf("id=%q", loginId), database.DB)
+		fmt.Println("tfaStatus:", tfaStatus)
+		if tfaStatus == "1" {
+			delCookie("tfasetup", r, w)
+		}
+
+		tfaseup, err := getCookie("tfasetup", r)
+		if err == nil {
+			setupForm = true
+			qrcodeimg = fmt.Sprintf("qrcode/%d", idToNumber(loginId))
+		}
+
 		base := GetBaseURL(r)
 		data := struct {
 			Title        string
@@ -2045,6 +2063,11 @@ func security(w http.ResponseWriter, r *http.Request) {
 			LastLogin    string
 			ClientSince  string
 			IconLabel    string
+			TfaSetupForm bool
+			TfaSetupKey  string
+			QrcodeImg    string
+			SetupErrMsg  string
+			TfaStatus    string
 		}{
 			Title:        "LxRoot Security",
 			Base:         base,
@@ -2055,6 +2078,11 @@ func security(w http.ResponseWriter, r *http.Request) {
 			LastLogin:    lastLoginDate,
 			ClientSince:  clientSince,
 			IconLabel:    strings.ToUpper(label),
+			TfaSetupForm: setupForm,
+			TfaSetupKey:  tfaseup,
+			QrcodeImg:    qrcodeimg,
+			SetupErrMsg:  setupErr,
+			TfaStatus:    tfaStatus,
 		}
 
 		err = tmplt.Execute(w, data)
@@ -2062,6 +2090,114 @@ func security(w http.ResponseWriter, r *http.Request) {
 			log.Println(err)
 		}
 
+	} else if r.Method == http.MethodPost {
+
+		var todo string = parseMultipartTodo(r)
+
+		if strings.ToUpper(todo) == "TFAENABLE" {
+
+			var rurl string = "/security"
+			tokenPullNSet(r)
+
+			funcsMap := map[string]interface{}{
+				"validCSRF": validCSRF,
+			}
+			rmap := make(map[string]interface{})
+			for key := range r.Form {
+				rmap[key] = r.FormValue(key)
+			}
+
+			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			if response == "OKAY" {
+
+				//password := r.FormValue("password")
+				loginId := smap["id"].(string)
+				username := smap["username"].(string)
+				//dbpasswd := lxql.FieldByValue("login", "passw", fmt.Sprintf("id='%s'", loginId), database.DB)
+				qrcodeFilePath := loginToQRcodeInfo(loginId)
+				secret, err := generateQRcode(username, qrcodeFilePath) //accountIdToQRcodeInfo(loginId)
+				if err == nil {
+					//message = fmt.Sprintf("OK-%s", secret)
+					setCookie("tfasetup", secret, 1800, w)
+					rurl = "/security"
+					fmt.Println("tfasetup no error", secret)
+				}
+			}
+			//fmt.Fprintln(w, message)
+			http.Redirect(w, r, rurl, http.StatusSeeOther)
+			return
+
+		} else if strings.ToUpper(todo) == "TFACONFIRM" {
+
+			//var message string
+			var rurl = "/security"
+			tokenPullNSet(r)
+			//time.Sleep(time.Second * 3)
+			funcsMap := map[string]interface{}{
+				"validCSRF": validCSRF,
+			}
+			rmap := make(map[string]interface{})
+			for key := range r.Form {
+				rmap[key] = r.FormValue(key)
+			}
+			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			//message = response
+
+			if response == "OKAY" {
+
+				loginId := smap["id"].(string)
+				username := smap["username"].(string)
+				authCode := r.FormValue("authcode") //token as password
+				secretBase32 := r.FormValue("secret")
+				ipAddress := cleanIp(r.RemoteAddr)
+				err = tfaAuthentication(secretBase32, authCode)
+				fmt.Println(err, loginId, secretBase32, authCode)
+				if err != nil {
+					//message = err.Error()
+					logError("tfaAuthentication", err)
+					rurl = fmt.Sprintf("/security?error=%s", err.Error())
+				}
+				if err == nil {
+					delCookie("tfasetup", r, w)
+					sql := fmt.Sprintf("UPDATE %s SET tfa_status=1,tfa_medium='authenticator_app',tfa_setupkey='%s',update_date='%s' WHERE id='%s';", tableToBucket("login"), secretBase32, mtool.TimeNow(), loginId)
+					database.DB.Exec(sql)
+					logtxt := fmt.Sprintf("TFA_ENABLED for %s", username)
+					addActiviyLog(loginId, UPDATE_ACTIVITY, "login", fmt.Sprintf("id=%s", loginId), logtxt, ipAddress)
+				}
+			}
+			//fmt.Fprintln(w, message)
+			http.Redirect(w, r, rurl, http.StatusSeeOther)
+			return
+		} else if strings.ToUpper(todo) == "TFADISABLE" {
+
+			var rurl string = "/security"
+			tokenPullNSet(r)
+
+			funcsMap := map[string]interface{}{
+				"validCSRF": validCSRF,
+			}
+			rmap := make(map[string]interface{})
+			for key := range r.Form {
+				rmap[key] = r.FormValue(key)
+			}
+
+			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			if response == "OKAY" {
+
+				ipAddress := cleanIp(r.RemoteAddr)
+				loginId := smap["id"].(string)
+				username := smap["username"].(string)
+				qrcodeFilePath := loginIdToFilePath(loginId)
+				os.Remove(qrcodeFilePath)
+
+				sql := fmt.Sprintf("UPDATE %s SET tfa_status=0,tfa_medium='',tfa_setupkey='',update_date='%s' WHERE id='%s';", tableToBucket("login"), mtool.TimeNow(), loginId)
+				database.DB.Exec(sql)
+				logtxt := fmt.Sprintf("TFA_DISABLED for %s", username)
+				addActiviyLog(loginId, UPDATE_ACTIVITY, "login", fmt.Sprintf("id=%s", loginId), logtxt, ipAddress)
+			}
+			http.Redirect(w, r, rurl, http.StatusSeeOther)
+			return
+		}
 	}
 }
 
@@ -2814,4 +2950,15 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+}
+
+func qrcodeimg(w http.ResponseWriter, r *http.Request) {
+
+	// _, err := getSessionInfo(r)
+	// if err != nil {
+	// 	http.Redirect(w, r, "/logout", http.StatusSeeOther)
+	// 	return
+	// }
+	id := chi.URLParam(r, "id") //loginId
+	http.ServeFile(w, r, fmt.Sprintf("data/qrcode/%s.png", id))
 }
