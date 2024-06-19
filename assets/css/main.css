@@ -5963,6 +5963,9 @@ button[disabled]{
 .whitespace-pre{
     white-space: pre;
 }
+.whitespace-nowrap{
+    white-space: nowrap;
+}
 
 /* For Chrome, EDGE, Opera, Others */
 .scrollbar::-webkit-scrollbar {

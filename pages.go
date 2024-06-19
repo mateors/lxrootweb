@@ -2141,6 +2141,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 		loginId, _ := smap["id"].(string)
 		accountId, _ := smap["account_id"].(string)
 		lastLoginDate, clientSince := profileLastLogin(loginId)
+		lastLoginDate = mtool.DateTimeParser(lastLoginDate, DATE_TIME_FORMAT, "Jan 02, 2006 15:04")
 
 		row := profileInfo(accountId)
 		firstName, _ := row["first_name"].(string)
@@ -3048,11 +3049,18 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 		accountId, _ := smap["account_id"].(string)
 		loginId, _ := smap["id"].(string)
 		lastLoginDate, clientSince := profileLastLogin(loginId)
+		lastLoginDate = mtool.DateTimeParser(lastLoginDate, DATE_TIME_FORMAT, "Jan 02, 2006 15:04")
 
 		row := profileInfo(accountId)
 		firstName, _ := row["first_name"].(string)
 		lastName, _ := row["last_name"].(string)
 		label := nameLabel(firstName, lastName)
+
+		sql := fmt.Sprintf("SELECT id,activity_type,ip_address,log_details,create_date FROM %s WHERE login_id=%q AND status=1;", tableToBucket("activity_log"), loginId)
+		rows, err := lxql.GetRows(sql, database.DB)
+		if err != nil {
+			return
+		}
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -3076,7 +3084,7 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 			LastLogin:    lastLoginDate,
 			ClientSince:  clientSince,
 			IconLabel:    strings.ToUpper(label),
-			Rows:         nil,
+			Rows:         rows,
 		}
 
 		err = tmplt.Execute(w, data)
