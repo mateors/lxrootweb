@@ -2147,13 +2147,11 @@ func security(w http.ResponseWriter, r *http.Request) {
 		lastName, _ := row["last_name"].(string)
 		label := nameLabel(firstName, lastName)
 
-		//setCookie("tfasetup", accountId, 180, w)
 		var setupForm bool
 		var qrcodeimg, setupErr string
 
 		setupErr = r.FormValue("error")
 		tfaStatus := lxql.FieldByValue("login", "tfa_status", fmt.Sprintf("id=%q", loginId), database.DB)
-		fmt.Println("tfaStatus:", tfaStatus)
 		if tfaStatus == "1" {
 			delCookie("tfasetup", r, w)
 		}
@@ -2205,7 +2203,6 @@ func security(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodPost {
 
 		var todo string = parseMultipartTodo(r)
-		fmt.Println("post", todo)
 
 		if strings.ToUpper(todo) == "TFAENABLE" {
 
@@ -2223,29 +2220,22 @@ func security(w http.ResponseWriter, r *http.Request) {
 			response := CheckMultipleConditionTrue(rmap, funcsMap)
 			if response == "OKAY" {
 
-				//password := r.FormValue("password")
 				loginId := smap["id"].(string)
 				username := smap["username"].(string)
-				//dbpasswd := lxql.FieldByValue("login", "passw", fmt.Sprintf("id='%s'", loginId), database.DB)
 				qrcodeFilePath := loginToQRcodeInfo(loginId)
 				secret, err := generateQRcode(username, qrcodeFilePath) //accountIdToQRcodeInfo(loginId)
 				if err == nil {
-					//message = fmt.Sprintf("OK-%s", secret)
 					setCookie("tfasetup", secret, 1800, w)
 					rurl = "/security"
-					fmt.Println("tfasetup no error", secret)
 				}
 			}
-			//fmt.Fprintln(w, message)
 			http.Redirect(w, r, rurl, http.StatusSeeOther)
 			return
 
 		} else if strings.ToUpper(todo) == "TFACONFIRM" {
 
-			//var message string
 			var rurl = "/security"
 			tokenPullNSet(r)
-			//time.Sleep(time.Second * 3)
 			funcsMap := map[string]interface{}{
 				"validCSRF": validCSRF,
 			}
@@ -2254,7 +2244,6 @@ func security(w http.ResponseWriter, r *http.Request) {
 				rmap[key] = r.FormValue(key)
 			}
 			response := CheckMultipleConditionTrue(rmap, funcsMap)
-			//message = response
 
 			if response == "OKAY" {
 
@@ -2264,9 +2253,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 				secretBase32 := r.FormValue("secret")
 				ipAddress := cleanIp(r.RemoteAddr)
 				err = tfaAuthentication(secretBase32, authCode)
-				fmt.Println(err, loginId, secretBase32, authCode)
 				if err != nil {
-					//message = err.Error()
 					logError("tfaAuthentication", err)
 					rurl = fmt.Sprintf("/security?error=%s", err.Error())
 				}
@@ -2278,9 +2265,9 @@ func security(w http.ResponseWriter, r *http.Request) {
 					addActiviyLog(loginId, UPDATE_ACTIVITY, "login", fmt.Sprintf("id=%s", loginId), logtxt, ipAddress)
 				}
 			}
-			//fmt.Fprintln(w, message)
 			http.Redirect(w, r, rurl, http.StatusSeeOther)
 			return
+
 		} else if strings.ToUpper(todo) == "TFADISABLE" {
 
 			var rurl string = "/security"
@@ -2310,10 +2297,10 @@ func security(w http.ResponseWriter, r *http.Request) {
 			}
 			http.Redirect(w, r, rurl, http.StatusSeeOther)
 			return
+
 		} else if strings.ToUpper(todo) == "CHANGEPASS" {
 
 			var message string
-			//fmt.Println(todo, r.Form) //changepass
 			tokenPullNSet(r)
 
 			funcsMap := map[string]interface{}{
@@ -2329,9 +2316,9 @@ func security(w http.ResponseWriter, r *http.Request) {
 			loginId, _ := smap["id"].(string)
 			rmap["login_id"] = loginId
 			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			message = response
 			if response == "OKAY" {
 
-				fmt.Println("OK...")
 				message = "OK"
 				password := r.FormValue("pass1")
 				hashpass := mtool.HashBcrypt(password)

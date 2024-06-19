@@ -1,5 +1,6 @@
 {{define "content"}}
 
+  <div data-message-container class="toast-container top-center"></div>
   <div class="content h-full md:h-full bg-slate-200 mb-10">
       <section class="container mx-auto">
 
@@ -59,8 +60,8 @@
                                     <button disabled type="submit" class="py-3 px-6 border rounded-md font-bold text-white bg-secondaryDeep hover:!bg-primaryMiddles hover:shadow">Change password</button>
                                 </div>
                                 <div class="borders p-0 block md:flex items-center justify-center gap-x-2">
-                                    <label class="w-fulls mb-0 text-skin-muted">Very Strong</label>
-                                    <progress class="accent-red" id="passtrength" max="100" value="75"></progress>
+                                    <label class="w-fulls mb-0 text-skin-muted">Strength</label>
+                                    <progress class="accent-red" id="passtrength" max="100" value="0"></progress>
                                 </div>
                             </div>
                         </form>
@@ -86,9 +87,9 @@
                             </div>
 
                             {{if ne .SetupErrMsg ""}}
-                            <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-warning rounded-md border-l-4 border-warning">
+                            <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-error rounded-md border-l-4 border-error">
                                 <div class="flex">
-                                    <p class="text-slate-700">{{.SetupErrMsg}}</p>
+                                    <p class="text-red-700">{{.SetupErrMsg}}</p>
                                 </div>
                             </div>
                             {{end}}
@@ -107,7 +108,7 @@
 
                         <div class="mt-4">
 
-                            <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-warning rounded-md border-l-4 border-warning">
+                            <div class="w-full flex flex-col md:flex-row items-center gap-3 mb-10 px-5 py-4 bg-green rounded-md border-l-4 border-green">
                                 <div class="flex">
                                     <p class="text-slate-700">Two-factor authentication has been configured on this account.</p>
                                 </div>
@@ -174,7 +175,7 @@
         if(passStrength=='Good') percent=50;
         if(passStrength=='Strong') percent=75;
         if(passStrength=='Very Strong') percent=100;
-        //console.log(passv,">>",passStrength, percent);
+
         $('#passtrength').val(`${percent}`);
         $('#passtrength').prev().textc(passStrength);
 
@@ -183,7 +184,6 @@
     if ("{{.TfaSetupForm}}"=='false' && "{{.TfaStatus}}"=='0'){
 
         $('#btnEnable').on('click', (e)=>{
-            console.log(location);
             vForm(location.pathname, {todo:'tfaenable',ftoken}, 'post')
             return false;
         });
@@ -192,7 +192,6 @@
     if ("{{.TfaSetupForm}}"=='true' && "{{.TfaStatus}}"=='0'){
 
         $('#btnTfaConfirm').on('click', (e)=>{
-            //console.log(location);
             let authcode=$('#authc').val();
             let secret=$(this).attr('data-secret');
             vForm(location.pathname, {todo:'tfaconfirm',ftoken,secret,authcode}, 'post')
@@ -212,8 +211,6 @@
     
         let pass1=$('#pass1').val();
         let pass2=e.target.value;
-        console.log(pass1,pass2);
-
         if (pass1.length>7 && pass2.length>7 && pass1==pass2){
             $('#mForm').find('button[type="submit"]').prop("disabled",false);
         }else{
@@ -242,7 +239,8 @@
 
         }).then( (resp) => {
 
-           console.log(resp);
+           if (resp.trim()=='OK'){ location.reload(); }else{ showToastMessage(resp);}
+           setTimeout(() => location.reload(),5000);
 
         }).catch( (err) => {
             console.log('fail:',err);
