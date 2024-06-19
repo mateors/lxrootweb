@@ -121,6 +121,7 @@ func main() {
 	r.HandleFunc("/signup", signup)                 //signup + checkout
 	r.HandleFunc("/verify", verify)                 //verify
 	r.HandleFunc("/signin", signin)                 //login ***
+	r.HandleFunc("/tfauth", tfAuth)                 //tfAuth ***
 	r.HandleFunc("/resetpass", resetpass)           //reset
 	r.HandleFunc("/reset-pass-form", resetPassForm) //reset-pass
 	r.HandleFunc("/dashboard", dashboard)           //dashboard OK

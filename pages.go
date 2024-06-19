@@ -1590,6 +1590,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 				//wrong username
 				logMsg := fmt.Sprintf("invalid username %s, password %s tried from %s, referer:%s", username, txtpass, location, referer)
 				addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
+				fmt.Println("count:", len(rows))
 			}
 
 		} else {
@@ -1598,6 +1599,117 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
 		}
 
+		http.Redirect(w, r, rurl, http.StatusSeeOther)
+		return
+	}
+}
+
+func tfAuth(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+
+		smap, err := getSessionInfo(r)
+		if err == nil {
+			if access, isOk := smap["access_name"].(string); isOk {
+				vacc := []string{"superadmin", "admin", "client"}
+				if mtool.ArrayValueExist(vacc, access) {
+					http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+				}
+			}
+		}
+
+		sessionCode, err := getCookie("visitor_session", r)
+		if err != nil {
+			visitorInfo(r, w)
+			log.Println("Visitor sessionCode generated", sessionCode)
+		}
+
+		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+			"templates/base.gohtml",
+			"templates/header2.gohtml",
+			"templates/footer2.gohtml",
+			"wpages/tfauth.gohtml", //
+		)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		ctoken := csrfToken()
+		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+		setCookie("ctoken", hashStr, 1800, w)
+		errMessage := r.FormValue("error")
+
+		var referer string
+		purl, err := url.Parse(r.Referer())
+		if err == nil {
+			referer = purl.Path
+			setCookie("redirect", referer, 120, w)
+		}
+
+		tfaUsername, err := getCookie("tfa", r)
+		fmt.Println("tfaUsername:", err, tfaUsername, r.Referer())
+
+		base := GetBaseURL(r)
+		data := struct {
+			Title        string
+			Base         string
+			BodyClass    string
+			MainDivClass string
+			CsrfToken    string
+			ErrorMessage string
+			Yourname     string
+			Username     string
+		}{
+			Title:        "TFA | LxRoot",
+			Base:         base,
+			BodyClass:    "",
+			MainDivClass: "main min-h-[calc(100vh-52px)]",
+			CsrfToken:    ctoken,
+			ErrorMessage: errMessage,
+			Yourname:     "Sign In",
+			Username:     tfaUsername,
+		}
+
+		err = tmplt.Execute(w, data)
+		if err != nil {
+			log.Println(err)
+		}
+
+	} else if r.Method == http.MethodPost {
+
+		var rurl string = "/tfauth"
+		r.ParseForm()
+		username := r.FormValue("username")
+		code := r.FormValue("code")
+		ip := cleanIp(r.RemoteAddr)
+
+		tfaSetupkey := lxql.FieldByValue("login", "tfa_setupkey", fmt.Sprintf("username='%s'", username), database.DB)
+		tfaAuth := tfaAuthentication(tfaSetupkey, code)
+		//fmt.Println(username, code, tfaSetupkey, tfaAuth)
+
+		sql := fmt.Sprintf("SELECT id,cid,access_name,username,passw,tfa_status,tfa_medium,tfa_setupkey FROM %s WHERE username=%q AND status IN[1,6];", tableToBucket("login"), username)
+		row, err := singleRow(sql)
+		if err != nil {
+			logError(">", err)
+			fmt.Println("sql:", sql)
+		}
+
+		if tfaAuth == nil {
+
+			loginId := row["id"].(string)
+			visitorSessionID := visitorInfo(r, w)
+			row["session_code"] = visitorSessionID
+			row["ip"] = ip
+			jwtstr, err := logsession(row)
+			logError("logsession", err)
+
+			token := lxql.FieldByValue("authc", "token", fmt.Sprintf("login_id=%q", loginId), database.DB)
+			setCookie("login_session", jwtstr, 86400*30, w)
+			setCookie("token", token, 86400*1, w) //30 days
+			rurl = "/dashboard"
+		}
+		fmt.Println("rurl", rurl)
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
 		return
 	}

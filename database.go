@@ -1063,3 +1063,58 @@ func loginToQRcodeInfo(loginId string) (qrcodefilepath string) {
 	os.MkdirAll(filepath.Dir(qrcodefilepath), 0750)
 	return
 }
+
+// set after successful login
+func logsession(row map[string]interface{}) (string, error) {
+
+	//row["session_code"] = visitorSessionID
+	visitorSessionID := row["session_code"].(string) //
+	ip := row["ip"].(string)                         //
+	//geolocation := row["geolocation"].(string)       //
+	delete(row, "geolocation")  //
+	delete(row, "session_code") //
+
+	loginID := row["id"].(string)
+	//cid := row["cid"].(string)
+	arow, _ := loginToAccountRow(loginID)
+	for key, val := range arow {
+		row[key] = val
+	}
+	//row["ip"] = ip
+	jwtstr, err := utility.JWTEncode(row, utility.JWTSECRET)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	sql := fmt.Sprintf("UPDATE %s SET update_date=%q WHERE id=%q;", tableToBucket("login"), mtool.TimeNow(), loginID)
+	err = lxql.RawSQL(sql, database.DB)
+	if err != nil {
+		log.Println("ERR:", sql)
+	}
+	var city, country string
+	location, err := getLocation(ip)
+	if err == nil {
+		slc := strings.Split(location, ",")
+		if len(slc) == 2 {
+			city = slc[0]
+			country = slc[1]
+		}
+	}
+	userAgent := ""
+	addLoginSession(loginID, visitorSessionID, ip, city, country, userAgent)
+	// rmap := make(map[string]interface{})
+	// rmap["table"] = "login_session"
+	// rmap["todo"] = "insert"
+	// rmap["pkfield"] = "id"
+	// rmap["cid"] = cid
+	// rmap["login_id"] = loginID
+	// rmap["login_time"] = mtool.TimeNow()
+	// rmap["session_code"] = visitorSessionID
+	// rmap["ip_address"] = ip
+	// rmap["geolocation"] = geolocation
+	// rmap["status"] = 1              //1 = active
+	// rmap["id"] = xid.New().String() //findNextID("login_session")
+	// err = lxql.InsertUpdateMap(rmap, database.DB)
+	// logError("logsession", err)
+	return jwtstr, nil
+}
