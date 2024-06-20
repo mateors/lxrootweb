@@ -1076,99 +1076,99 @@ func contact(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func joinWaitlist(w http.ResponseWriter, r *http.Request) {
+// func joinWaitlist(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+// 	if r.Method == http.MethodGet {
 
-		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
-			"templates/base.gohtml",
-			"templates/header.gohtml",
-			"templates/footer.gohtml",
-			"wpages/join-waitlist.gohtml", //
-		)
-		if err != nil {
-			log.Println(err)
-			return
-		}
+// 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
+// 			"templates/base.gohtml",
+// 			"templates/header.gohtml",
+// 			"templates/footer.gohtml",
+// 			"wpages/join-waitlist.gohtml", //
+// 		)
+// 		if err != nil {
+// 			log.Println(err)
+// 			return
+// 		}
 
-		ctoken := csrfToken()
-		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
-		setCookie("ctoken", hashStr, 1800, w)
+// 		ctoken := csrfToken()
+// 		hashStr := hmacHash(ctoken, ENCDECPASS) //utility.ENCDECPASS
+// 		setCookie("ctoken", hashStr, 1800, w)
 
-		base := GetBaseURL(r)
-		data := struct {
-			Title        string
-			Base         string
-			BodyClass    string
-			MainDivClass string
-			CsrfToken    string
-		}{
-			Title:        "Join-waitlist | LxRoot",
-			Base:         base,
-			BodyClass:    "",
-			MainDivClass: "main min-h-[calc(100vh-312px)]",
-			CsrfToken:    ctoken,
-		}
+// 		base := GetBaseURL(r)
+// 		data := struct {
+// 			Title        string
+// 			Base         string
+// 			BodyClass    string
+// 			MainDivClass string
+// 			CsrfToken    string
+// 		}{
+// 			Title:        "Join-waitlist | LxRoot",
+// 			Base:         base,
+// 			BodyClass:    "",
+// 			MainDivClass: "main min-h-[calc(100vh-312px)]",
+// 			CsrfToken:    ctoken,
+// 		}
 
-		err = tmplt.Execute(w, data)
-		if err != nil {
-			log.Println(err)
-		}
+// 		err = tmplt.Execute(w, data)
+// 		if err != nil {
+// 			log.Println(err)
+// 		}
 
-	} else if r.Method == http.MethodPost {
+// 	} else if r.Method == http.MethodPost {
 
-		var errNo int = 1
-		var errMsg string = "OK"
-		r.ParseForm()
-		commonDataSet(r)
+// 		var errNo int = 1
+// 		var errMsg string = "OK"
+// 		r.ParseForm()
+// 		commonDataSet(r)
 
-		ctoken, err := getCookie("ctoken", r) //cross check with form token
-		logError("ctoken", err)
-		r.Form.Set("ctoken", ctoken)
+// 		ctoken, err := getCookie("ctoken", r) //cross check with form token
+// 		logError("ctoken", err)
+// 		r.Form.Set("ctoken", ctoken)
 
-		funcsMap := map[string]interface{}{
-			"validCSRF": validCSRF,
-		}
-		rmap := make(map[string]interface{})
-		for key := range r.Form {
-			rmap[key] = r.FormValue(key)
-		}
-		response := CheckMultipleConditionTrue(rmap, funcsMap)
+// 		funcsMap := map[string]interface{}{
+// 			"validCSRF": validCSRF,
+// 		}
+// 		rmap := make(map[string]interface{})
+// 		for key := range r.Form {
+// 			rmap[key] = r.FormValue(key)
+// 		}
+// 		response := CheckMultipleConditionTrue(rmap, funcsMap)
 
-		if response == "OKAY" {
+// 		if response == "OKAY" {
 
-			errNo = 0
-			modelName := structName(WaitList{})
-			err := modelUpsert(modelName, r.Form)
-			if err == nil {
+// 			errNo = 0
+// 			modelName := structName(WaitList{})
+// 			err := modelUpsert(modelName, r.Form)
+// 			if err == nil {
 
-				email := r.FormValue("email")
-				errMsg = settingsValue("waitlist_confirmation") //to display after form submission
+// 				email := r.FormValue("email")
+// 				errMsg = settingsValue("waitlist_confirmation") //to display after form submission
 
-				subject := "Thank You for Joining the LxRoot Waitlist!"
-				emailTemplate := settingsValue("waitlist_email")
+// 				subject := "Thank You for Joining the LxRoot Waitlist!"
+// 				emailTemplate := settingsValue("waitlist_email")
 
-				dmap := make(map[string]interface{})
-				dmap["first_name"] = r.FormValue("first_name")
-				dmap["last_name"] = r.FormValue("last_name")
-				emailBody, _ := templatePrepare(emailTemplate, dmap)
-				err = SendEmail([]string{email}, subject, emailBody)
-				logError("waitListSendEmail", err)
-			}
-		}
+// 				dmap := make(map[string]interface{})
+// 				dmap["first_name"] = r.FormValue("first_name")
+// 				dmap["last_name"] = r.FormValue("last_name")
+// 				emailBody, _ := templatePrepare(emailTemplate, dmap)
+// 				err = SendEmail([]string{email}, subject, emailBody)
+// 				logError("waitListSendEmail", err)
+// 			}
+// 		}
 
-		var row = make(map[string]interface{})
-		row["error"] = errNo
-		row["message"] = errMsg
-		bs, err := json.Marshal(row)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, string(bs))
-	}
-}
+// 		var row = make(map[string]interface{})
+// 		row["error"] = errNo
+// 		row["message"] = errMsg
+// 		bs, err := json.Marshal(row)
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 			return
+// 		}
+// 		w.Header().Set("Content-Type", "application/json")
+// 		fmt.Fprintln(w, string(bs))
+// 	}
+// }
 
 func signup(w http.ResponseWriter, r *http.Request) {
 
@@ -1648,7 +1648,8 @@ func tfAuth(w http.ResponseWriter, r *http.Request) {
 		}
 
 		tfaUsername, err := getCookie("tfa", r)
-		fmt.Println("tfaUsername:", err, tfaUsername, r.Referer())
+		//fmt.Println("tfaUsername:", err, tfaUsername, r.Referer())
+		logError("tfa", err)
 
 		base := GetBaseURL(r)
 		data := struct {
@@ -1708,8 +1709,10 @@ func tfAuth(w http.ResponseWriter, r *http.Request) {
 			setCookie("login_session", jwtstr, 86400*30, w)
 			setCookie("token", token, 86400*1, w) //30 days
 			rurl = "/dashboard"
+			delCookie("redirect", r, w)
+			delCookie("tfa", r, w)
 		}
-		fmt.Println("rurl", rurl)
+		//fmt.Println("rurl", rurl)
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
 		return
 	}
@@ -2044,13 +2047,13 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 func profile(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == http.MethodGet {
+	smap, err := getSessionInfo(r)
+	if err != nil {
+		http.Redirect(w, r, "/logout", http.StatusSeeOther)
+		return
+	}
 
-		smap, err := getSessionInfo(r)
-		if err != nil {
-			http.Redirect(w, r, "/logout", http.StatusSeeOther)
-			return
-		}
+	if r.Method == http.MethodGet {
 
 		tmplt, err := template.New("base.gohtml").Funcs(nil).ParseFiles(
 			"templates/base.gohtml",
@@ -2108,7 +2111,42 @@ func profile(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+	} else if r.Method == http.MethodPost {
 
+		var todo string = parseMultipartTodo(r)
+		var message string = "OK"
+		tokenPullNSet(r)
+
+		if strings.ToUpper(todo) == "CHANGE_NAME" {
+
+			funcsMap := map[string]interface{}{
+				"validCSRF": validCSRF,
+			}
+			rmap := make(map[string]interface{})
+			for key := range r.Form {
+				rmap[key] = r.FormValue(key)
+			}
+			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			message = response
+			if response == "OKAY" {
+
+				//fmt.Println(r.Form)
+				ipAddress := cleanIp(r.RemoteAddr)
+				firstName := r.FormValue("first_name")
+				lastName := r.FormValue("last_name")
+				accountId, _ := smap["account_id"].(string)
+				row := profileInfo(accountId)
+				eFirstName, _ := row["first_name"].(string)
+				eLastName, _ := row["last_name"].(string)
+				loginId, _ := smap["id"].(string)
+				sql := fmt.Sprintf("UPDATE %s SET first_name=%q,last_name=%q WHERE id=%q;", tableToBucket("account"), firstName, lastName, accountId)
+				database.DB.Exec(sql)
+				logMsg := fmt.Sprintf("profile name %s %s -> %s %s", eFirstName, eLastName, firstName, lastName)
+				addActiviyLog(loginId, UPDATE_ACTIVITY, "account", fmt.Sprintf("id=%s", accountId), logMsg, ipAddress)
+				message = "OK"
+			}
+		}
+		fmt.Fprintln(w, message)
 	}
 }
 
