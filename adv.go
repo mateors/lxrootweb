@@ -50,6 +50,8 @@ var FuncMap = template.FuncMap{
 	"toUpper":          toUpper,
 	"paymentIcon":      paymentIcon,
 	"niceDate":         niceDate,
+	"decodeRune":       decodeRune,
+	"charCount":        charCount,
 }
 
 const DATE_TIME_FORMAT = "2006-01-02 15:04:05"
@@ -167,6 +169,24 @@ func decrypt(encryptedString string, keyString string) (decryptedString string) 
 	}
 
 	return fmt.Sprintf("%s", plaintext)
+}
+
+func charCount(str string) int {
+	return len([]rune(str))
+}
+
+func decodeRune(text string) string {
+
+	return _UnescapeUnicodeCharactersInJSON(text)
+
+}
+
+func _UnescapeUnicodeCharactersInJSON(_jsonRaw string) string {
+	str, err := strconv.Unquote(strings.Replace(strconv.Quote(_jsonRaw), `\\u`, `\u`, -1))
+	if err != nil {
+		return ""
+	}
+	return str
 }
 
 func niceDate(createDateTime string) string {

@@ -75,7 +75,8 @@
                         <p class="text-slate-400 !font-light mb-4">Your LxRoot Profile uses this email for sign-in. You can change it using the button below.</p>
 
                         <form id="eForm" method="post">
-                            <input type="hidden" name="ftoken" value="" />
+                            <input type="hidden" name="ftoken" value="{{.CsrfToken}}" />
+                            <input type="hidden" name="todo" value="change_username" />
                             <div class="field flex flex-col mb-4">
                                 <label for="email">Username <span class="required-spot">*</span></label>
                                 <input type="email" id="email" name="email" placeholder="Email" value="{{$email}}" disabled required />
@@ -191,6 +192,42 @@
             submitBtn.prop('disabled', false);
 
             if(resp.trim()=='OK'){ showToastMessage("Profile name changes successfully!"); $('button[cancelnames]').trigger("click"); }else{ showToastMessage(resp);}
+            //setTimeout( () => { location.reload(); }, 3000);
+
+        }).catch( (err) => {
+            console.log('fail:',err);
+        });
+
+        return false;
+    });
+
+    $('#eForm').submit( (e) => {
+    
+        e.preventDefault();
+        let submitBtn=$('#eForm').find('button[type="submit"]');
+        let btnText=submitBtn.text();
+        console.log(btnText);
+
+        submitBtn.empty();
+        submitBtn.addChild(elmDivSpinner());
+        //submitBtn.addChild(document.createTextNode('Please wait'));
+        submitBtn.prop('disabled', true);
+
+        $.ajax({
+            async: true,
+            type: "POST",
+            dataType: "text", //text
+            url: "/profile",
+            data: $(this).serialize(),
+
+        }).then( (resp) => {
+
+            console.log(resp);
+            submitBtn.empty();
+            submitBtn.text(btnText);
+            submitBtn.prop('disabled', false);
+
+            if(resp.trim()=='OK'){ showToastMessage("Username changes successfully!"); $('button[cancelemail]').trigger("click"); }else{ showToastMessage(resp);}
             //setTimeout( () => { location.reload(); }, 3000);
 
         }).catch( (err) => {

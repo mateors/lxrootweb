@@ -1582,21 +1582,21 @@ func signin(w http.ResponseWriter, r *http.Request) {
 					sql := fmt.Sprintf("UPDATE %s SET ip_address=%q,ipcount=ipcount+1,update_date=%q WHERE id=%q;", tableToBucket("login"), ipAddress, mtool.TimeNow(), loginId)
 					database.DB.Exec(sql)
 					logMsg := fmt.Sprintf("invalid password %s tried from %s referer:%s", txtpass, location, referer)
-					addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
+					addActiviyLog(loginId, LOGIN_ACTIVITY, "login", sessionCode, logMsg, ipAddress)
 				}
 			}
 			if len(rows) == 0 {
 				rurl = "/signin?error=invalid username or password"
 				//wrong username
 				logMsg := fmt.Sprintf("invalid username %s, password %s tried from %s, referer:%s", username, txtpass, location, referer)
-				addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
+				addActiviyLog(loginId, LOGIN_ACTIVITY, "login", sessionCode, logMsg, ipAddress)
 				fmt.Println("count:", len(rows))
 			}
 
 		} else {
 			rurl = "/signin?error=invalid username or password."
 			logMsg := fmt.Sprintf("invalid username %s or password %s try from %s referer:%s", username, txtpass, location, referer)
-			addActiviyLog(loginId, INVALID_USERPASS, "login", sessionCode, logMsg, ipAddress)
+			addActiviyLog(loginId, LOGIN_ACTIVITY, "login", sessionCode, logMsg, ipAddress)
 		}
 
 		http.Redirect(w, r, rurl, http.StatusSeeOther)
@@ -2139,10 +2139,44 @@ func profile(w http.ResponseWriter, r *http.Request) {
 				eFirstName, _ := row["first_name"].(string)
 				eLastName, _ := row["last_name"].(string)
 				loginId, _ := smap["id"].(string)
-				sql := fmt.Sprintf("UPDATE %s SET first_name=%q,last_name=%q WHERE id=%q;", tableToBucket("account"), firstName, lastName, accountId)
+				sql := fmt.Sprintf("UPDATE %s SET first_name=%q,last_name=%q,update_date=%q WHERE id=%q;", tableToBucket("account"), firstName, lastName, mtool.TimeNow(), accountId)
 				database.DB.Exec(sql)
 				logMsg := fmt.Sprintf("profile name %s %s -> %s %s", eFirstName, eLastName, firstName, lastName)
 				addActiviyLog(loginId, UPDATE_ACTIVITY, "account", fmt.Sprintf("id=%s", accountId), logMsg, ipAddress)
+				message = "OK"
+			}
+
+		} else if strings.ToUpper(todo) == "CHANGE_USERNAME" {
+
+			funcsMap := map[string]interface{}{
+				"validCSRF":  validCSRF,
+				"validEmail": validEmail,
+			}
+			rmap := make(map[string]interface{})
+			for key := range r.Form {
+				rmap[key] = r.FormValue(key)
+			}
+			response := CheckMultipleConditionTrue(rmap, funcsMap)
+			message = response
+			if response == "OKAY" {
+
+				fmt.Println(r.Form)
+				ipAddress := cleanIp(r.RemoteAddr)
+				username := r.FormValue("email")
+
+				accountId, _ := smap["account_id"].(string)
+				loginId, _ := smap["id"].(string)
+				row := profileInfo(accountId)
+				euserName, _ := row["username"].(string)
+
+				sql := fmt.Sprintf("UPDATE %s SET email=%q,update_date=%q WHERE id=%q;", tableToBucket("account"), username, mtool.TimeNow(), accountId)
+				database.DB.Exec(sql)
+
+				sql = fmt.Sprintf("UPDATE %s SET username=%q,update_date=%q WHERE id=%q;", tableToBucket("login"), username, mtool.TimeNow(), loginId)
+				database.DB.Exec(sql)
+
+				logMsg := fmt.Sprintf("username %s -> %s", euserName, username)
+				addActiviyLog(loginId, UPDATE_ACTIVITY, "login", fmt.Sprintf("id=%s", loginId), logMsg, ipAddress)
 				message = "OK"
 			}
 		}
@@ -2287,7 +2321,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 			if response == "OKAY" {
 
 				loginId := smap["id"].(string)
-				username := smap["username"].(string)
+				//username := smap["username"].(string)
 				authCode := r.FormValue("authcode") //token as password
 				secretBase32 := r.FormValue("secret")
 				ipAddress := cleanIp(r.RemoteAddr)
@@ -2300,7 +2334,7 @@ func security(w http.ResponseWriter, r *http.Request) {
 					delCookie("tfasetup", r, w)
 					sql := fmt.Sprintf("UPDATE %s SET tfa_status=1,tfa_medium='authenticator_app',tfa_setupkey='%s',update_date='%s' WHERE id='%s';", tableToBucket("login"), secretBase32, mtool.TimeNow(), loginId)
 					database.DB.Exec(sql)
-					logtxt := fmt.Sprintf("TFA_ENABLED for %s", username)
+					logtxt := "TFA_ENABLED"
 					addActiviyLog(loginId, UPDATE_ACTIVITY, "login", fmt.Sprintf("id=%s", loginId), logtxt, ipAddress)
 				}
 			}
@@ -2325,13 +2359,13 @@ func security(w http.ResponseWriter, r *http.Request) {
 
 				ipAddress := cleanIp(r.RemoteAddr)
 				loginId := smap["id"].(string)
-				username := smap["username"].(string)
+				//username := smap["username"].(string)
 				qrcodeFilePath := loginIdToFilePath(loginId)
 				os.Remove(qrcodeFilePath)
 
 				sql := fmt.Sprintf("UPDATE %s SET tfa_status=0,tfa_medium='',tfa_setupkey='',update_date='%s' WHERE id='%s';", tableToBucket("login"), mtool.TimeNow(), loginId)
 				database.DB.Exec(sql)
-				logtxt := fmt.Sprintf("TFA_DISABLED for %s", username)
+				logtxt := "TFA_DISABLED"
 				addActiviyLog(loginId, UPDATE_ACTIVITY, "login", fmt.Sprintf("id=%s", loginId), logtxt, ipAddress)
 			}
 			http.Redirect(w, r, rurl, http.StatusSeeOther)
@@ -3094,7 +3128,7 @@ func activityLog(w http.ResponseWriter, r *http.Request) {
 		lastName, _ := row["last_name"].(string)
 		label := nameLabel(firstName, lastName)
 
-		sql := fmt.Sprintf("SELECT id,activity_type,ip_address,log_details,create_date FROM %s WHERE login_id=%q AND status=1;", tableToBucket("activity_log"), loginId)
+		sql := fmt.Sprintf("SELECT id,activity_type,ip_address,log_details,create_date FROM %s WHERE login_id=%q AND status=1 ORDER BY id DESC;", tableToBucket("activity_log"), loginId)
 		rows, err := lxql.GetRows(sql, database.DB)
 		if err != nil {
 			return

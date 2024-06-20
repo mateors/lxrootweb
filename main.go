@@ -85,7 +85,7 @@ func init() {
 	// licenseKey := uuid.NewV1().String()
 	// id, err := addSubscription("accountId", "billahmdmostain@gmail.com", "stripeCustomer", licenseKey, "monthly", "20", "due", subscriptionStart, subscriptionEnd, "trial")
 	// fmt.Println(err, id)
-	// os.Exit(1)
+	//os.Exit(1)
 }
 
 func main() {
