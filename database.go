@@ -591,7 +591,6 @@ func addSubscription(accountId, email, stripeCustomer, licenseKey, billing, pric
 	form["email"] = email
 	form["subscriber"] = stripeCustomer //stripe.customer
 	form["license_key"] = licenseKey    //
-	//form["domain"] = domain
 	form["billing"] = billing
 	form["price"] = price
 	form["payment_status"] = paymentStatus
@@ -599,7 +598,7 @@ func addSubscription(accountId, email, stripeCustomer, licenseKey, billing, pric
 	form["subscription_end"] = subscriptionEnd
 	form["create_date"] = mtool.TimeNow()
 	form["remarks"] = remarks
-	form["status"] = 1
+	form["status"] = 0 //0=generated but not used by others, 1=used by subscriber
 	err = lxql.InsertUpdateMap(form, database.DB)
 	return id, err
 }
