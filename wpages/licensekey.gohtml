@@ -95,11 +95,24 @@
                     </div>
 
                     <!---instruction block--->
-                    <div class="p-6 mt-6 bg-white border rounded-lg">
+                    <div id="codeBlock" class="p-6 mt-6 bg-white border rounded-lg">
 
-                        <p class="text-slate-700 mb-6">To get started with LxRoot, run the following command on a blank <strong>Ubuntu 22.04 LTS</strong> server as a <strong>root</strong> user.</p>
+                        <p class="text-slate-700 mb-6">To get started with LxRoot, run the following three commands sequentially on a clean <strong>Ubuntu 22.04 LTS</strong> server as a <strong>root</strong> user.</p>
 
-                        <pre class="scrollbar overflow-x-auto bg-code text-code whitespace-pre px-6 py-4 flex justify-between items-center"><code>wget -qO- lxr.sh | bash -s yourdomain.com</code> <span copycom class="material-icon cursor-pointer hover:text-primary">content_copy</span></pre> 
+                        <pre class="scrollbar overflow-x-auto bg-code text-code whitespace-pre px-6 pt-4 flex justify-between items-center">
+                            <code>apt update && apt upgrade -y</code> 
+                            <span copycom class="material-icon cursor-pointer hover:text-primary">content_copy</span>
+                        </pre> 
+
+                        <pre class="scrollbar overflow-x-auto bg-code text-code whitespace-pre px-6 py-1 flex justify-between items-center">
+                            <code>reboot</code> 
+                            <span copycom class="material-icon cursor-pointer hover:text-primary">content_copy</span>
+                        </pre> 
+
+                        <pre class="scrollbar overflow-x-auto bg-code text-code whitespace-pre px-6 pb-4 flex justify-between items-center">
+                            <code>wget -qO- lxr.sh | bash -s yourdomain.com</code> 
+                            <span copycom class="material-icon cursor-pointer hover:text-primary">content_copy</span>
+                        </pre> 
 
                         <p class="mt-4 text-slate-700">Replace <strong>yourdomain.com</strong> with the domain you would like to be your <strong>LxRoot panel</strong> domain - the DNS should already be pointed to the primary IP of your server.</p>
 
@@ -152,7 +165,8 @@
         copyToClp(text);
         showToastMessage("License key copied!");
     });
-    $('span[copycom]').on('click', (e)=> {
+
+    $('#codeBlock').find('span[copycom]').on('click', (e)=> {
         let text=$(e.target).prev().text();
         copyToClp(text.trim());
         showToastMessage("Command copied!");
