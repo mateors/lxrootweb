@@ -85,15 +85,15 @@ func init() {
 	// licenseKey := uuid.NewV1().String()
 	// id, err := addSubscription("accountId", "billahmdmostain@gmail.com", "stripeCustomer", licenseKey, "monthly", "20", "due", subscriptionStart, subscriptionEnd, "trial")
 	// fmt.Println(err, id)
-	pList, err := processList()
-	if err != nil {
-		log.Println("err>", err)
-		return
-	}
-	for _, p := range pList {
-		fmt.Println(p.Pid, p.PPid, p.Name, p.Executable, p.WorkingDirectory)
-	}
-	os.Exit(1)
+	// pList, err := processList()
+	// if err != nil {
+	// 	log.Println("err>", err)
+	// 	return
+	// }
+	// for _, p := range pList {
+	// 	fmt.Println(p.Pid, p.PPid, p.Name, p.Executable, p.WorkingDirectory)
+	// }
+	// os.Exit(1)
 }
 
 func main() {
