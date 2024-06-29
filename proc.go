@@ -176,6 +176,42 @@ func processFileDescriptor(data string) map[string]map[string]interface{} {
 	return irow
 }
 
+func tcpIpv4() map[string]map[string]interface{} {
+
+	pmap := make(map[string]map[string]interface{})
+	tcpFile := "/proc/net/tcp"
+	bs, err := os.ReadFile(tcpFile)
+	if err != nil {
+		return nil
+	}
+	tcpContent := string(bs)
+	irow := processFileDescriptor(tcpContent)
+	for _, vmap := range irow {
+		//fmt.Println(">>", localA, vmap)
+		inode := vmap["inode"].(string)
+		pmap[inode] = vmap
+	}
+	return pmap
+}
+
+func tcpIpv6() map[string]map[string]interface{} {
+
+	pmap := make(map[string]map[string]interface{})
+	tcpFile := "/proc/net/tcp6"
+	bs, err := os.ReadFile(tcpFile)
+	if err != nil {
+		return nil
+	}
+	tcpContent := string(bs)
+	irow := processFileDescriptor(tcpContent)
+	for _, vmap := range irow {
+		//fmt.Println(">>", localA, vmap)
+		inode := vmap["inode"].(string)
+		pmap[inode] = vmap
+	}
+	return pmap
+}
+
 func fileDescriptorList(pid int) []map[string]string {
 
 	var dlist = make([]map[string]string, 0)
@@ -251,4 +287,37 @@ func fileDescriptorSocketList(pid int) []map[string]interface{} {
 		}
 	}
 	return rows
+}
+
+func pidOpenSocketList(pid int) []map[string]interface{} {
+
+	slist := make([]map[string]interface{}, 0)
+	rows := fileDescriptorSocketList(pid)
+	for _, row := range rows {
+
+		fd, _ := row["fd"].(string)
+		inode, _ := row["inode"].(int)
+
+		//check ipv4 socket
+		pmap := tcpIpv4()
+		mrow, isOk := pmap[fmt.Sprint(inode)]
+		if isOk {
+			//fmt.Println(fd, inode, mrow)
+			mrow["version"] = "ipv4"
+			mrow["fd"] = fd
+			slist = append(slist, mrow)
+		}
+
+		//check ipv6 socket
+		pmap = tcpIpv6()
+		mrow, isOk = pmap[fmt.Sprint(inode)]
+		if isOk {
+			//fmt.Println(fd, inode, mrow)
+			mrow["version"] = "ipv6"
+			mrow["fd"] = fd
+			slist = append(slist, mrow)
+		}
+
+	}
+	return slist
 }

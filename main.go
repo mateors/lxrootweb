@@ -111,6 +111,10 @@ func init() {
 	// for _, fdMap := range rows {
 	// 	fmt.Println(fdMap)
 	// }
+	// rows := pidOpenSocketList(490)
+	// for _, row := range rows {
+	// 	fmt.Println(row)
+	// }
 	// os.Exit(1)
 }
 
