@@ -85,14 +85,6 @@ func init() {
 	// licenseKey := uuid.NewV1().String()
 	// id, err := addSubscription("accountId", "billahmdmostain@gmail.com", "stripeCustomer", licenseKey, "monthly", "20", "due", subscriptionStart, subscriptionEnd, "trial")
 	// fmt.Println(err, id)
-	// pList, err := processList()
-	// if err != nil {
-	// 	log.Println("err>", err)
-	// 	return
-	// }
-	// for _, p := range pList {
-	// 	fmt.Println(p.Pid, p.PPid, p.Name, p.Executable, p.WorkingDirectory)
-	// }
 
 	/*
 		tcpFile := "/proc/net/tcp6"
@@ -114,6 +106,18 @@ func init() {
 	// rows := pidOpenSocketList(490)
 	// for _, row := range rows {
 	// 	fmt.Println(row)
+	// }
+
+	// pList, err := ProcessList()
+	// if err != nil {
+	// 	log.Println("err>", err)
+	// 	return
+	// }
+	// for _, p := range pList {
+
+	// 	if len(p.SocketList) > 0 {
+	// 		fmt.Println(p.Pid, p.PPid, p.Name, p.State, p.Executable, p.WorkingDirectory, p.Uid, p.Gid, p.Groups, p.Threads, "**-->", len(p.SocketList))
+	// 	}
 	// }
 	// os.Exit(1)
 }

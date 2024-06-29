@@ -17,8 +17,13 @@ type Process struct {
 	State            string //
 	Pid              int    //
 	PPid             int    //
+	Uid              int
+	Gid              int
+	Groups           string
+	Threads          int
 	Executable       string
 	WorkingDirectory string //cwd
+	SocketList       []map[string]interface{}
 }
 
 func newProcess(pid int) (*Process, error) {
@@ -29,30 +34,57 @@ func newProcess(pid int) (*Process, error) {
 
 func (p *Process) getProcessStat() error {
 
-	statFile := fmt.Sprintf("/proc/%d/stat", p.Pid)
-	bs, err := os.ReadFile(statFile)
-	if err != nil {
-		return err
+	kvMap := processStatus(p.Pid)
+	p.Name = kvMap["Name"]
+	p.State = kvMap["State"]
+	p.PPid = str2int(kvMap["PPid"])
+
+	uidSlc := strings.Fields(kvMap["Uid"])
+	if len(uidSlc) == 4 {
+		p.Uid = str2int(uidSlc[0])
 	}
-	content := string(bs)
-	start := strings.IndexRune(content, '(') + 1
-	end := strings.IndexRune(content, ')')
-	p.Name = content[start:end]
-	data := content[end+2:]
-	_, err = fmt.Sscanf(data, "%s %d", &p.State, &p.PPid)
-	if err != nil {
-		fmt.Println("err->", err, p.Name, data[0:1], data[2:3], "**", data)
+	gidSlc := strings.Fields(kvMap["Gid"])
+	if len(gidSlc) == 4 {
+		p.Gid = str2int(gidSlc[0])
 	}
+	p.Groups = kvMap["Groups"]
+	p.Threads = str2int(kvMap["Threads"])
+
 	readlink, _ := os.Readlink(fmt.Sprintf("/proc/%d/exe", p.Pid))
 	cwd, _ := os.Readlink(fmt.Sprintf("/proc/%d/cwd", p.Pid))
 	p.Executable = readlink
 	p.WorkingDirectory = cwd
+	p.SocketList = pidOpenSocketList(p.Pid)
 	return err
 }
 
+// func (p *Process) getProcessStat() error {
+
+// 	statFile := fmt.Sprintf("/proc/%d/stat", p.Pid)
+// 	bs, err := os.ReadFile(statFile)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	content := string(bs)
+// 	start := strings.IndexRune(content, '(') + 1
+// 	end := strings.IndexRune(content, ')')
+// 	p.Name = content[start:end]
+// 	data := content[end+2:]
+// 	_, err = fmt.Sscanf(data, "%s %d", &p.State, &p.PPid)
+// 	if err != nil {
+// 		fmt.Println("err->", err, p.Name, data[0:1], data[2:3], "**", data)
+// 	}
+// 	readlink, _ := os.Readlink(fmt.Sprintf("/proc/%d/exe", p.Pid))
+// 	cwd, _ := os.Readlink(fmt.Sprintf("/proc/%d/cwd", p.Pid))
+// 	p.Executable = readlink
+// 	p.WorkingDirectory = cwd
+// 	p.SocketList = pidOpenSocketList(p.Pid)
+// 	return err
+// }
+
 //proc/411/stat
 
-func processList() ([]Process, error) {
+func ProcessList() ([]Process, error) {
 
 	d, err := os.Open("/proc")
 	if err != nil {
@@ -109,9 +141,7 @@ func hexaNumberToInteger(hexaString string) string {
 	// replace 0x or 0X with empty String
 	numberStr := strings.Replace(hexaString, "0x", "", -1)
 	numberStr = strings.Replace(numberStr, "0X", "", -1)
-
 	//output, err: = strconv.ParseInt(hexaNumberToInteger(hexaNumber), 16, 64)
-
 	return numberStr
 }
 
@@ -320,4 +350,26 @@ func pidOpenSocketList(pid int) []map[string]interface{} {
 
 	}
 	return slist
+}
+
+func processStatus(pid int) map[string]string {
+
+	//cat /proc/490/status
+	kvMap := make(map[string]string)
+	statusFile := fmt.Sprintf("/proc/%d/status", pid)
+	bs, err := os.ReadFile(statusFile)
+	if err != nil {
+		log.Println("processStatusERR:", err)
+		return nil
+	}
+	content := string(bs)
+	slc := cmdOutputSlc2(content)
+	for _, line := range slc {
+		slc = strings.Split(line, ":")
+		if len(slc) == 2 {
+			key := slc[0]
+			kvMap[key] = strings.TrimSpace(slc[1])
+		}
+	}
+	return kvMap
 }
