@@ -93,6 +93,24 @@ func init() {
 	// for _, p := range pList {
 	// 	fmt.Println(p.Pid, p.PPid, p.Name, p.Executable, p.WorkingDirectory)
 	// }
+
+	/*
+		tcpFile := "/proc/net/tcp6"
+		bs, err := os.ReadFile(tcpFile)
+		if err != nil {
+			return
+		}
+		tcpContent := string(bs)
+		irow := processFileDescriptor(tcpContent)
+		for localA, vmap := range irow {
+			fmt.Println(">>", localA, vmap)
+		}
+		fmt.Println(len(irow))
+	*/
+	// rows := fileDescriptorSocketList(723)
+	// for _, fdMap := range rows {
+	// 	fmt.Println(fdMap)
+	// }
 	// os.Exit(1)
 }
 
